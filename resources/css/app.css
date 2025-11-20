@@ -1,3 +1,38 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+.chat-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 16px;
+}
+.message {
+    margin-bottom: 12px;
+    padding: 8px;
+    border-radius: 4px;
+    background: #e9ecef;
+}
+.message.sent {
+    background: #d1e7dd;
+    text-align: right;
+}
+.message.received {
+    background: #f8d7da;
+    text-align: left;
+}
+
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
