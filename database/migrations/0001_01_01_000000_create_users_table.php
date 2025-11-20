@@ -15,8 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            //$table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->date('birthday');
+            $table->string('target_language');
+            $table->string('country');
+            $table->string('region');
+            $table->boolean('suspended');
             $table->rememberToken();
             $table->timestamps();
         });
