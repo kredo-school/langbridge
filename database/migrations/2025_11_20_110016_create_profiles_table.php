@@ -25,6 +25,7 @@ return new class extends Migration
             $table->boolean('country_hidden');
             $table->boolean('region_hidden');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

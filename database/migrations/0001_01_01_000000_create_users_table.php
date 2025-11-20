@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('country');
             $table->string('region');
             $table->boolean('suspended');
+            $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
         });
