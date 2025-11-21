@@ -8,26 +8,46 @@ $timeAndSeen = "<span data-time='$created_at' class='message-time'>
 <div class="message-card @if($isSender) mc-sender @endif" data-id="{{ $id }}">
     {{-- Delete Message Button --}}
     @if ($isSender)
-        <div class="actions">
-            <i class="fas fa-trash delete-btn" data-id="{{ $id }}"></i>
-        </div>
+    <div class="actions">
+        <i class="fas fa-trash delete-btn" data-id="{{ $id }}"></i>
+    </div>
     @endif
     {{-- Card --}}
     <div class="message-card-content">
         @if (@$attachment->type != 'image' || $message)
-            <div class="message">
-                {!! ($message == null && $attachment != null && @$attachment->type != 'file') ? $attachment->title : nl2br($message) !!}
-                {!! $timeAndSeen !!}
-                {{-- If attachment is a file --}}
-                @if(@$attachment->type == 'file')
-                <a href="{{ route(config('chatify.attachments.download_route_name'), ['fileName'=>$attachment->file]) }}" class="file-download">
-                    <span class="fas fa-file"></span> {{$attachment->title}}</a>
-                @endif
-            </div>
+        <div class="message">
+            {!! ($message == null && $attachment != null && @$attachment->type != 'file') ? $attachment->title :
+            nl2br($message) !!}
+            {!! $timeAndSeen !!}
+            {{-- If attachment is a file --}}
+            @if(@$attachment->type == 'file')
+            <a href="{{ route(config('chatify.attachments.download_route_name'), ['fileName'=>$attachment->file]) }}"
+                class="file-download">
+                <span class="fas fa-file"></span> {{$attachment->title}}</a>
+            @endif
+        </div>
         @endif
+        {{-- @if(@$attachment->type == 'image')
+        <div class="image-wrapper" style="text-align: {{$isSender ? 'end' : 'start'}}">
+            <div class="image-file chat-image"
+                style="background-image: url('{{ Chatify::getAttachmentUrl($attachment->file) }}')">
+                <div>{{ $attachment->title }}</div>
+            </div>
+            <div style="margin-bottom:5px">
+                {!! $timeAndSeen !!}
+            </div>
+        </div>
+        @endif --}}
         @if(@$attachment->type == 'image')
         <div class="image-wrapper" style="text-align: {{$isSender ? 'end' : 'start'}}">
-            <div class="image-file chat-image" style="background-image: url('{{ Chatify::getAttachmentUrl($attachment->file) }}')">
+            <div class="image-file chat-image">
+                {{-- <img src="{{ Chatify::getAttachmentUrl($attachment->file) }}" alt="{{ $attachment->title }}"
+                    style="width:100%;height:auto;"> --}}
+                {{-- <img src="{{ asset('storage/attachments/' . $attachment->file) }}" alt="{{ $attachment->title }}"
+                    style="width:100%;height:auto;"> --}}
+                <img src="{{ asset('storage/attachments/' . $attachment->file) }}" alt="{{ $attachment->title }}"
+                    style="display:block;max-width:100%;max-height:170px;width:auto;height:auto;object-fit:contain;">
+
                 <div>{{ $attachment->title }}</div>
             </div>
             <div style="margin-bottom:5px">

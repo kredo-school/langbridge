@@ -33,6 +33,18 @@ img {
     text-align: left;
 }
 
+
+
+.shared-photo.chat-image,
+.image-file.chat-image {
+    width: 200px;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    display: block;
+}
+
+
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';

@@ -433,6 +433,30 @@ body {
   background-repeat: no-repeat;
   cursor: pointer;
 }
+
+/* ここに追加 */
+div.shared-photo.chat-image {
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center center !important;
+    width: 100% !important;
+    height: 120px !important;
+    border: 2px solid red !important;
+}
+
+
+
+.shared-photo.chat-image {
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center center !important;
+    width: 100% !important;
+    height: 120px !important;
+}
+
+
+
+
 .shared-photo img {
   width: auto;
   height: 100%;
