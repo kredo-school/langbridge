@@ -3,8 +3,26 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
 
 class Profile extends Model
 {
-    //
+    use HasFactory;
+
+    /**
+     * 🔗 User モデルとのリレーション（1対1）
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * 🔍 検索で使う興味リレーション（User 経由）
+     */
+    public function interests()
+    {
+        return $this->user ? $this->user->interests : collect();
+    }
 }
