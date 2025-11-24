@@ -17,12 +17,6 @@ return new class extends Migration
             $table->string('email')->unique();
             //$table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->date('birthday');
-            $table->string('target_language');
-            $table->string('country');
-            $table->string('region');
-            $table->boolean('suspended');
-            $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
         });
