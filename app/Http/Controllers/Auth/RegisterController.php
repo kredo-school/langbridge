@@ -49,8 +49,8 @@ class RegisterController extends Controller
     public function store1(Request $request){
         $this->validator1($request->all())->validate();
      session([
-        'register.emali' => $request->email,
-        'register.password' => Hash::make('request->passwprd'),
+        'register.email' => $request->email,
+        'register.password' => Hash::make('request->password'),
      ]);
      return redirect()->route('register.show2');
     }
