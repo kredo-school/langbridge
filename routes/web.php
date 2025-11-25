@@ -8,7 +8,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
-
+use App\Http\Controllers\RegisterController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -27,6 +27,13 @@ Route::middleware(['auth'])->group(function () {
     Route::group(["prefix" => "setting", "as" => "setting."], function () {
         Route::get('/', [SettingController::class, 'index'])->name('index');
         Route::patch('/', [SettingController::class, 'update'])->name('update');
+    });
+
+    Route::group(["prefix"=>"register","as"=>"register."],function(){
+        Route::get('/register/1',[RegisterController::class,'show1'])->name('show1');
+        Route::get('/register/2',[RegisterController::class,'show2'])->name('show2');
+        Route::post('/register/1',[RegisterController::class,'store1'])->name('store1');
+        Route::post('/register/2',[RegisterController::class,'store2'])->name('store2');    
     });
 
     Route::group(["prefix" => "user", "as" => "user."], function () {

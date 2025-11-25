@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+
 
 class RegisterController extends Controller
 {
@@ -40,21 +42,64 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+    public function show1(){
+        return view('#1');
+    }
+
+    public function store1(Request $request){
+        $this->validator1($request->all())->validate();
+     session([
+        'register.emali' => $request->email,
+        'register.password' => Hash::make('request->passwprd'),
+     ]);
+     return redirect()->route('register.show2');
+    }
+
+    public function show2(){
+        return view('#2');
+    }
+    public function store2(Request $request){
+        $this->validator2($request->all())->validate();
+
+        $user = $this->create([
+            'email' => session('register.email'),
+            'password' => session('register.password'),
+            'name' => $request->name,
+            'target_language' => $request->target_language,
+            'birthday' => $request->birthday,
+            'country' => $request->country,
+            'region' => $request->region,
+        ]);
+
+        session()->forget('register');
+        $this->guard()->login($user);
+        return $this->registered($request, $user)
+        ?: redirect($this->redirectPath());
+    }
+
     /**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
+    protected function validator1(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
-
+    protected function validator2(array $data)
+    {
+        return Validator::make($data, [
+            'name' => ['required', 'string'],
+            'target_language' => ['required', 'string'],
+            'birthday' => ['required', 'date'],
+            'county' => ['required', 'string'],
+            'region' => ['required', 'string'],
+        ]);
+    }
     /**
      * Create a new user instance after a valid registration.
      *
@@ -66,7 +111,13 @@ class RegisterController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'password' => $data['password'],
+            'target_language' => $data['target_language'],
+            'birthday' => $data['birthday'],
+            'country' => $data['country'],
+            'region' => $data['region'],
         ]);
     }
+
+
 }
