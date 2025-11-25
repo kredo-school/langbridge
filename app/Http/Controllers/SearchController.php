@@ -8,35 +8,32 @@ use App\Models\Interest;
 
 class SearchController extends Controller
 {
-public function search(Request $request)
-{
-    $users = collect();
 
-    $query = Profile::query()->where('hidden', false); // 非表示除外
 
-    if ($request->filled('handle') && !$request->filled('interest')) {
-        // ハンドルネームのみで検索（部分一致にしてもOK）
-        $query->where('handle', 'like', '%' . $request->handle . '%');
-        $users = $query->get();
-    } elseif ($request->filled('interest') && !$request->filled('handle')) {
-        // 興味のみで検索
-        $query->whereHas('user.interests', function ($q) use ($request) {
-            $q->where('interests.id', $request->interest);
-        });
-        $users = $query->get();
+
+    public function search(Request $request)
+    {
+        $users = collect(); // initialize empty collection for users
+        $query = Profile::query()->where('hidden', false); // exclude hidden profiles
+
+        if ($request->filled('handle')) { // partial match search by handle name
+            $query->where('handle', 'like', '%' . $request->handle . '%');
+        }
+
+        if ($request->filled('interests')) { // filter by interest categories
+            $query->whereHas('user.interests', function ($q) use ($request) {
+                $q->whereIn('interests.id', $request->interests);
+            });
+        }
+
+        if ($request->filled('handle') || $request->filled('interests')) { // execute query only if there are search conditions
+            $users = $query->with('user.interests')->paginate(10);
+        }
+
+        $interests = Interest::all(); // get all interest categories
+        return view('search', [ // pass data to search.blade.php
+            'users' => $users,
+            'interests' => $interests,
+        ]);
     }
-    // 両方入力 or どちらも未入力 → 検索しない（空のまま）
-
-    $interests = Interest::all();
-
-    return view('search', [
-        'users' => $users,
-        'interests' => $interests,
-    ]);
 }
-
-
-}
-
-
-
