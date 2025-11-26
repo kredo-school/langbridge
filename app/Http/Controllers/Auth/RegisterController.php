@@ -50,7 +50,7 @@ class RegisterController extends Controller
         $this->validator1($request->all())->validate();
      session([
         'register.email' => $request->email,
-        'register.password' => Hash::make('request->password'),
+        'register.password' => Hash::make($request->password),
      ]);
      return redirect()->route('register.show2');
     }
