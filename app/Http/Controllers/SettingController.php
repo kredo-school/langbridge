@@ -16,10 +16,15 @@ class SettingController extends Controller
 
         $user->update([
             'hidden'        => $request->has('hidden'),
+            
+        ]);
+
+        $user->profile->update([
             'age_hidden'    => $request->has('age_hidden'),
             'country_hidden'    => $request->has('country_hidden'),
             'region_hidden'    => $request->has('region_hidden'),
         ]);
+        
         return redirect()->route('setting.index');
     }
 
