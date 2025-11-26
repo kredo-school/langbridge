@@ -5,27 +5,55 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\User;
+use App\Models\Interest;
+
 
 class Profile extends Model
 {
+
     use HasFactory;
-   //add unique handle name when creating profile
+
+    
+    protected $fillable = [
+        'nickname',
+        'bio',
+        //other fillable fields can be added here
+    ];
+
+    
     protected static function boot()
     {
         parent::boot();
+use Illuminate\Support\Str;
 
+class Profile extends Model
+{
+    // App\Models\Profile.php
+    protected $primaryKey = 'user_id';
+    public $incrementing = false;
+    protected $keyType = 'int';
+    protected $attributes = [
+        'hidden' => true,
+        'age_hidden' => true,
+        'country_hidden' => true,
+        'region_hidden' => true,
+    ];
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    protected static function boot(){
+        parent::boot();
         static::creating(function ($profile) {
-            // Example: create a handle name like @user5
             $base = '@user' . $profile->user_id;
             $handle = $base;
             $counter = 1;
 
-            // If the same handle name already exists, add a number like @user5 → @user51 → @user52...
             while (Profile::where('handle', $handle)->exists()) {
                 $handle = $base . $counter;
                 $counter++;
             }
-            // Set the unique handle name
+
             $profile->handle = $handle;
         });
     }
@@ -43,7 +71,15 @@ class Profile extends Model
      */
     public function interests()
     {
-        // If there is a user, return that user's interests. Otherwise, return an empty collection.
         return $this->user ? $this->user->interests : collect();
+    }
+            // ランダムな英数字8文字を生成
+            $handle = Str::random(8);
+    
+            while (Profile::where('handle', $handle)->exists()) {
+                $handle = Str::random(8);
+            }    
+            $profile->handle = $handle;
+        });
     }
 }
