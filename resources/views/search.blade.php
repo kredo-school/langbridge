@@ -5,7 +5,7 @@
 <h1>Profile Search</h1>
 
 <!-- 🔍 Search Form -->
-<form method="GET" action="{{ route('users.search') }}">
+<form method="GET" action="{{ route('users.search') }}" autocomplete="off">
     <input type="text" name="keyword" placeholder="Search by @handle, nickname, or bio"
         value="{{ request('keyword') }}">
 
