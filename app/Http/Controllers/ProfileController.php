@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Profile;
 use Illuminate\Http\Request;
 
+use App\Models\User;
+use App\Models\Interest;
+
 class ProfileController extends Controller
 {
-    
+
     private $profile;
    
     public function __construct(Profile $profile){
@@ -28,6 +31,35 @@ class ProfileController extends Controller
             ->with('profile', $profile);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
+    // public function create()
+    // {
+    //
+    // }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    // public function store(Request $request)
+    // {
+
+    // }
+
+    /**
+     * Display the specified resource.
+     */
+
+
+    /**
+     * Update the specified resource in storage.
+     */
+
+
+    /**
+     * Remove the specified resource from storage.
+     */
     public function update(Request $request)
     {
         $profile = $this->profile->findOrFail(auth()->id());
@@ -35,7 +67,7 @@ class ProfileController extends Controller
         $request->validate([
             'handle' => 'required|string|unique:profiles,handle,' . $profile->user_id,
         ]);
-        
+
         $profile->nickname = $request->nickname;
         $profile->bio = $request->bio;
         $profile->JP_level = $request->JP_level;
@@ -52,11 +84,11 @@ class ProfileController extends Controller
         $user->region = $request->region;
         $user->save();
 
-        return redirect()->route('profile.show',$profile->user_id);
+        return redirect()->route('profile.show', $profile->user_id);
     }
 
 
-  
+
     public function destroy(Profile $profile)
     {
         //
