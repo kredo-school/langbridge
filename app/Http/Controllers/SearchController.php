@@ -6,59 +6,49 @@ use Illuminate\Http\Request;
 use App\Models\Profile;
 use App\Models\Interest;
 
+
+
 class SearchController extends Controller
 {
+    public function search(Request $request)
+    {
 
-public function search(Request $request)
-{
-    // empty collection 
-    $users = collect();
+        $users = collect();//initialize empty collection
 
-    //initialize query builder
-    $query = Profile::query()->where('hidden', false);
 
-    // if handle is provided, search by partial match
-    if ($request->filled('handle')) {
-        $query->where('handle', 'like', '%' . $request->handle . '%');
+        $query = Profile::query()->where('hidden', false);//base query
+
+
+        if ($request->filled('keyword')) {//keyword filter
+            $query->where(function ($q) use ($request) {//grouped conditions
+                $q->where('handle', 'like', '%' . $request->keyword . '%')//search by handle
+                    ->orWhere('nickname', 'like', '%' . $request->keyword . '%')//search by nickname
+                    ->orWhere('bio', 'like', '%' . $request->keyword . '%');//search by bio
+            });
+        }
+
+
+        if ($request->filled('interests')) {//interests filter
+            $query->whereHas('user.interests', function ($q) use ($request) {//filter by interests
+                $q->whereIn('interests.id', $request->interests);//match selected interests
+            });
+        }
+
+
+        if (
+            $request->filled('keyword') ||//either filter is applied
+            $request->filled('interests')//either filter is applied
+        ) {
+            $users = $query->with('user.interests')->paginate(10);//paginate results
+        }
+
+
+        $interests = Interest::all();//get all interests for filter options
+
+
+        return view('search', [//return view with data
+            'users' => $users,//filtered users
+            'interests' => $interests,//all interests
+        ]);
     }
-
-    // if nickname is provided, search by partial match
-    if ($request->filled('nickname')) {
-        $query->where('nickname', 'like', '%' . $request->nickname . '%');
-    }
-
-    // if bio is provided, search by partial match
-    if ($request->filled('bio')) {
-        $query->where('bio', 'like', '%' . $request->bio . '%');
-    }
-
-    // if interest categories are selected, search for users matching them
-    if ($request->filled('interests')) {
-        $query->whereHas('user.interests', function ($q) use ($request) {
-            $q->whereIn('interests.id', $request->interests);
-        });
-    }
-
-    // if any search criteria is provided, execute the search and get results
-    if (
-        $request->filled('handle') ||
-        $request->filled('nickname') ||
-        $request->filled('bio') ||
-        $request->filled('interests')
-    ) {
-        // Retrieve related "interests" as well, and paginate results by 10 per page
-        $users = $query->with('user.interests')->paginate(10);
-    }
-
-    // Retrieve the list of interest categories (to display in the search form)
-    $interests = Interest::all();
-
-    // Pass search results and interest categories to the view
-    return view('search', [
-        'users' => $users,
-        'interests' => $interests,
-    ]);
-}
-
-
 }

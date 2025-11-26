@@ -6,9 +6,8 @@
 
 <!-- 🔍 Search Form -->
 <form method="GET" action="{{ route('users.search') }}">
-    <input type="text" name="handle" placeholder="Handle Name" value="{{ request('handle') }}">
-    <input type="text" name="nickname" placeholder="Nickname" value="{{ request('nickname') }}">
-    <input type="text" name="bio" placeholder="Bio" value="{{ request('bio') }}">
+    <input type="text" name="keyword" placeholder="Search by @handle, nickname, or bio"
+        value="{{ request('keyword') }}">
 
     <h3>Interest Categories</h3>
     @foreach($interests as $interest)
@@ -48,8 +47,7 @@
     </div>
 </div>
 @empty
-@if(request()->filled('handle') || request()->filled('nickname') || request()->filled('bio') ||
-request()->filled('interests'))
+@if(request()->filled('keyword') || request()->filled('interests'))
 <p>No matching profiles found.</p>
 @endif
 @endforelse
