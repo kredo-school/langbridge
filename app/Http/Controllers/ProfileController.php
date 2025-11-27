@@ -22,7 +22,7 @@ class ProfileController extends Controller
         if ($profile->hidden && auth()->id() !== $profile->user_id && !auth()->user()?->isAdmin()) {
             abort(404);
         }
-        return view('#')->with('profile', $profile);
+        return view('pages.profile.show')->with('profile', $profile);
     }
     public function edit(){
         $profile = $this->profile->findOrFail(auth()->id());
