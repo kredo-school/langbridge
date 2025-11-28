@@ -46,7 +46,7 @@ class SearchController extends Controller
         $interests = Interest::all();//get all interests for filter options
 
 
-        return view('search', [//return view with data
+        return view('pages.search', [//return view with data
             'users' => $users,//filtered users
             'interests' => $interests,//all interests
         ]);
