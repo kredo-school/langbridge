@@ -36,7 +36,7 @@ class InterestTableSeeder extends Seeder
                 'name' => 'Fashion & Beauty'
             ],
             [
-                'name' => 'Buisiness & Finance'
+                'name' => 'Business & Finance'
             ],
             [
                 'name' => 'Art & Design'
