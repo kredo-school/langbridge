@@ -3,7 +3,7 @@
 {{-- チャット画面のメインテンプレート --}}
 @section('content')
 <div class="container w-75">
-    <div style="display:flex;gap:24px;">a
+    <div style="display:flex;gap:24px;">
         {{-- 左側：対話相手の選択フォーム --}}
         <div style="width:220px;min-width:180px;">
             <h5>Chat Partner</h5>
@@ -102,47 +102,94 @@
         document.getElementById('reportModal').style.display = 'none';
     }
 
+    function fetchMessages(to_user_id){
+        return fetch(`/chat/fetch?to_user_id=${to_user_id}`)
+            .then(res => res.json())
+    }
+
+    function deleteMessage(messageId) {
+        if (!confirm('このメッセージを削除しますか？')) return;
+        fetch(`/chat/delete/${messageId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(res => res.json())
+        .then(() => {
+            displayMessages();
+        });
+    }
+
+    function formatMessage(msg, box, myId) {
+        // 画像タグ
+        let imgTag = msg.image_path
+            ? `<img src='${msg.image_path}' style='max-width:100px;'>`
+            : "";
+        // 絵文字タグ
+        let emojiTag = msg.emoji ? msg.emoji : "";
+        // 既読・未読表示
+        let readTag = msg.is_read
+            ? '<span style="color:gray;">(既読)</span>'
+            : '<span style="color:gray;">(未読)</span>';
+
+        // 日時タグ
+        let timeTag = msg.sent_at
+            ? `<span style='color:gray;font-size:0.9em;'>${msg.sent_at}</span>`
+            : "";
+        // 右左・背景色・名前
+        let align = msg.user_id == myId ? "right" : "left";
+        let bgColor = msg.user_id == myId ? "#e0f7fa" : "#f1f8e9";
+        let nameTag = msg.user_id == myId ? "My Name" : "Partner Name";
+
+        // 旗アイコン（受信メッセージのみ）
+        let reportTag =
+            msg.user_id != myId
+            ? ` <span style='cursor:pointer;color:#d32f2f;font-size:1.2em;' title='報告する' onclick='openReportModal(${msg.id})'>🚩</span>`
+            : "";
+
+        // 削除ボタン（自分のメッセージのみ）
+        let deleteBtn = "";
+        if (msg.user_id == myId) {
+            deleteBtn = `<button onclick="deleteMessage(${msg.id})" style="margin-left:8px;" class="btn btn-danger btn-sm">削除</button>`;
+        }
+
+        // メッセージ表示HTML（旗アイコンの隣に削除ボタン）
+        box.innerHTML += [
+            `<div style='text-align:${align};background:${bgColor};`,
+            `margin:5px 0;padding:5px;border-radius:8px;max-width:70%;display:inline-block;float:${align};clear:both;position:relative;'>`,
+            `<strong>${nameTag}</strong>: ${msg.content} ${emojiTag}`,
+            imgTag ? `<div style='margin-top:4px;'>${imgTag}</div>` : "",
+            `<div style='margin-top:4px;font-size:0.9em;'>${timeTag} ${readTag}</div>`,
+            reportTag,
+            deleteBtn,
+            `</div><div style='clear:both;'></div>`,
+        ].join("");
+    }
+
     // メッセージ一覧を取得して表示する関数
-    function fetchMessages() {
+    function displayMessages() {
         // 選択中のユーザーIDを取得
         const to_user_id = document.getElementById('to_user_id')?.value || document.getElementById('form_to_user_id')?.value;
         if (!to_user_id) return;
+
         // サーバーからメッセージ一覧を取得
-        fetch(`/chat/fetch?to_user_id=${to_user_id}`)
-            .then(res => res.json())
-            .then(data => {
+        fetchMessages(to_user_id)
+            .then(data =>{
                 const box = document.getElementById('chat-box');
                 box.innerHTML = '';
                 const myId = {{ auth()->id() }};
                 // 取得したメッセージを1件ずつ表示
                 data.messages.forEach(msg => {
-                    let imgTag = msg.image_path ? `<img src='${msg.image_path}' style='max-width:100px;'>` : '';
-                    let emojiTag = msg.emoji ? msg.emoji : '';
-                    // 既読・未読表示
-                    let readTag = '';
-                    if (msg.is_read) {
-                        readTag = '<span style="color:gray;">(既読)</span>';
-                    } else {
-                        readTag = '<span style="color:gray;">(未読)</span>';
-                    }
-                    let timeTag = msg.sent_at ? `<span style='color:gray;font-size:0.9em;'>${msg.sent_at}</span>` : '';
-                    // 送信者（自分）は右、受信者は左
-                    let align = (msg.user_id == myId) ? 'right' : 'left';
-                    let bgColor = (msg.user_id == myId) ? '#e0f7fa' : '#f1f8e9';
-                    let nameTag = (msg.user_id == myId) ? 'My Name' : 'Partner Name';
-                    // メッセージ表示HTMLを作成
-                    box.innerHTML += `<div style='text-align:${align};background:${bgColor};margin:5px 0;padding:5px;border-radius:8px;max-width:70%;display:inline-block;float:${align};clear:both;position:relative;'>` +
-                        `<strong>${nameTag}</strong>: ${msg.content} ${emojiTag}` +
-                        (imgTag ? `<div style='margin-top:4px;'>${imgTag}</div>` : '') +
-                        `<div style='margin-top:4px;font-size:0.9em;'>${timeTag} ${readTag}</div>` +
-                        (msg.user_id != myId ? ` <span style='cursor:pointer;color:#d32f2f;font-size:1.2em;' title='報告する' onclick='openReportModal(${msg.id})'>🚩</span>` : '') +
-                        `</div><div style='clear:both;'></div>`;
+                    formatMessage(msg, box, myId);
                 });
                 box.scrollTop = box.scrollHeight;
             });
     }
-    fetchMessages();
-    setInterval(fetchMessages, 2000);
+
+    // メッセージ削除処理
+    displayMessages();
+    setInterval(displayMessages, 5000);
 
     // メッセージ送信処理
     const form = document.getElementById('chat-form');

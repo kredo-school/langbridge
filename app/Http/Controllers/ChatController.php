@@ -59,4 +59,14 @@ class ChatController extends Controller
 
         return response()->json(['messages' => $messages]);
     }
+
+    public function destroy($id)
+    {
+        $message = Message::findOrFail($id);
+        if ($message->user_id !== auth()->id()) {
+            return response()->json(['error' => '権限がありません'], 403);
+        }
+        $message->delete();
+        return response()->json(['success' => true]);
+    }
 }
