@@ -18,10 +18,10 @@
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js','resources/css/style.css'])
 </head>
-<body style="background-color: #c1cfec;">
+<body class="lang-blue">
     <div id="app" class="d-flex">
         <x-navbar />
-        <div class="main-content flex-grow-1 rounded-3" style="background-color: #ffffff; margin-top: 20px; margin-right: 20px;">
+        <div class="main-content flex-grow-1 rounded-3">
             <main class="py-4">
                 @yield('content')
             </main>

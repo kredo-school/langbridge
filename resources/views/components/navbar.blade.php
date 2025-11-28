@@ -1,10 +1,9 @@
-<div class="position-fixed top-0 start-0 d-flex flex-column align-items-center vh-100"
-     style="background-color: #c1cfec; width: 80px; z-index: 1050;">
+<div class="position-fixed top-0 start-0 d-flex flex-column align-items-center vh-100 nav-body">
 
     <!-- ロゴ -->
     <div class="my-3">
         <a href="{{ url('/') }}"> <!--Homeページへのルートを入れる-->
-            <img src="{{ asset('images/logo.png') }}" alt="Logo" style="width: 40px; height: 40px;">
+            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="nav-logo">
         </a>
     </div>
 
@@ -13,12 +12,12 @@
             data-bs-toggle="collapse"
             data-bs-target="#sidebarMenuContent"
             aria-expanded="false"
-            style="background-color: #c1cfec;">
+            >
         <span><i class="fa-solid fa-bars"></i></span>
     </button>
 
     <!-- 固定アイコン：検索 -->
-    <a class="nav-link mb-4" href=""> <!--searchページへのルートを入れる-->
+    <a class="nav-link mb-4" href="{{ route('users.search')}}">
         <i class="fas fa-search fa-lg"></i>
     </a>
 
