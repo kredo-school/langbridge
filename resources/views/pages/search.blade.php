@@ -6,7 +6,7 @@
 <div class="container">
 <h1>Profile Search</h1>
 
-<!-- 🔍 Search Form -->
+<!-- Search Form -->
 <form method="GET" action="{{ route('users.search') }}" autocomplete="off">
     <input class="form-control my-3" type="text" name="keyword" placeholder="Search by @handle, nickname, or bio"
         value="{{ request('keyword') }}">
@@ -33,9 +33,9 @@
     <button type="submit" class="btn-search d-block mx-auto">Search</button>
 </form>
 
-<!-- 👥 Results Display -->
+<!-- Results Display -->
 @forelse ($users as $profile)
-<div class="row" style="margin-bottom: 1em;">
+<div class="row mb-4">
     <div class="col-auto d-flex align-items-center">
         @if($profile->avatar)
             <img src="{{ $prifile->avatar }}" alt="" class="rounded-circle image-md d-block mx-auto my-auto">
@@ -70,7 +70,7 @@
 @endif
 @endforelse
 
-<!-- 📄 Pagination -->
+<!-- Pagination -->
 @if($users instanceof \Illuminate\Pagination\LengthAwarePaginator)
 {{ $users->appends(request()->query())->links() }}
 @endif
