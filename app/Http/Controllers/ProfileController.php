@@ -19,6 +19,8 @@ class ProfileController extends Controller
     public function show($user_id){
         $profile = $this->profile->findOrFail($user_id);
 
+        
+        return view('profile')->with('profile', $profile);
         if ($profile->hidden && auth()->id() !== $profile->user_id && !auth()->user()?->isAdmin()) {
             abort(404);
         }
@@ -27,7 +29,7 @@ class ProfileController extends Controller
     public function edit(){
         $profile = $this->profile->findOrFail(auth()->id());
 
-        return view('#')
+        return view('editprofile')
             ->with('profile', $profile);
     }
 

@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str; // ここはクラスの外で use
 use App\Models\User;
+use App\Models\Interest;
+use Illuminate\Support\Str;
+
 
 class Profile extends Model
 {
@@ -17,18 +20,24 @@ class Profile extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
+        'user_id',
         'nickname',
         'bio',
-        // 他の fillable フィールドもここに追加
+        'handle',
+        //other fillable fields can be added here
     ];
 
+    // App\Models\Profile.php
+    protected $primaryKey = 'user_id';
+    public $incrementing = false;
+    protected $keyType = 'int';
     protected $attributes = [
         'hidden' => true,
         'age_hidden' => true,
         'country_hidden' => true,
         'region_hidden' => true,
     ];
-
+    
     /**
      * 🔗 Which user this profile belongs to (one-to-one relationship)
      */
@@ -44,16 +53,11 @@ class Profile extends Model
     {
         return $this->user ? $this->user->interests : collect();
     }
-
-    /**
-     * プロフィール作成時に handle を自動生成
-     */
-    protected static function boot()
-    {
+            
+    protected static function boot(){
         parent::boot();
-
         static::creating(function ($profile) {
-            // ランダムな英数字8文字で handle を生成
+            
             $handle = Str::random(8);
 
             // 重複しないようにループ
@@ -64,4 +68,5 @@ class Profile extends Model
             $profile->handle = $handle;
         });
     }
+    
 }
