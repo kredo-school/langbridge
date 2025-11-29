@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Str; // ここはクラスの外で use
 use App\Models\User;
 use App\Models\Interest;
 use Illuminate\Support\Str;
