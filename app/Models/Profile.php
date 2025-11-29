@@ -11,13 +11,10 @@ use Illuminate\Support\Str;
 
 class Profile extends Model
 {
+
     use HasFactory;
 
-    // primary key を user_id に変更
-    protected $primaryKey = 'user_id';
-    public $incrementing = false;
-    protected $keyType = 'int';
-
+    
     protected $fillable = [
         'user_id',
         'nickname',
@@ -38,7 +35,7 @@ class Profile extends Model
     ];
     
     /**
-     * 🔗 Which user this profile belongs to (one-to-one relationship)
+     *  Which user this profile belongs to (one-to-one relationship)
      */
     public function user()
     {
@@ -46,7 +43,7 @@ class Profile extends Model
     }
 
     /**
-     * 🔍 Get the interest categories of this profile (retrieved via User)
+     *  Get the interest categories of this profile (retrieved via User)
      */
     public function interests()
     {
@@ -58,12 +55,10 @@ class Profile extends Model
         static::creating(function ($profile) {
             
             $handle = Str::random(8);
-
-            // 重複しないようにループ
+    
             while (Profile::where('handle', $handle)->exists()) {
                 $handle = Str::random(8);
-            }
-
+            }    
             $profile->handle = $handle;
         });
     }
