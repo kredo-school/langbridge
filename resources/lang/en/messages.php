@@ -38,6 +38,7 @@ return [
     'interest_categories' => 'Interest Tags',
     'no_profile' => 'No matching users found.',
     //単語リスト
+    'vocabulary_list' => 'Vocabulary List',
     'add_vocabulary' => 'Add Vocabulary',
     'edit_vocabulary' => 'Edit Vocabulary',
     'front' => 'Front',

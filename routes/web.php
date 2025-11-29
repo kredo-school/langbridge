@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\VocabularyController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -40,4 +41,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('/users/search', [SearchController::class, 'search'])->name('users.search');
+
+    Route::group(["prefix" => "vocabulary", "as" => "vocabulary."], function () {
+        Route::get('/index', [VocabularyController::class, 'index'])->name('index');
+    });
 });

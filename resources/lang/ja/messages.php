@@ -38,6 +38,7 @@ return [
     'interest_categories' => '興味・関心タグ',
     'no_profile' => '該当するユーザは見つかりませんでした',
     //単語リスト
+    'vocabulary_list' => '単語帳',
     'add_vocabulary' => '単語帳に追加',
     'edit_vocabulary' => '単語を編集',
     'front' => '表',
