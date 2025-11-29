@@ -21,6 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'target_language',
+        'birthday',
+        'country',
+        'region',
         'is_admin',
     ];
     public function isAdmin(): bool

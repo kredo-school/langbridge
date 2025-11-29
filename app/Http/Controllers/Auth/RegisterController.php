@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use App\Models\Profile;
 
 
 class RegisterController extends Controller
@@ -30,7 +31,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/profile/edit';
 
     /**
      * Create a new controller instance.
@@ -42,82 +43,50 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
-    public function show1(){
-        return view('#1');
-    }
-
-    public function store1(Request $request){
-        $this->validator1($request->all())->validate();
-     session([
-        'register.email' => $request->email,
-        'register.password' => Hash::make($request->password),
-     ]);
-     return redirect()->route('register.show2');
-    }
-
-    public function show2(){
-        return view('#2');
-    }
-    public function store2(Request $request){
-        $this->validator2($request->all())->validate();
-
-        $user = $this->create([
-            'email' => session('register.email'),
-            'password' => session('register.password'),
-            'name' => $request->name,
-            'target_language' => $request->target_language,
-            'birthday' => $request->birthday,
-            'country' => $request->country,
-            'region' => $request->region,
-        ]);
-
-        session()->forget('register');
-        $this->guard()->login($user);
-        return $this->registered($request, $user)
-        ?: redirect($this->redirectPath());
-    }
-
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator1(array $data)
-    {
-        return Validator::make($data, [
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-    }
-    protected function validator2(array $data)
-    {
-        return Validator::make($data, [
-            'name' => ['required', 'string'],
-            'target_language' => ['required', 'string'],
-            'birthday' => ['required', 'date'],
-            'county' => ['required', 'string'],
-            'region' => ['required', 'string'],
-        ]);
-    }
+    
     /**
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
-    {
-        return User::create([
+    protected function create(array $data){
+        if ($data['role'] === 'learner_en_teacher_jp') {
+            $target_language = 'en';
+        } else {
+            $target_language = 'ja';
+        }
+
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => $data['password'],
-            'target_language' => $data['target_language'],
+            'password' => Hash::make($data['password']),
+            'target_language' => $target_language,
             'birthday' => $data['birthday'],
             'country' => $data['country'],
             'region' => $data['region'],
         ]);
+
+        Profile::create([
+            'user_id' => $user->id,
+            'nickname' => $user->name, 
+        ]);
+    
+        return $user;
     }
+
+    protected function validator(array $data)
+{
+    return Validator::make($data, [
+        'name' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        'password' => ['required', 'string', 'min:8', 'confirmed'],
+        'birthday' => ['required', 'date', 'before:today'],
+        'role' => ['required', 'string'],
+        'country' => ['nullable', 'string'],
+        'region' => ['nullable', 'string'],
+    ]);
+}
 
 
 }
