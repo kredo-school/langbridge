@@ -4,59 +4,30 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str; // ここはクラスの外で use
 use App\Models\User;
-use App\Models\Interest;
-
 
 class Profile extends Model
 {
-
     use HasFactory;
 
-    
-    protected $fillable = [
-        'nickname',
-        'bio',
-        //other fillable fields can be added here
-    ];
-
-    
-    protected static function boot()
-    {
-        parent::boot();
-use Illuminate\Support\Str;
-
-class Profile extends Model
-{
-    // App\Models\Profile.php
+    // primary key を user_id に変更
     protected $primaryKey = 'user_id';
     public $incrementing = false;
     protected $keyType = 'int';
+
+    protected $fillable = [
+        'nickname',
+        'bio',
+        // 他の fillable フィールドもここに追加
+    ];
+
     protected $attributes = [
         'hidden' => true,
         'age_hidden' => true,
         'country_hidden' => true,
         'region_hidden' => true,
     ];
-    public function user(){
-        return $this->belongsTo(User::class);
-    }
-
-    protected static function boot(){
-        parent::boot();
-        static::creating(function ($profile) {
-            $base = '@user' . $profile->user_id;
-            $handle = $base;
-            $counter = 1;
-
-            while (Profile::where('handle', $handle)->exists()) {
-                $handle = $base . $counter;
-                $counter++;
-            }
-
-            $profile->handle = $handle;
-        });
-    }
 
     /**
      * 🔗 Which user this profile belongs to (one-to-one relationship)
@@ -73,12 +44,23 @@ class Profile extends Model
     {
         return $this->user ? $this->user->interests : collect();
     }
-            // ランダムな英数字8文字を生成
+
+    /**
+     * プロフィール作成時に handle を自動生成
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($profile) {
+            // ランダムな英数字8文字で handle を生成
             $handle = Str::random(8);
-    
+
+            // 重複しないようにループ
             while (Profile::where('handle', $handle)->exists()) {
                 $handle = Str::random(8);
-            }    
+            }
+
             $profile->handle = $handle;
         });
     }
