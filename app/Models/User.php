@@ -59,4 +59,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Interest::class, 'user_interest');
     }
+
+    public function vocabularies()
+    {
+        return $this->hasMany(Vocabulary::class);
+    }
 }
