@@ -3,7 +3,8 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-
+use App\Models\Vocabulary;
+use Illuminate\Support\Facades\Auth;
 
 class VocabularyModal extends Component
 {
@@ -13,12 +14,16 @@ class VocabularyModal extends Component
     public $vocabularyId = null; // 編集時は既存の単語IDを入れる
     public $isOpen = false;      // モーダル表示フラグ
 
+    protected $listeners = [
+        'openVocabularyModal' => 'open',
+    ];
+
     // モーダルを開く
-    public function open($front = '', $back = '', $vocabularyId = null)
+    public function open($front = '', $back = '', $vocabularyId = null, $note = '')
     {
         $this->front = $front;
         $this->back = $back;
-        $this->note = '';
+        $this->note = $note;
         $this->vocabularyId = $vocabularyId;
         $this->isOpen = true;
     }
@@ -35,7 +40,7 @@ class VocabularyModal extends Component
         Vocabulary::updateOrCreate(
             ['id' => $this->vocabularyId],
             [
-                'user_id' => auth()->id(),
+                'user_id' => Auth::id(),
                 'front' => $this->front,
                 'back' => $this->back,
                 'note' => $this->note,
@@ -44,7 +49,7 @@ class VocabularyModal extends Component
         );
 
         $this->close();
-        $this->emit('vocabularyAdded'); // 追加完了通知（親コンポーネントで受け取れる）
+        $this->emit('vocabularyAdded'); // 親コンポーネントで画面更新可能
     }
 
     // モーダルを閉じる
@@ -53,4 +58,8 @@ class VocabularyModal extends Component
         $this->isOpen = false;
     }
 
+    public function render()
+    {
+        return view('livewire.vocabulary-modal');
+    }
 }

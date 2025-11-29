@@ -9,6 +9,10 @@ return [
     'register' => '登録',
     'logout' => 'ログアウト',
     'home' => 'ホーム',
+    'add' => '追加',
+    'cancel' => 'キャンセル',
+    'optional' => '任意',
+    'update' => '保存',
     //ログインページ
     'welcome' => 'LangBridgeへようこそ',
     //興味・関心
@@ -32,5 +36,11 @@ return [
     ],
     //検索
     'interest_categories' => '興味・関心タグ',
-    'no_profile' => '該当するユーザは見つかりませんでした'
+    'no_profile' => '該当するユーザは見つかりませんでした',
+    //単語リスト
+    'add_vocabulary' => '単語帳に追加',
+    'edit_vocabulary' => '単語を編集',
+    'front' => '表',
+    'back' => '裏',
+    'note' => 'メモ'
 ];

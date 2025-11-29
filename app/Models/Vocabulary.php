@@ -25,7 +25,7 @@ class Vocabulary extends Model
     }
 
     // クイズ履歴とのリレーション
-    public function quizes()
+    public function quizzes()
     {
         return $this->hasMany(Quiz::class);
     }
