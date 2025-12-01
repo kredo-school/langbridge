@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -62,5 +63,10 @@ class User extends Authenticatable
     public function interests()
     {
         return $this->belongsToMany(Interest::class, 'user_interest');
+    }
+
+
+    public function getAgeAttribute(){
+    return Carbon::parse($this->birthday)->age;
     }
 }

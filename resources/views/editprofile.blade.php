@@ -23,7 +23,7 @@
 
         <div class="mb-3">
             <label>Bio</label>
-            <textarea name="bio" class="form-control">{{ old('bio', $profile->bio) }}</textarea>
+            <textarea name="bio" id="bio-text" class="form-control">{{ old('bio', $profile->bio) }}</textarea>
         </div>
 
         <div class="mb-3">
@@ -47,6 +47,11 @@
         <div class="mb-3">
             <label>Country</label>
             <input type="text" name="country" value="{{ old('country', $profile->user->country) }}" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Age</label>
+            <input type="text" class="form-control" value="{{ $user->age }}" readonly>
         </div>
 
         <div class="mb-3">

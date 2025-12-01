@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'translate' => [
+    'url' => env('TRANSLATE_API_URL'),
+],
+
 ];

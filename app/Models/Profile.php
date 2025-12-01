@@ -35,7 +35,7 @@ class Profile extends Model
     ];
     
     /**
-     * 🔗 Which user this profile belongs to (one-to-one relationship)
+     *  Which user this profile belongs to (one-to-one relationship)
      */
     public function user()
     {
@@ -43,7 +43,7 @@ class Profile extends Model
     }
 
     /**
-     * 🔍 Get the interest categories of this profile (retrieved via User)
+     *  Get the interest categories of this profile (retrieved via User)
      */
     public function interests()
     {
@@ -59,7 +59,7 @@ class Profile extends Model
             while (Profile::where('handle', $handle)->exists()) {
                 $handle = Str::random(8);
             }    
-            $profile->handle = $handle;
+            $profile->handle = '@' . $handle;
         });
     }
     
