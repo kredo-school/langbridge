@@ -11,6 +11,7 @@
     <title>{{ config('app.name') }} | @yield('title')</title>
 
     <!-- Fonts -->
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet"> <!--Localize CDN after finally decided which font we will use-->
 
