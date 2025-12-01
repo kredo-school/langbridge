@@ -9,6 +9,10 @@ return [
     'register' => 'Register',
     'logout' => 'Logout',
     'home' => 'Home',
+    'add' => 'Add',
+    'cancel' => 'Cancel',
+    'optional' => 'Optional',
+    'update' => 'Update',
     //ログインページ
     'welcome' => 'Welcome to LangBridge',
     //興味・関心
@@ -32,5 +36,11 @@ return [
     ],
     //検索
     'interest_categories' => 'Interest Tags',
-    'no_profile' => 'No matching users found.'
+    'no_profile' => 'No matching users found.',
+    //単語リスト
+    'add_vocabulary' => 'Add Vocabulary',
+    'edit_vocabulary' => 'Edit Vocabulary',
+    'front' => 'Front',
+    'back' => 'Back',
+    'note' => 'Note'
 ];
