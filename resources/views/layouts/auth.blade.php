@@ -20,13 +20,12 @@
 </head>
 <body class="lang-blue">
     <div id="app" class="d-flex">
-        <x-navbar />
-        <div class="main-content flex-grow-1 rounded-3">
+        <div class="flex-grow-1 rounded-3">
             <main class="py-4">
                 @yield('content')
             </main>
         </div>
     </div>
 </body>
-@yield('scripts')
+
 </html>

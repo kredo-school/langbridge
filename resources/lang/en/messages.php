@@ -9,6 +9,38 @@ return [
     'register' => 'Register',
     'logout' => 'Logout',
     'home' => 'Home',
+    'add' => 'Add',
+    'cancel' => 'Cancel',
+    'optional' => 'Optional',
+    'update' => 'Update',
     //ログインページ
-    'welcome' => 'Welcome to LangBridge'
+    'welcome' => 'Welcome to LangBridge',
+    //興味・関心
+    'interests' => [
+        '1' => 'Entertainment',
+        '2' => 'Sports & Fitness',
+        '3' => 'Food & Drink',
+        '4' => 'Travel',
+        '5' => 'Education & Learning',
+        '6' => 'Technology',
+        '7' => 'Fashion & Beauty',
+        '8' => 'Business & Finance',
+        '9' => 'Art & Design',
+        '10' => 'Lifestyle & Wellness',
+        '11' => 'Family & Relationships',
+        '12' => 'Gaming',
+        '13' => 'Social Causes',
+        '14' => 'Shopping & Deals',
+        '15' => 'Pets & Animals',
+        '16' => 'Books & Literature'
+    ],
+    //検索
+    'interest_categories' => 'Interest Tags',
+    'no_profile' => 'No matching users found.',
+    //単語リスト
+    'add_vocabulary' => 'Add Vocabulary',
+    'edit_vocabulary' => 'Edit Vocabulary',
+    'front' => 'Front',
+    'back' => 'Back',
+    'note' => 'Note'
 ];
