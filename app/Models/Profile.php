@@ -59,7 +59,7 @@ class Profile extends Model
             while (Profile::where('handle', $handle)->exists()) {
                 $handle = Str::random(8);
             }    
-            $profile->handle = $handle;
+            $profile->handle = '@' . $handle;
         });
     }
     

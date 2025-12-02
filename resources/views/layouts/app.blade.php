@@ -7,7 +7,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    
     <title>{{ config('app.name') }} | @yield('title')</title>
 
     <!-- Fonts -->
@@ -16,7 +16,7 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet"> <!--Localize CDN after finally decided which font we will use-->
 
     <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js','resources/css/style.css'])
+    @vite(['resources/sass/app.scss', 'resources/js/app.js','resources/css/style.css','resources/js/profile.js'])
 </head>
 <body class="lang-blue">
     <div id="app" class="d-flex">
@@ -28,5 +28,5 @@
         </div>
     </div>
 </body>
-
+@yield('scripts')
 </html>

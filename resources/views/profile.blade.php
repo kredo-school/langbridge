@@ -8,14 +8,23 @@
             <strong>Nickname:</strong> {{ $profile->nickname }}
         </div>
         <div class="mb-3">
-            <strong>Handle:</strong> @{{ $profile->handle }}
+            <strong>Handle:</strong> {{ $profile->handle }}
         </div>
         <div class="mb-3">
-            <strong>Age:</strong> {{  }}
+            <strong>Age:</strong> {{ $user->age }}
         </div>
-        <div class="mb-3">
-            <strong>Bio:</strong> {{ $profile->bio }}
+        <div class="mb-3 d-flex justify-content-between align-items-center">
+            <label class="form-label mb-0">Bio</label>
+            <button id="translate-btn" class="btn btn-sm btn-outline-secondary">
+                <i class="fa fa-language"></i>
+            </button>
         </div>
+               
+        <p id="bio-text">{{ $profile->bio }}</p>
+
+        <div id="translation-result" class="mt-2"></div>
+
+        
         <div class="mb-3">
             <strong>Japanese Level:</strong> {{ $profile->JP_level }}
         </div>
@@ -30,7 +39,7 @@
         </div>
         <div class="mb-3">
             <strong>interest:</strong>
-            @foreach ($profile->interests as $interest)
+            @foreach ($profile->user->interests as $interest)
                 <span class="badge bg-primary">{{ $interest->name }}</span>
             @endforeach
         </div>
@@ -40,3 +49,6 @@
     </div>
 </div>
 @endsection
+
+@vite(['resources/js/profile.js'])
+

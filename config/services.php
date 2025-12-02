@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+   'deepl' => [
+    'key' => env('DEEPL_API_KEY'),
+    'url' => env('DEEPL_API_URL'),
+],
+
+
 ];
