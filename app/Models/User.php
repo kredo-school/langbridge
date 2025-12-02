@@ -65,14 +65,13 @@ class User extends Authenticatable
         return $this->belongsToMany(Interest::class, 'user_interest');
     }
 
-<<<<<<< HEAD
 
     public function getAgeAttribute(){
     return Carbon::parse($this->birthday)->age;
-=======
+    }
     public function vocabularies()
     {
         return $this->hasMany(Vocabulary::class);
->>>>>>> 165c9f064c5dd77287b3c5cb738eee6bbd82f98c
     }
 }
+

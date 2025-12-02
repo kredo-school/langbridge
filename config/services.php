@@ -35,8 +35,10 @@ return [
         ],
     ],
 
-    'translate' => [
-    'url' => env('TRANSLATE_API_URL'),
+   'deepl' => [
+    'key' => env('DEEPL_API_KEY'),
+    'url' => env('DEEPL_API_URL'),
 ],
+
 
 ];
