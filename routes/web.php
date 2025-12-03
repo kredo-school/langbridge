@@ -32,7 +32,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::group(["prefix" => "setting", "as" => "setting."], function () {
         Route::get('/', [SettingController::class, 'index'])->name('index');
-        Route::patch('/', [SettingController::class, 'update'])->name('update');
+        Route::put('/', [SettingController::class, 'update'])->name('update');
     });
 
 
