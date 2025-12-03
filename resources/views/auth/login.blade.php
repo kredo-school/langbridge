@@ -58,6 +58,21 @@
                                 </p>
                      </form>
     </div>
+
+    @if(session('deleted'))
+    <!-- 感謝モーダルを開いた状態で表示 -->
+    <div class="modal fade show" style="display:block;" tabindex="-1" aria-labelledby="thankYouLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content text-center p-4">
+          <h5 class="modal-title mb-3">Thank you for using our service</h5>
+          <div class="modal-footer">
+            <a href="{{ route('login') }}" class="btn btn-primary">Go to Login</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+    @endif
 </div>
                    
 @endsection

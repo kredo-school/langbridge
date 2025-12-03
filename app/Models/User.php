@@ -27,6 +27,7 @@ class User extends Authenticatable
         'country',
         'region',
         'is_admin',
+        
     ];
     public function isAdmin(): bool
     {

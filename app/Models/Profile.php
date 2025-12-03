@@ -20,6 +20,10 @@ class Profile extends Model
         'nickname',
         'bio',
         'handle',
+        'age_hidden',
+        'country_hidden',
+        'region_hidden',
+        'hidden',
         //other fillable fields can be added here
     ];
 
@@ -27,12 +31,12 @@ class Profile extends Model
     protected $primaryKey = 'user_id';
     public $incrementing = false;
     protected $keyType = 'int';
-    protected $attributes = [
-        'hidden' => true,
-        'age_hidden' => true,
-        'country_hidden' => true,
-        'region_hidden' => true,
-    ];
+    // protected $attributes = [
+    //     'hidden' => true,
+    //     'age_hidden' => true,
+    //     'country_hidden' => true,
+    //     'region_hidden' => true,
+    // ];
     
     /**
      *  Which user this profile belongs to (one-to-one relationship)
