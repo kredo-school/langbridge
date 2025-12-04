@@ -4,7 +4,7 @@
 
 <h1>Profile Search</h1>
 
-<!-- 🔍 Search Form -->
+<!--  Search Form -->
 <form method="GET" action="{{ route('users.search') }}" autocomplete="off">
     <input type="text" name="keyword" placeholder="Search by @handle, nickname, or bio"
         value="{{ request('keyword') }}">
@@ -23,7 +23,7 @@
 
 <hr>
 
-<!-- 👥 Results Display -->
+<!--  Results Display -->
 @forelse ($users as $profile)
 <div style="margin-bottom: 1em;">
     <a href="#">
@@ -52,7 +52,7 @@
 @endif
 @endforelse
 
-<!-- 📄 Pagination -->
+<!--  Pagination -->
 @if($users instanceof \Illuminate\Pagination\LengthAwarePaginator)
 {{ $users->appends(request()->query())->links() }}
 @endif

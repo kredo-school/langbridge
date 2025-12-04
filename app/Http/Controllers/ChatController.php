@@ -3,40 +3,60 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Message;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use App\Models\Report;
+use App\Models\ReportViolationReason;
+
+
 
 class ChatController extends Controller
 {
-    // チャット画面表示
+    // display chat interface
     public function index(Request $request)
     {
-        // 対話相手一覧を取得（例: 全ユーザー）
-        $users = User::where('id', '!=', auth()->id())->get();
+        //get users with whom the logged-in user has chatted, ordered by last chat time
+        $user_id = Auth::id();
+        $users = User::where('users.id', '!=', $user_id)
+            ->leftJoin('messages', function ($join) use ($user_id) {
+                $join->on('users.id', '=', 'messages.user_id')
+                    ->orOn('users.id', '=', 'messages.to_user_id');
+            })
+            ->select('users.id', 'users.name', 'users.email', DB::raw('MAX(messages.sent_at) as last_chat'))
+            ->groupBy('users.id', 'users.name', 'users.email')
+            ->orderByDesc('last_chat')
+            ->get();
         $to_user_id = $request->input('to_user_id');
-        return view('chat.index', compact('users', 'to_user_id'));
+
+        $violationReasons = ReportViolationReason::where('category', 'message')->get();
+
+        return view('chat.index', compact('users', 'to_user_id', 'violationReasons'));
     }
 
-    // メッセージ送信
+
+    // send message
     public function send(Request $request)
     {
-        // いずれかが入力されているかチェック
+        // check if any of the fields are filled
         if (
             !$request->filled('content') &&
             !$request->filled('emoji') &&
             !$request->hasFile('image')
         ) {
-            return response()->json(['error' => 'メッセージ、絵文字、または画像のいずれかを入力してください'], 422);
+            return response()->json(['error' => 'please enter a message, emoji, or image'], 422);
         }
 
-        // to_user_idが空の場合はエラー
+        // if to_user_id is empty, return error
         $to_user_id = $request->input('to_user_id');
         if (empty($to_user_id)) {
-            return response()->json(['error' => '相手ユーザーが選択されていません'], 422);
+            return response()->json(['error' => 'chat partner is not selected'], 422);
         }
 
         $message = new Message();
-        $message->user_id = auth()->id();
+        $message->user_id = Auth::id();
         $message->to_user_id = $to_user_id;
         $message->content = $request->input('content');
         $message->emoji = $request->input('emoji');
@@ -53,11 +73,11 @@ class ChatController extends Controller
     }
 
 
-    // メッセージ取得
+    // fetch messages
     public function fetch(Request $request)
     {
         $to_user_id = $request->input('to_user_id');
-        $user_id = auth()->id();
+        $user_id = Auth::id();
         if (empty($to_user_id)) {
             return response()->json(['messages' => []]);
         }
@@ -67,30 +87,32 @@ class ChatController extends Controller
             $q->where('user_id', $to_user_id)->where('to_user_id', $user_id);
         })->orderBy('sent_at', 'asc')->get();
 
-        // usernameを追加
+        // add username
         foreach ($messages as $msg) {
-            // 送信者と受信者の区別
             if ($msg->user_id == $user_id) {
-                $user = User::find($msg->user_id); // 自分
-                $partner = User::find($msg->to_user_id); // 相手
+                $user = User::with('profile')->find($msg->user_id); // user himself
+                $partner = User::with('profile')->find($msg->to_user_id); // chat partner
                 $msg->user_name = $user->name ?? '';
                 $msg->partner_name = $partner->name ?? '';
-                $msg->user_avatar = ($user && $user->profile && !empty($user->profile->avatar)) ? $user->profile->avatar : '';
-                $msg->partner_avatar = ($partner && $partner->profile && !empty($partner->profile->avatar)) ? $partner->profile->avatar : '';
+                $msg->user_avatar = $user->profile->avatar ?? '';
+                $msg->partner_avatar = $partner->profile->avatar ?? '';
+                $msg->partner_handle = $partner->profile->handle ?? '';
             } else {
-                $user = User::find($msg->user_id); // 相手
-                $partner = User::find($msg->to_user_id); // 自分
+                $user = User::with('profile')->find($msg->user_id); // chat partner
+                $partner = User::with('profile')->find($msg->to_user_id); // user himself
                 $msg->user_name = $user->name ?? '';
                 $msg->partner_name = $partner->name ?? '';
-                $msg->user_avatar = ($user && $user->profile && $user->profile->avatar) ? $user->profile->avatar : '';
-                $msg->partner_avatar = ($partner && $partner->profile && $partner->profile->avatar) ? $partner->profile->avatar : '';
+                $msg->user_avatar = $user->profile->avatar ?? '';
+                $msg->partner_avatar = $partner->profile->avatar ?? '';
+                $msg->partner_handle = $user->profile->handle ?? '';
             }
+
             $msg->content = $msg->content ?? '';
             $msg->emoji = $msg->emoji ?? '';
             $msg->image_path = (!empty($msg->image_path) && $msg->image_path !== 'null') ? $msg->image_path : '';
         }
 
-        // 未読メッセージを既読に更新
+        // update unread messages to read
         Message::where('user_id', $to_user_id)
             ->where('to_user_id', $user_id)
             ->where('is_read', false)
@@ -102,18 +124,49 @@ class ChatController extends Controller
     public function destroy($id)
     {
         $message = Message::findOrFail($id);
-        if ($message->user_id !== auth()->id()) {
-            return response()->json(['error' => '権限がありません'], 403);
+        if ($message->user_id !== Auth::id()) {
+            return response()->json(['error' => 'forbidden'], 403);
         }
         $message->delete();
         return response()->json(['success' => true]);
     }
 
-    public function report($id)
+
+    public function report(Request $request, $id)
     {
-        $message = Message::findOrFail($id);
-        // ここで報告内容を保存したり、管理者に通知したりできます
-        // 今回は簡単に成功レスポンスを返します
-        return response()->json(['success' => true, 'message' => 'メッセージが報告されました']);
+
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'violation_reason_id' => 'required|exists:report_violation_reasons,id',
+            'detail' => 'nullable|string',
+            'file' => 'nullable|file|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // save report
+        $filePath = null;
+        if ($request->hasFile('file')) {
+            $filePath = $request->file('file')->store('reports', 'public');
+        }
+
+        Report::create([
+            'reporter_id' => $user->id,
+            'category' => 'message',
+            'violation_reason_id' => $request->violation_reason_id,
+            'detail' => $request->detail,
+            'file' => $filePath,
+            'reported_content_id' => $id,
+            'reported_content_type' => 'message',
+            'action_status' => 'pending',
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Report saved.']);
     }
 }

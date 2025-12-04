@@ -11,9 +11,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ChatController;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 
 Auth::routes();
 
@@ -48,8 +45,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
     Route::get('/chat/fetch', [ChatController::class, 'fetch'])->name('chat.fetch');
     Route::delete('/messages/{id}', [ChatController::class, 'destroy'])->name('messages.destroy');
-
     Route::delete('/chat/delete/{id}', [ChatController::class, 'destroy'])->name('chat.destroy');
-    Route::post('/chat/report', [ChatController::class, 'report'])->name('chat.report'); // 必要なら
-
+    Route::post('/chat/report/{id}', [ChatController::class, 'report'])->name('chat.report');
 });
