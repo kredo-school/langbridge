@@ -10,6 +10,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\VocabularyController;
+use App\Http\Controllers\TranslateController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,7 +33,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::group(["prefix" => "setting", "as" => "setting."], function () {
         Route::get('/', [SettingController::class, 'index'])->name('index');
-        Route::patch('/', [SettingController::class, 'update'])->name('update');
+        Route::put('/', [SettingController::class, 'update'])->name('update');
     });
 
 
@@ -45,4 +46,6 @@ Route::middleware(['auth'])->group(function () {
     Route::group(["prefix" => "vocabulary", "as" => "vocabulary."], function () {
         Route::get('/index', [VocabularyController::class, 'index'])->name('index');
     });
+    Route::post('/translate', [TranslateController::class, 'translate'])->name('translate');
+    
 });
