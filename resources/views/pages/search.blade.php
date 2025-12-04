@@ -30,7 +30,7 @@
     @endforeach
 </div>
 
-    <button type="submit" class="btn-search d-block mx-auto">{{__('messages.search')}}</button>
+    <button type="submit" class="btn-yellow d-block mx-auto">{{__('messages.search')}}</button>
 </form>
 
 <!-- Results Display -->

@@ -28,6 +28,15 @@ class VocabularyModal extends Component
         $this->isOpen = true;
     }
 
+    public function mount()
+    {
+        $this->isOpen = false;
+        $this->front = '';
+        $this->back = '';
+        $this->note = '';
+        $this->vocabularyId = null;
+    }
+
     // 保存処理
     public function save()
     {

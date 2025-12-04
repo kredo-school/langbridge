@@ -34,13 +34,32 @@
     border-radius: 4px;
 }
 
-.btn-search {
+.btn-yellow {
+    display: inline-flex; 
+    align-items: center;  
+    justify-content: center;
     font-size: medium;
     border: 1px solid ;
     padding: 8px 14px;
     border-radius: 8px;
     background: #eca133;
     color: #ffffff;
+    text-decoration: none;
+    line-height: 1;
+}
+
+.btn-red {
+    display: inline-flex; 
+    align-items: center;  
+    justify-content: center;
+    font-size: medium;
+    border: 1px solid ;
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #F5A59E;
+    color: #ffffff;
+    text-decoration: none;
+    line-height: 1;
 }
 
 .image-md {
@@ -79,6 +98,7 @@
     border-radius: 0.5rem;
     width: 400px;
     max-width: 90%;
+    z-index: 1060;
 }
 
 .btn-add {

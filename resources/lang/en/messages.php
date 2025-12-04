@@ -43,5 +43,7 @@ return [
     'edit_vocabulary' => 'Edit Vocabulary',
     'front' => 'Front',
     'back' => 'Back',
-    'note' => 'Note'
+    'note' => 'Note',
+    //単語クイズ
+    'vocabulary_quiz' => 'Vocabulary Quiz'
 ];

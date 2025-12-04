@@ -5,7 +5,7 @@
 
             <input type="text" wire:model="front" placeholder="{{ __('messages.front') }}">
             <input type="text" wire:model="back" placeholder="{{ __('messages.back') }}">
-            <textarea wire:model="note" placeholder="{{ __('messages.note') . '(' . __('optional') . ')' }}"></textarea>
+            <textarea wire:model="note" placeholder="{{ __('messages.note') . '(' . __('messages.optional') . ')' }}"></textarea>
 
             <!-- Add/Edit 切り替えボタン -->
             <button 
