@@ -98,6 +98,61 @@
     color: #333;
 }
 
-
+.interests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .interest-card {
+    position: relative;       
+    display: block;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  /* チェックボックスは非表示にしてカードクリックで選択 */
+  .interest-card input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  /* カードの見た目は子要素に集約 */
+  .interest-card-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 70px;
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #a855f7;
+    border-radius: 12px;
+    text-align: center;
+    background-color: #fff;
+    color: #333;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  /* hover時の色変化 */
+  .interest-card:hover .interest-card-content {
+    background-color: #f3e8ff;
+  }
+  
+  /* 選択済み（DBにある）場合 → 初期表示で色付き */
+  .interest-card.selected .interest-card-content {
+    background-color: #a855f7;
+    color: #fff;
+    border-color: #7c3aed;
+  }
+  
+  /* 今クリックした場合 → 即座に色付き */
+  .interest-card input[type="checkbox"]:checked ~ .interest-card-content {
+    background-color: #a855f7;
+    color: #fff;
+    border-color: #7c3aed;
+  }
+  
 
 
