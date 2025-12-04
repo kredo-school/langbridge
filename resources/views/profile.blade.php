@@ -22,7 +22,7 @@
             @if($user->profile->age_hidden)
              <span class="text-muted">Private</span>
             @else 
-            {{ $user->age }}
+            {{ $user->age }}<!--生年月日から年齢を計算して表示するようにする-->
             @endif
         </div>
         <div class="mb-3 d-flex justify-content-between align-items-center">
@@ -38,10 +38,10 @@
 
         
         <div class="mb-3">
-            <strong>Japanese Level:</strong> {{ $profile->JP_level }}
+            <strong>Japanese Level:</strong> {{ $profile->JP_level }} <!--データベース上の数字をUI上で選択したレベルの文字列に変換-->
         </div>
         <div class="mb-3">
-            <strong>English Level:</strong> {{ $profile->EN_level }}
+            <strong>English Level:</strong> {{ $profile->EN_level }} <!--データベース上の数字をUI上で選択したレベルの文字列に変換-->
         </div>
         <div class="mb-3">
             <strong>Country:</strong> 
