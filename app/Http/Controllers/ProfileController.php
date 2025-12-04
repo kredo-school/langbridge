@@ -22,13 +22,17 @@ class ProfileController extends Controller
         if ($profile->hidden && auth()->id() !== $profile->user_id && !auth()->user()?->isAdmin()) {
             abort(404);
         }
-        return view('#')->with('profile', $profile);
+        $user = $profile->user;
+
+    return view('profile', compact('profile', 'user'));
     }
     public function edit(){
         $profile = $this->profile->findOrFail(auth()->id());
 
-        return view('#')
-            ->with('profile', $profile);
+        $user = auth()->user();
+
+        return view('editprofile', compact('profile', 'user'));
+
     }
 
     /**
@@ -65,13 +69,20 @@ class ProfileController extends Controller
         $profile = $this->profile->findOrFail(auth()->id());
         $user = $profile->user;
         $request->validate([
-            'handle' => 'required|string|unique:profiles,handle,' . $profile->user_id,
+            'handle' => 'required|string|unique:profiles,handle,' . $profile->user_id . ',user_id',
         ]);
+
+        $levelMap = [
+            'Beginner' => 1,
+            'Intermediate' => 2,
+            'Advanced' => 3,
+            'Native' => 4,
+        ];
 
         $profile->nickname = $request->nickname;
         $profile->bio = $request->bio;
-        $profile->JP_level = $request->JP_level;
-        $profile->EN_level = $request->EN_level;
+        $profile->JP_level = $levelMap[$request->JP_level];
+        $profile->EN_level = $levelMap[$request->EN_level];
        
         if ($request->avatar) { 
             $profile->avatar = 'data:image/' . $request->avatar->extension() . ';base64,' . base64_encode(file_get_contents($request->avatar)); 

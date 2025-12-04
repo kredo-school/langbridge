@@ -10,9 +10,18 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\TranslateController;
 
+Route::get('/', function () {
+    return view('welcome');
+});
 
 Auth::routes();
+
+
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register']);
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
@@ -24,7 +33,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::group(["prefix" => "setting", "as" => "setting."], function () {
         Route::get('/', [SettingController::class, 'index'])->name('index');
-        Route::patch('/', [SettingController::class, 'update'])->name('update');
+        Route::put('/', [SettingController::class, 'update'])->name('update');
     });
 
     Route::group(["prefix" => "register", "as" => "register."], function () {
@@ -47,4 +56,5 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/messages/{id}', [ChatController::class, 'destroy'])->name('messages.destroy');
     Route::delete('/chat/delete/{id}', [ChatController::class, 'destroy'])->name('chat.destroy');
     Route::post('/chat/report/{id}', [ChatController::class, 'report'])->name('chat.report');
+    Route::post('/translate', [TranslateController::class, 'translate'])->name('translate');
 });

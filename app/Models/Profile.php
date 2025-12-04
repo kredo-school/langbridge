@@ -8,8 +8,6 @@ use App\Models\User;
 use App\Models\Interest;
 use Illuminate\Support\Str;
 
-
-
 class Profile extends Model
 {
 
@@ -17,8 +15,14 @@ class Profile extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'nickname',
         'bio',
+        'handle',
+        'age_hidden',
+        'country_hidden',
+        'region_hidden',
+        'hidden',
         //other fillable fields can be added here
     ];
 
@@ -46,20 +50,27 @@ class Profile extends Model
     {
         parent::boot();
         static::creating(function ($profile) {
-            $base = '@user' . $profile->user_id;
-            $handle = $base;
-            $counter = 1;
+
+            $handle = Str::random(8);
 
             while (Profile::where('handle', $handle)->exists()) {
-                $handle = $base . $counter;
-                $counter++;
+                $handle = Str::random(8);
             }
-
-            $profile->handle = $handle;
+            $profile->handle = '@' . $handle;
         });
     }
 
 
+    // protected $attributes = [
+    //     'hidden' => true,
+    //     'age_hidden' => true,
+    //     'country_hidden' => true,
+    //     'region_hidden' => true,
+    // ];
+
+    /**
+     *  Which user this profile belongs to (one-to-one relationship)
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -67,7 +78,7 @@ class Profile extends Model
 
 
     /**
-     * 🔍 Get the interest categories of this profile (retrieved via User)
+     *  Get the interest categories of this profile (retrieved via User)
      */
     public function interests()
     {
