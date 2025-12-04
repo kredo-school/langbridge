@@ -16,6 +16,11 @@
         <span><i class="fa-solid fa-bars"></i></span>
     </button>
 
+    <!-- 固定アイコン：プロフィール -->
+    <a class="nav-link mb-4" href="{{ route('profile.show', Auth::id())}}">
+        <i class="fas fa-user fa-lg"></i>
+    </a>
+
     <!-- 固定アイコン：検索 -->
     <a class="nav-link mb-4" href="{{ route('users.search')}}">
         <i class="fa-solid fa-search fa-lg"></i>
@@ -27,9 +32,8 @@
     </a>
 
     <!-- 右にスライドで出るメニュー -->
-    <div class="collapse position-absolute"
-         id="sidebarMenuContent"
-         style="top: 70px; left: 80px; width: 180px;">
+    <div class="collapse position-absolute menu-size"
+         id="sidebarMenuContent">
         <div class="card shadow-sm">
             <ul class="list-group list-group-flush">
 
@@ -40,7 +44,7 @@
                 </li>
 
                 <li class="list-group-item">
-                    <a href="" class="text-decoration-none text-dark"> <!--vocabularyページへのルートを入れる-->
+                    <a href="{{ route('vocabulary.index')}}" class="text-decoration-none text-dark"> <!--vocabularyページへのルートを入れる-->
                         <i class="fa-solid fa-book me-2"></i>{{ __('messages.vocabulary')}}
                     </a>
                 </li>

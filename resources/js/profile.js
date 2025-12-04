@@ -1,8 +1,10 @@
 
             let isTranslated = false;
         
-            document.getElementById('translate-btn').addEventListener('click', function () {
-                const resultDiv = document.getElementById('translation-result');
+            const translateBtn = document.getElementById('translate-btn');
+            if (translateBtn) {
+                translateBtn.addEventListener('click', function () {
+                    const resultDiv = document.getElementById('translation-result');
         
                 if (isTranslated) {
                     
@@ -30,4 +32,5 @@
                     .catch(error => console.error("Error:", error));
                 }
             });
+        }
     

@@ -45,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::group(["prefix" => "vocabulary", "as" => "vocabulary."], function () {
         Route::get('/index', [VocabularyController::class, 'index'])->name('index');
+        Route::delete('/destroy/{vocabulary_id}',[VocabularyController::class, 'destroy'])->name('delete');
     });
     Route::post('/translate', [TranslateController::class, 'translate'])->name('translate');
     

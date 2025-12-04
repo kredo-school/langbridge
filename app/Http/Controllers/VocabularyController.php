@@ -11,14 +11,19 @@ class VocabularyController extends Controller
 {
     private $vocabulary; //ログインユーザの単語リスト
 
-    public function __construct(Vocabulary $vocabulary)
-    {
-        $this->vocabulary = $vocabulary->where('user_id', Auth::id());
-    }
-
     public function index()
     {
-        $vocabularies = $this->vocabulary->get();
+        $vocabularies = Vocabulary::where('user_id', Auth::id())->get();
         return view('pages.vocabulary.index', compact('vocabularies'));
+    }
+
+    public function destroy($id)
+    {
+        Vocabulary::where('id', $id)
+        ->where('user_id', Auth::id())
+        ->firstOrFail()
+        ->delete();
+
+        return redirect()->route('vocabulary.index');
     }
 }

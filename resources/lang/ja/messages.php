@@ -13,6 +13,7 @@ return [
     'cancel' => 'キャンセル',
     'optional' => '任意',
     'update' => '保存',
+    'status' => 'ステータス',
     //ログインページ
     'welcome' => 'LangBridgeへようこそ',
     //興味・関心
@@ -44,6 +45,7 @@ return [
     'front' => '表',
     'back' => '裏',
     'note' => 'メモ',
+    'no_vocabulary' => '登録されている単語はありません',
     //単語クイズ
     'vocabulary_quiz' => '単語クイズ'
 ];
