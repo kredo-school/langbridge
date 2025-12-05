@@ -57,7 +57,8 @@ class VocabularyModal extends Component
         );
 
         $this->close();
-        $this->dispatch('vocabularyAdded'); // 親コンポーネントで画面更新可能
+        $this->dispatch('vocabularyAdded'); // ページリロード用
+        $this->redirect('/vocabulary/index');
     }
 
     // モーダルを閉じる
@@ -68,6 +69,8 @@ class VocabularyModal extends Component
 
     public function render()
     {
-        return view('livewire.vocabulary-modal');
+        return view('livewire.vocabulary-modal', [
+            'componentId' => $this->getId()
+        ]);
     }
 }

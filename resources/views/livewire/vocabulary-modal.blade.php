@@ -1,9 +1,4 @@
-<div wire:ignore.self>
-    <script>
-        document.addEventListener('openVocabularyModal', function() {
-            @this.call('open');
-        });
-    </script>
+<div wire:ignore.self id="vocab-modal-component" data-component-id="{{ $componentId }}">
 
     @if($isOpen)
     <div class="modal-backdrop d-flex justify-content-center align-items-center" style="display: flex !important;">

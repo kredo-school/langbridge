@@ -24,8 +24,8 @@
                 <th>{{__('messages.back')}}</th>
                 <th>{{__('messages.note')}}</th>
                 <th>{{__('messages.status')}}</th>
-                <th></th>
-                <th></th>
+                <th width="50"></th>
+                <th width="50"></th>
             </tr>
         </thead>
         <tbody>
@@ -35,10 +35,18 @@
                     <td>{{ $vocabulary->back }}</td>
                     <td>{{ $vocabulary->note }}</td>
                     <td>{{ $vocabulary->status }}</td>
-                    <td>
-                        <button type="button" class="btn-yellow" onclick="document.dispatchEvent(new CustomEvent('openVocabularyModal','{{ $vocabulary->front }}', '{{ $vocabulary->back }}', '{{ $vocabulary->note}}'))"><i class="fa-solid fa-pen"></i></button>
+                    <td width="50">
+                        <button 
+                            class="btn-yellow open-vocab-modal"
+                            data-id="{{ $vocabulary->id }}"
+                            data-front="{{ $vocabulary->front }}"
+                            data-back="{{ $vocabulary->back }}"
+                            data-note="{{ $vocabulary->note }}"
+                        >
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
                     </td>
-                    <td>
+                    <td width="50">
                         <form method='post' action="{{ route('vocabulary.delete', $vocabulary->id )}}">
                             @csrf
                             @method('DELETE')
@@ -54,6 +62,11 @@
         </tbody>
     
     </table>
+
+    <div class="d-flex justify-content-center mt-3">
+        {{ $vocabularies->links('pagination::bootstrap-5') }}
+    </div>
+
 
 </div>
 @endsection

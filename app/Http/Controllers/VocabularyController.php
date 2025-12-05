@@ -13,7 +13,7 @@ class VocabularyController extends Controller
 
     public function index()
     {
-        $vocabularies = Vocabulary::where('user_id', Auth::id())->get();
+        $vocabularies = Vocabulary::where('user_id', Auth::id())->paginate(12);
         return view('pages.vocabulary.index', compact('vocabularies'));
     }
 

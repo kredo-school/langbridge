@@ -121,6 +121,24 @@
     z-index: 1060;
 }
 
+/* Pagination Styling */
+.pagination .page-link {
+    color: #5b84bd;
+    border-color: #dee2e6;
+}
+
+.pagination .page-link:hover {
+    color: #5b84bd;
+    background-color: #f0f0f0;
+    border-color: #dee2e6;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #5b84bd;
+    border-color: #5b84bd;
+    color: white;
+}
+
 
 
 
