@@ -78,5 +78,5 @@
 </div>
 @endsection
 
-@vite(['resources/js/profile.js'])
+@vite(['resources/js/translate.js'])
 
