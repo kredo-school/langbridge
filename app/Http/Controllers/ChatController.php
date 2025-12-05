@@ -33,7 +33,7 @@ class ChatController extends Controller
 
         $violationReasons = ReportViolationReason::where('category', 'message')->get();
 
-        return view('chat.index', compact('users', 'to_user_id', 'violationReasons'));
+        return view('pages.chat', compact('users', 'to_user_id', 'violationReasons'));
     }
 
 

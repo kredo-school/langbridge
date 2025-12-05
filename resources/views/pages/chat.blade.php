@@ -4,6 +4,7 @@
 @section('content')
 <div class="container w-75">
     <div style="display:flex;gap:24px;">
+
         {{-- left side: chat partner selection form --}}
         <div style="width:220px;min-width:180px;">
             <h5>Chat Partner</h5>
@@ -27,6 +28,7 @@
                 </div>
             </form>
         </div>
+
         {{-- right side: chat main body --}}
         <div style="flex:1;">
             {{-- chat room title --}}
@@ -95,7 +97,6 @@
                     <!-- Hidden: target message -->
                     <input type="hidden" id="report_message_id">
 
-
                     <!-- Step 1: Confirm -->
                     <div id="report-step-1">
                         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
@@ -126,13 +127,11 @@
                                 @endforeach
                             </select>
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label"></label>
                             <textarea id="report_details" name="detail" class="form-control" rows="3"
                                 placeholder="Additional details (optional)"></textarea>
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label">Screenshot etc (optional)</label>
                             <input type="file" id="report_file" name="file" class="form-control" accept="image/*">
@@ -168,11 +167,11 @@
             </div>
         </div>
     </div>
+</div>
 
-
-    {{-- JavaScript for chat functionality --}}
-    <script>
-        function fetchMessages(to_user_id){
+{{-- JavaScript for chat functionality --}}
+<script>
+    function fetchMessages(to_user_id){
         return fetch(`/chat/fetch?to_user_id=${to_user_id}`)
             .then(res => res.json())
     }
@@ -197,17 +196,19 @@
             ? `<img src='${msg.image_path}' style='max-width:100px;'>`
             : "";
 
+    
         // emoji tag
         let emojiTag = msg.emoji ? msg.emoji : "";
+
         // read/unread display
         let readTag = msg.is_read
             ? '<span style="color:gray;">(Read)</span>'
             : '<span style="color:gray;">(Unread)</span>';
 
-        // time tag
+        // time tag(Japanese time zone)
         let timeTag = msg.sent_at
-            ? `<span style='color:gray;font-size:0.9em;'>${msg.sent_at}</span>`
-            : "";
+        ? `<span style='color:gray;font-size:0.9em;'>${new Date(msg.sent_at + 'Z').toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })}</span>`
+        : "";
 
         // alignment, background color, and name
         let align = msg.user_id == myId ? "right" : "left";
@@ -342,7 +343,6 @@
         if (modal) modal.hide();
     }
 
- 
    // report modal step navigation
   document.addEventListener ('DOMContentLoaded', function () {
   const step1 = document.getElementById('report-step-1');
@@ -369,7 +369,7 @@
 
  document.getElementById('report-submit-2').addEventListener('click', () => {
   const messageId = document.getElementById('report_message_id').value;
-  const reasonId = document.getElementById('report_reason').value; // ← ここ修正！
+  const reasonId = document.getElementById('report_reason').value;
   const details = document.getElementById('report_details').value;
   const file = document.getElementById('report_file').files[0];
 
@@ -381,7 +381,7 @@
     document.getElementById('report_reason').classList.remove('is-invalid');
   }
 
-    const fd = new FormData();
+   const fd = new FormData();
     fd.append('violation_reason_id', reasonId);
     fd.append('detail', details);
     if (file) {
@@ -401,7 +401,7 @@ fetch(`/chat/report/${messageId}`, {
   if (!res.ok) {
     const errorData = await res.json();
     console.error('Validation error:', errorData);
-    alert('報告に失敗しました: ' + (errorData.message || '不明なエラー'));
+    alert('Failed to report.: ' + (errorData.message || 'Unknown error'));
     throw new Error('Validation failed');
   }
   return res.json();
@@ -414,10 +414,11 @@ fetch(`/chat/report/${messageId}`, {
 })
 .catch(error => {
   console.error('❌ Report error:', error);
-  alert('報告の送信中にエラーが発生しました');
+  alert('An error occurred while sending the report.');
 });
 
  });
 });
-    </script>
-    @endsection
+</script>
+
+@endsection

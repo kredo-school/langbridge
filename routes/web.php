@@ -49,12 +49,13 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/users/search', [SearchController::class, 'search'])->name('users.search');
 
+    Route::group(['prefix' => 'chat', 'as' => 'chat.'], function () {
+        Route::get('/', [ChatController::class, 'index'])->name('chat');
+        Route::post('/send', [ChatController::class, 'send'])->name('send');
+        Route::get('/fetch', [ChatController::class, 'fetch'])->name('fetch');
+        Route::delete('/delete/{id}', [ChatController::class, 'destroy'])->name('destroy');
+        Route::post('/report/{id}', [ChatController::class, 'report'])->name('report');
+    });
 
-    Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
-    Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
-    Route::get('/chat/fetch', [ChatController::class, 'fetch'])->name('chat.fetch');
-    Route::delete('/messages/{id}', [ChatController::class, 'destroy'])->name('messages.destroy');
-    Route::delete('/chat/delete/{id}', [ChatController::class, 'destroy'])->name('chat.destroy');
-    Route::post('/chat/report/{id}', [ChatController::class, 'report'])->name('chat.report');
     Route::post('/translate', [TranslateController::class, 'translate'])->name('translate');
 });

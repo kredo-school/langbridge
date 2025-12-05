@@ -32,7 +32,6 @@ class Profile extends Model
     //     parent::boot();
     // }
 
-    // App\Models\Profile.php
     protected $primaryKey = 'user_id';
     public $incrementing = false;
     protected $keyType = 'int';
@@ -61,13 +60,6 @@ class Profile extends Model
     }
 
 
-    // protected $attributes = [
-    //     'hidden' => true,
-    //     'age_hidden' => true,
-    //     'country_hidden' => true,
-    //     'region_hidden' => true,
-    // ];
-
     /**
      *  Which user this profile belongs to (one-to-one relationship)
      */
@@ -85,13 +77,6 @@ class Profile extends Model
         return $this->user ? $this->user->interests : collect();
     }
 
-    // ランダムな英数字8文字を生成
-    //     $handle = Str::random(8);
-
-    //     while (Profile::where('handle', $handle)->exists()) {
-    //         $handle = Str::random(8);
-    //     }    
-    //     $profile->handle = $handle;
-    // });
+   
 
 }
