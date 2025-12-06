@@ -61,9 +61,15 @@
         </div>
         <div class="mb-3">
             <strong>interest:</strong>
-            @foreach ($profile->user->interests as $interest)
-                <span class="badge bg-primary">{{ $interest->name }}</span>
-            @endforeach
+            <div class="interests-grid">
+                @foreach($interests as $interest)
+                  <div class="interest-card {{ $user->interests->pluck('id')->contains($interest->id) ? 'selected' : '' }}">
+                    <div class="interest-card-content">{{ $interest->name }}</div>
+                  </div>
+                @endforeach
+              </div>
+              
+
         </div>
         @if (auth()->id() === $profile->user_id)
             <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary">Edit</a>
@@ -72,5 +78,5 @@
 </div>
 @endsection
 
-@vite(['resources/js/profile.js'])
+@vite(['resources/js/translate.js'])
 

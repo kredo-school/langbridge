@@ -13,8 +13,8 @@
             <h5>Personal Information</h5>
 
             <div class="mb-3">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" id="name" name="name" class="form-control" value="{{ $user->name }}">
+                <label for="name" class="form-label">Email</label>
+                <input type="text" id="name" name="name" class="form-control" value="{{ $user->email }}">
             </div>
 
             
@@ -38,7 +38,7 @@
         <div class="card p-4 mb-4">
             <h5>Search Settings</h5>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="hidden" id="hidden" {{ $user->hidden ? 'checked' : '' }}>
+                <input class="form-check-input" type="checkbox" name="hidden" id="hidden" {{ $user->profile->hidden ? 'checked' : '' }}>
                 <label class="form-check-label" for="hidden">Hide my profile from search results</label>
             </div>
             <small class="text-muted">*Prevent your profile from appearing in user searches or suggested connections.</small>

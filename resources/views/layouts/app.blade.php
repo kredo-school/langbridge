@@ -7,17 +7,30 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+
     <title>{{ config('app.name') }} | @yield('title')</title>
 
     <!-- Fonts -->
     <link rel="stylesheet" href="/fontawesome/css/all.min.css">
     <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet"> <!--Localize CDN after finally decided which font we will use-->
+    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <!--Localize CDN after finally decided which font we will use-->
 
     <!-- Scripts -->
+<<<<<<< HEAD
     @vite(['resources/sass/app.scss', 'resources/js/app.js','resources/css/style.css','resources/js/profile.js','resources/js/vocabulary-modal.js'])
+=======
+    @vite([
+    'resources/sass/app.scss',
+    'resources/js/app.js',
+    'resources/css/style.css',
+    'resources/js/profile.js'
+    ])
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+>>>>>>> 4486da2c5d9017dd57e50b2b68d9e8804996e701
 </head>
+
 <body class="lang-blue">
     <div id="app" class="d-flex">
         <x-navbar />
@@ -29,4 +42,5 @@
     </div>
 </body>
 @yield('scripts')
+
 </html>

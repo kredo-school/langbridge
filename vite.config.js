@@ -1,12 +1,14 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
+import { defineConfig } from "vite";
+import laravel from "laravel-vite-plugin";
 
 export default defineConfig({
     plugins: [
         laravel({
             input: [
-                'resources/sass/app.scss',
-                'resources/js/app.js',
+                "resources/sass/app.scss",
+                "resources/js/app.js",
+                "resources/css/style.css", // ← 追加
+                "resources/js/profile.js", // ← 追加
             ],
             refresh: true,
         }),

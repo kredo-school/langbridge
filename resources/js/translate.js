@@ -3,8 +3,8 @@
         
             const translateBtn = document.getElementById('translate-btn');
             if (translateBtn) {
-                translateBtn.addEventListener('click', function () {
-                    const resultDiv = document.getElementById('translation-result');
+            translateBtn.addEventListener('click', function () {
+                const resultDiv = document.getElementById('translation-result');
         
                 if (isTranslated) {
                     
@@ -25,8 +25,7 @@
                     .then(response => response.json())
                     .then(data => {
                         resultDiv.innerHTML =
-                            `<p><strong>Original:</strong> ${data.original}</p>
-                             <p><strong>Translation:</strong> ${data.translated}</p>`;
+                            `<p><strong>Translation:</strong> ${data.translated}</p>`;
                         isTranslated = true;
                     })
                     .catch(error => console.error("Error:", error));
