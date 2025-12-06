@@ -196,7 +196,6 @@
             ? `<img src='${msg.image_path}' style='max-width:100px;'>`
             : "";
 
-    
         // emoji tag
         let emojiTag = msg.emoji ? msg.emoji : "";
 
@@ -224,35 +223,51 @@
                 ? `<img src='${msg.partner_avatar}' class="rounded-circle" style="width:32px;height:32px;">`
                 : `<i class="fas fa-user-circle" style="font-size:32px;color:#bbb;"></i>`;
         }
-
-        // always display sender's name
+        
+        // name tag
         let nameTag = msg.user_name;
 
-        // flag icon (received messages only)
+        // report icon (相手のみ)
         let reportTag =
-        msg.user_id != myId
-        ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.2em;' title='Report' onclick='openReportModal(${msg.id}, "${msg.user_name}", "${msg.partner_avatar ?? ''}", "${msg.partner_handle ?? ''}")'><i class="fa-solid fa-flag"></i></span>`
+         msg.user_id != myId
+        ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.2em;' title='Report'
+        onclick='openReportModal(${msg.id}, "${msg.user_name}", "${msg.partner_avatar ?? ''}", "${msg.partner_handle ?? ''}")'>
+        <i class="fa-solid fa-flag"></i></span>`
         : "";
 
-        // delete button (only for own messages)
-        let deleteBtn = "";
-        if (msg.user_id == myId) {
-            deleteBtn = `<button onclick="deleteMessage(${msg.id})" style="margin-left:8px;background:none; border:none;" class="btn btn-danger btn-sm">
-           <i class="fas fa-trash-alt" style="color:#d32f2f;"></i></button>`;
-        }
+        // translate icon (常に表示)
+        let translateTag =
+        `<span style='cursor:pointer;color:#1976d2;font-size:1.2em;margin-left:4px;' title='Translate'
+        onclick="translateMessage(${msg.id}, \`${msg.content}\`)">
+        <i class="fa-solid fa-language"></i></span>`;
 
-        // message display HTML (avatar and name left-aligned)
+        // delete icon (自分のみ)
+        let deleteBtn =
+        msg.user_id == myId
+        ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.2em;margin-left:8px;' title='Delete'
+        onclick='deleteMessage(${msg.id})'>
+        <i class="fa-regular fa-trash-can"></i></span>`
+        : "";
+
+        // 本文にIDと属性を付与
         box.innerHTML += [
-            `<div style='text-align:${align};background:${bgColor};margin:5px 0;padding:5px;border-radius:8px;max-width:70%;display:inline-block;float:${align};clear:both;position:relative;'>`,
-            `<div style="display:flex;align-items:center;justify-content:flex-start;gap:8px;">${avatarTag}<strong>${nameTag}</strong></div>`,
-            ` ${msg.content} ${emojiTag}`,
-            imgTag ? `<div style='margin-top:4px;'>${imgTag}</div>` : "",
-            `<div style='margin-top:4px;font-size:0.9em;'>${timeTag} ${readTag}</div>`,
-            reportTag,
-            deleteBtn,
-            `</div><div style='clear:both;'></div>`,
+       `<div style='text-align:${align};background:${bgColor};margin:5px 0;padding:5px;
+        border-radius:8px;max-width:70%;display:inline-block;float:${align};
+        clear:both;position:relative;'>`,
+
+        `<div style="display:flex;align-items:center;justify-content:flex-start;gap:8px;">
+        ${avatarTag}<strong>${nameTag}</strong></div>`,
+
+        `<span id="msg-content-${msg.id}" data-original="${msg.content}" data-translated="false">${msg.content}</span> ${emojiTag}`,
+
+        imgTag ? `<div style='margin-top:4px;'>${imgTag}</div>` : "",
+        `<div style='margin-top:4px;font-size:0.9em;'>${timeTag} ${readTag}</div>`,
+
+        reportTag, translateTag, deleteBtn,
+
+       `</div><div style='clear:both;'></div>`,
         ].join("");
-    }
+       }
 
        // function to fetch and display message list
         function displayMessages() {
@@ -282,8 +297,8 @@
         const form = document.getElementById('chat-form');
         form.addEventListener('submit', function(e) {
         e.preventDefault();
-        // send message to server
 
+        // send message to server
         const fd = new FormData(form);
         fetch('/chat/send', {
             method: 'POST',
@@ -416,9 +431,51 @@ fetch(`/chat/report/${messageId}`, {
   console.error('❌ Report error:', error);
   alert('An error occurred while sending the report.');
 });
-
  });
 });
+
+function translateMessage(messageId, content) {
+    const target = document.querySelector(`#msg-content-${messageId}`);
+    if (!target) return;
+
+    // すでに翻訳済みなら元に戻す
+    if (target.dataset.translated === "true") {
+        target.textContent = target.dataset.original;
+        target.dataset.translated = "false";
+        return;
+    }
+
+    // 未翻訳ならAPI呼び出し
+    fetch('/translate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ text: content })
+    })
+    .then(async res => {
+        if (!res.ok) {
+            // HTMLエラーページなどをそのまま返す
+            const text = await res.text();
+            throw new Error(`Server error ${res.status}: ${text}`);
+        }
+        return res.json();
+    })
+    .then(data => {
+        if (data.translated) {
+            target.textContent = data.translated;
+            target.dataset.translated = "true"; // 翻訳済みフラグ
+        } else {
+            throw new Error('No translated text in response');
+        }
+    })
+    .catch(err => {
+        console.error('Translation error:', err);
+        alert('Failed to translate.');
+    });
+}
+
 </script>
 
 @endsection
