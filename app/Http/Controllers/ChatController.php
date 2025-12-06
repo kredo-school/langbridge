@@ -15,26 +15,35 @@ use App\Models\ReportViolationReason;
 
 class ChatController extends Controller
 {
-    // display chat interface
     public function index(Request $request)
     {
-        //get users with whom the logged-in user has chatted, ordered by last chat time
         $user_id = Auth::id();
+
         $users = User::where('users.id', '!=', $user_id)
-            ->leftJoin('messages', function ($join) use ($user_id) {
+            ->join('messages', function ($join) use ($user_id) {
                 $join->on('users.id', '=', 'messages.user_id')
                     ->orOn('users.id', '=', 'messages.to_user_id');
             })
-            ->select('users.id', 'users.name', 'users.email', DB::raw('MAX(messages.sent_at) as last_chat'))
+            ->where(function ($q) use ($user_id) {
+                $q->where('messages.user_id', $user_id)
+                    ->orWhere('messages.to_user_id', $user_id);
+            })
+            ->select(
+                'users.id',
+                'users.name',
+                'users.email',
+                DB::raw('MAX(messages.sent_at) as last_chat')
+            )
             ->groupBy('users.id', 'users.name', 'users.email')
             ->orderByDesc('last_chat')
             ->get();
-        $to_user_id = $request->input('to_user_id');
 
+        $to_user_id = $request->input('to_user_id');
         $violationReasons = ReportViolationReason::where('category', 'message')->get();
 
         return view('pages.chat', compact('users', 'to_user_id', 'violationReasons'));
     }
+
 
 
     // send message
@@ -107,6 +116,7 @@ class ChatController extends Controller
                 $msg->partner_handle = $user->profile->handle ?? '';
             }
 
+    
             $msg->content = $msg->content ?? '';
             $msg->emoji = $msg->emoji ?? '';
             $msg->image_path = (!empty($msg->image_path) && $msg->image_path !== 'null') ? $msg->image_path : '';

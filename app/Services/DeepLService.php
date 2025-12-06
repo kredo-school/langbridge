@@ -36,29 +36,5 @@ class DeepLService
             ];
         }
 
-        // $response = Http::withHeaders([
-        //     'Content-Type' => 'application/json',
-        //     'Authorization' => 'DeepL-Auth-Key ' . config('services.deepl.key'),
-        //     'Accept' => 'application/json',
-        // ])->acceptJson()->post(config('services.deepl.url'), [
-        //     'text' => [$text],
-        //     'target_lang' => $targetLang,
-        // ]);
-
-        // if ($response) {
-        //     // $json = $response->json();
-
-
-        // } else {
-        //     Log::error('DeepL API error', [
-        //         // 'status' => $response->,
-        //         'body' => $response,
-        //     ]);
-        //     return [
-        //         'original' => $text,
-        //         'translated' => null,
-        //         'error' => 'Translation failed',
-        //     ];
-        // }
     }
 }

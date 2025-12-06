@@ -171,6 +171,9 @@
 
 {{-- JavaScript for chat functionality --}}
 <script>
+    const loadedMessages = new Set();  // * Global set to track loaded message IDs
+    let previousMessage = null; // * To track previous message for date comparison
+
     function fetchMessages(to_user_id){
         return fetch(`/chat/fetch?to_user_id=${to_user_id}`)
             .then(res => res.json())
@@ -190,7 +193,7 @@
         });
     }
 
-    function formatMessage(msg, box, myId) {
+    function formatMessage(msg, box, myId, previousMessage) {
         // image tag
         let imgTag = (msg.image_path && msg.image_path !== 'null' && msg.image_path.length > 0)
             ? `<img src='${msg.image_path}' style='max-width:100px;'>`
@@ -205,8 +208,21 @@
             : '<span style="color:gray;">(Unread)</span>';
 
         // time tag(Japanese time zone)
+        let dateString = new Date(msg.sent_at + 'Z').toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+
+        let dateTag = msg.sent_at
+        ? `<span style='color:gray;font-size:0.9em;'>${dateString.split(' ')[0]}</span>`
+        : "";
+
+        if (previousMessage) {
+            let prevDateString = new Date(previousMessage.sent_at + 'Z').toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+            if (dateString.split(' ')[0] === prevDateString.split(' ')[0]) {
+                dateTag = ""; // 同じ日の場合は日付表示を省略
+            }
+        }
+
         let timeTag = msg.sent_at
-        ? `<span style='color:gray;font-size:0.9em;'>${new Date(msg.sent_at + 'Z').toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })}</span>`
+        ? `<span style='color:gray;font-size:0.9em;'>${dateString.split(' ')[1]}</span>`
         : "";
 
         // alignment, background color, and name
@@ -230,42 +246,53 @@
         // report icon (相手のみ)
         let reportTag =
          msg.user_id != myId
-        ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.2em;' title='Report'
+        ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;' title='Report'
         onclick='openReportModal(${msg.id}, "${msg.user_name}", "${msg.partner_avatar ?? ''}", "${msg.partner_handle ?? ''}")'>
         <i class="fa-solid fa-flag"></i></span>`
         : "";
 
         // translate icon (常に表示)
         let translateTag =
-        `<span style='cursor:pointer;color:#1976d2;font-size:1.2em;margin-left:4px;' title='Translate'
+        `<span style='cursor:pointer;color:#1976d2;font-size:1.0em;margin-left:4px;' title='Translate'
         onclick="translateMessage(${msg.id}, \`${msg.content}\`)">
         <i class="fa-solid fa-language"></i></span>`;
 
         // delete icon (自分のみ)
         let deleteBtn =
         msg.user_id == myId
-        ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.2em;margin-left:8px;' title='Delete'
+        ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;margin-left:8px;' title='Delete'
         onclick='deleteMessage(${msg.id})'>
         <i class="fa-regular fa-trash-can"></i></span>`
         : "";
 
         // 本文にIDと属性を付与
+
         box.innerHTML += [
-       `<div style='text-align:${align};background:${bgColor};margin:5px 0;padding:5px;
+        `<div style='text-align:center;'>${dateTag}</div>`,
+
+        `<div style='text-align:${align};margin:5px 0;padding:5px;
         border-radius:8px;max-width:70%;display:inline-block;float:${align};
         clear:both;position:relative;'>`,
 
-        `<div style="display:flex;align-items:center;justify-content:flex-start;gap:8px;">
-        ${avatarTag}<strong>${nameTag}</strong></div>`,
 
-        `<span id="msg-content-${msg.id}" data-original="${msg.content}" data-translated="false">${msg.content}</span> ${emojiTag}`,
+                imgTag ? `<div style='margin-top:4px;'>${imgTag}</div>` : "",
+        // 相手のメッセージのみアバターと名前を表示
+        (msg.user_id != myId
+            ? `<div style=\"display:flex;align-items:center;justify-content:flex-start;gap:8px;\">${avatarTag}<strong>${nameTag}</strong></div>`
+            : `<!-- <div style=\"display:flex;align-items:center;justify-content:flex-start;gap:8px;\">${avatarTag}<strong>${nameTag}</strong></div> -->`),
 
-        imgTag ? `<div style='margin-top:4px;'>${imgTag}</div>` : "",
-        `<div style='margin-top:4px;font-size:0.9em;'>${timeTag} ${readTag}</div>`,
 
-        reportTag, translateTag, deleteBtn,
+        `<span id="msg-content-${msg.id}" data-original="${msg.content}" data-translated="false" style="background:${bgColor};padding:4px 8px 2px 8px;border-radius:6px;display:inline-block;">
+            ${msg.content} ${emojiTag}
+        </span>`,
 
-       `</div><div style='clear:both;'></div>`,
+        `<div style='margin-top:4px;font-size:0.9em;color:gray;'>${readTag} ${timeTag}</div>`,
+
+        reportTag,
+        translateTag,
+        deleteBtn,
+
+           `</div><div style='clear:both;'></div>`,
         ].join("");
        }
 
@@ -279,15 +306,19 @@
         fetchMessages(to_user_id)
             .then(data =>{
                 const box = document.getElementById('chat-box');
-                box.innerHTML = '';
+                // box.innerHTML = ''; // * Clear previous messages - DELETED
                 const myId = {{ auth()->id() }};
-                // display each fetched message
+                // * display each fetched message if not already loaded
                 data.messages.forEach(msg => {
-                    formatMessage(msg, box, myId);
+                    if (loadedMessages.has(msg.id)) return; // * skip adding/modifying already loaded messages
+
+                    formatMessage(msg, box, myId, previousMessage); // * format and add message to chat box
+                    loadedMessages.add(msg.id);
+                    previousMessage = msg; // * Update previousMessage for next iteration
                 });
-                box.scrollTop = box.scrollHeight;
+                // box.scrollTop = box.scrollHeight; // auto scroll to bottom
             });
-    }
+        }
 
         // message delete process
         displayMessages();
@@ -475,6 +506,9 @@ function translateMessage(messageId, content) {
         alert('Failed to translate.');
     });
 }
+
+
+
 
 </script>
 
