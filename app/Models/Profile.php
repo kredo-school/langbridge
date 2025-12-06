@@ -8,13 +8,12 @@ use App\Models\User;
 use App\Models\Interest;
 use Illuminate\Support\Str;
 
-
 class Profile extends Model
 {
 
+
     use HasFactory;
 
-    
     protected $fillable = [
         'user_id',
         'nickname',
@@ -27,17 +26,40 @@ class Profile extends Model
         //other fillable fields can be added here
     ];
 
-    // App\Models\Profile.php
+
+    // protected static function boot()
+    // {
+    //     parent::boot();
+    // }
+
     protected $primaryKey = 'user_id';
     public $incrementing = false;
     protected $keyType = 'int';
-    // protected $attributes = [
-    //     'hidden' => true,
-    //     'age_hidden' => true,
-    //     'country_hidden' => true,
-    //     'region_hidden' => true,
-    // ];
-    
+    protected $attributes = [
+        'hidden' => true,
+        'age_hidden' => true,
+        'country_hidden' => true,
+        'region_hidden' => true,
+    ];
+
+    /**
+     * 🔗 Which user this profile belongs to (one-to-one relationship)
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($profile) {
+
+            $handle = Str::random(8);
+
+            while (Profile::where('handle', $handle)->exists()) {
+                $handle = Str::random(8);
+            }
+            $profile->handle = '@' . $handle;
+        });
+    }
+
+
     /**
      *  Which user this profile belongs to (one-to-one relationship)
      */
@@ -46,6 +68,7 @@ class Profile extends Model
         return $this->belongsTo(User::class);
     }
 
+
     /**
      *  Get the interest categories of this profile (retrieved via User)
      */
@@ -53,18 +76,7 @@ class Profile extends Model
     {
         return $this->user ? $this->user->interests : collect();
     }
-            
-    protected static function boot(){
-        parent::boot();
-        static::creating(function ($profile) {
-            
-            $handle = Str::random(8);
-    
-            while (Profile::where('handle', $handle)->exists()) {
-                $handle = Str::random(8);
-            }    
-            $profile->handle = '@' . $handle;
-        });
-    }
-    
+
+   
+
 }
