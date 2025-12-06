@@ -14,6 +14,7 @@ return [
     'optional' => 'Optional',
     'update' => 'Update',
     'status' => 'Status',
+    'next' => 'Next',
     //ログインページ
     'welcome' => 'Welcome to LangBridge',
     //興味・関心
@@ -47,5 +48,17 @@ return [
     'note' => 'Note',
     'no_vocabulary' => 'No words registered.',
     //単語クイズ
-    'vocabulary_quiz' => 'Vocabulary Quiz'
+    'vocabulary_quiz' => 'Vocabulary Quiz',
+    'quiz_settings' => 'Quiz Settings',
+    'unlearned' => 'unlearned',
+    'learning' => 'learning',
+    'mastered' => 'mastered',
+    'order' => 'Order',
+    'added' => 'Added',
+    'random' => 'Random',
+    'only_unmastered' => 'Only Unmastered Items',
+    'on' => 'ON',
+    'off' => 'OFF',
+    'question_side' => 'Question Side',
+    'nofq' => 'Number of Questions'
 ];

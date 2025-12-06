@@ -26,4 +26,24 @@ class VocabularyController extends Controller
 
         return redirect()->route('vocabulary.index');
     }
+
+    public function settings()
+    {
+        return view('pages.vocabulary.settings');
+    }
+
+    // public function step1(Request $request)
+    // {
+    //     $only_unmastered = $request->only_unmastered;
+    //     $query = Vocabulary::where('user_id', Auth::id());
+
+    //     if($only_unmastered)
+    //     {
+    //         $query->where('status', '!=', 'mastered');
+    //     }
+
+    //     $max = $query->count();
+
+
+    // }
 }

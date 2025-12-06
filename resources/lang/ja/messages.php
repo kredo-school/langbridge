@@ -14,6 +14,7 @@ return [
     'optional' => '任意',
     'update' => '保存',
     'status' => 'ステータス',
+    'next' => '次へ',
     //ログインページ
     'welcome' => 'LangBridgeへようこそ',
     //興味・関心
@@ -47,5 +48,17 @@ return [
     'note' => 'メモ',
     'no_vocabulary' => '登録されている単語はありません',
     //単語クイズ
-    'vocabulary_quiz' => '単語クイズ'
+    'vocabulary_quiz' => '単語クイズ',
+    'quiz_settings' => '出題設定',
+    'unlearned' => '新規',
+    'learning' => '習得中',
+    'mastered' => '習得済',
+    'order' => '出題順',
+    'added' => '登録順',
+    'random' => 'ランダム',
+    'only_unmastered' => '未修得のみ出題',
+    'on' => 'オン',
+    'off' => 'オフ',
+    'question_side' => '出題面',
+    'nofq' => '出題数'
 ];
