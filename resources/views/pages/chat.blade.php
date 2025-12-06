@@ -282,9 +282,9 @@
             : `<!-- <div style=\"display:flex;align-items:center;justify-content:flex-start;gap:8px;\">${avatarTag}<strong>${nameTag}</strong></div> -->`),
 
 
-        `<span id="msg-content-${msg.id}" data-original="${msg.content}" data-translated="false" style="background:${bgColor};padding:4px 8px 2px 8px;border-radius:6px;display:inline-block;">
+        msg.content || emojiTag ? `<span id="msg-content-${msg.id}" data-original="${msg.content}" data-translated="false" style="background:${bgColor};padding:4px 8px 2px 8px;border-radius:6px;display:inline-block;">
             ${msg.content} ${emojiTag}
-        </span>`,
+        </span>` : "",
 
         `<div style='margin-top:4px;font-size:0.9em;color:gray;'>${readTag} ${timeTag}</div>`,
 
