@@ -6,7 +6,7 @@
 <div class="container">
     <h1>{{__('messages.quiz_settings')}}</h1>
     <div class='w-25 mx-auto mt-5'>
-        <form action="{{ route('quiz.settings.step1')}}" method="post">
+        <form action="" method="post">
             @csrf
             <div class="row">
                 <div class="col">

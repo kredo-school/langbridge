@@ -54,13 +54,13 @@
             <div class="mb-3">
                 <label class="form-label">Role in the app</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="role" id="role1" value="learner_en_teacher_jp" checked>
+                    <input class="form-check-input" type="radio" name="role" id="role1" value="learner_jp_teacher_en" checked>
                     <label class="form-check-label" for="role1">
                         Japanese learner & English teacher
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="role" id="role2" value="learner_jp_teacher_en">
+                    <input class="form-check-input" type="radio" name="role" id="role2" value="learner_en_teacher_jp">
                     <label class="form-check-label" for="role2">
                         English learner & Japanese teacher
                     </label>
