@@ -174,12 +174,12 @@
     const loadedMessages = new Set();  // * Global set to track loaded message IDs
     let previousMessage = null; // * To track previous message for date comparison
 
-    function fetchMessages(to_user_id){
+    function fetchMessages(to_user_id){// fetch message list from server
         return fetch(`/chat/fetch?to_user_id=${to_user_id}`)
             .then(res => res.json())
     }
 
-    function deleteMessage(messageId) {
+    function deleteMessage(messageId) {// delete a message by ID
         if (!confirm('Do you want to delete this message?')) return;
         fetch(`/chat/delete/${messageId}`, {
             method: 'DELETE',
@@ -189,11 +189,11 @@
         })
         .then(res => res.json())
         .then(() => {
-            displayMessages();
+            displayMessages(true); // * reload all messages after deletion of one message
         });
     }
 
-    function formatMessage(msg, box, myId, previousMessage) {
+    function formatMessage(msg, box, myId, previousMessage) {// format a single message for display
         // image tag
         let imgTag = (msg.image_path && msg.image_path !== 'null' && msg.image_path.length > 0)
             ? `<img src='${msg.image_path}' style='max-width:100px;'>`
@@ -208,7 +208,9 @@
             : '<span style="color:gray;">(Unread)</span>';
 
         // time tag(Japanese time zone)
-        let dateString = new Date(msg.sent_at + 'Z').toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+        let dateString = new Date(msg.sent_at + 'Z').toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }).slice(0, -3);
+
+         // date tag (only if different from previous message)
 
         let dateTag = msg.sent_at
         ? `<span style='color:gray;font-size:0.9em;'>${dateString.split(' ')[0]}</span>`
@@ -222,8 +224,8 @@
         }
 
         let timeTag = msg.sent_at
-        ? `<span style='color:gray;font-size:0.9em;'>${dateString.split(' ')[1]}</span>`
-        : "";
+            ? `<span style='color:gray;font-size:0.9em;'>${dateString.split(' ')[1]}</span>`
+            : "";
 
         // alignment, background color, and name
         let align = msg.user_id == myId ? "right" : "left";
@@ -245,70 +247,70 @@
 
         // report icon (相手のみ)
         let reportTag =
-         msg.user_id != myId
-        ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;' title='Report'
-        onclick='openReportModal(${msg.id}, "${msg.user_name}", "${msg.partner_avatar ?? ''}", "${msg.partner_handle ?? ''}")'>
-        <i class="fa-solid fa-flag"></i></span>`
-        : "";
+            msg.user_id != myId
+            ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;' title='Report'
+            onclick='openReportModal(${msg.id}, "${msg.user_name}", "${msg.partner_avatar ?? ''}", "${msg.partner_handle ?? ''}")'>
+            <i class="fa-solid fa-flag"></i></span>`
+            : "";
 
         // translate icon (常に表示)
         let translateTag =
-        `<span style='cursor:pointer;color:#1976d2;font-size:1.0em;margin-left:4px;' title='Translate'
-        onclick="translateMessage(${msg.id}, \`${msg.content}\`)">
-        <i class="fa-solid fa-language"></i></span>`;
+            `<span style='cursor:pointer;color:#1976d2;font-size:1.0em;margin-left:4px;' title='Translate'
+            onclick="translateMessage(${msg.id}, \`${msg.content}\`)">
+            <i class="fa-solid fa-language"></i></span>`;
 
         // delete icon (自分のみ)
         let deleteBtn =
-        msg.user_id == myId
-        ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;margin-left:8px;' title='Delete'
-        onclick='deleteMessage(${msg.id})'>
-        <i class="fa-regular fa-trash-can"></i></span>`
-        : "";
+            msg.user_id == myId
+                ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;margin-left:8px;' title='Delete'
+                onclick='deleteMessage(${msg.id})'>
+                <i class="fa-regular fa-trash-can"></i></span>`
+                : "";
 
         // 本文にIDと属性を付与
 
         box.innerHTML += [
-        `<div style='text-align:center;'>${dateTag}</div>`,
+            `<div style='text-align:center;'>${dateTag}</div>`,
 
-        `<div style='text-align:${align};margin:5px 0;padding:5px;
-        border-radius:8px;max-width:70%;display:inline-block;float:${align};
-        clear:both;position:relative;'>`,
-
-
-                imgTag ? `<div style='margin-top:4px;'>${imgTag}</div>` : "",
-        // 相手のメッセージのみアバターと名前を表示
-        (msg.user_id != myId
-            ? `<div style=\"display:flex;align-items:center;justify-content:flex-start;gap:8px;\">${avatarTag}<strong>${nameTag}</strong></div>`
-            : `<!-- <div style=\"display:flex;align-items:center;justify-content:flex-start;gap:8px;\">${avatarTag}<strong>${nameTag}</strong></div> -->`),
+            `<div style='text-align:${align};margin:5px 0;padding:5px;
+            border-radius:8px;max-width:70%;display:inline-block;float:${align};
+            clear:both;position:relative;'>`,
 
 
-        msg.content || emojiTag ? `<span id="msg-content-${msg.id}" data-original="${msg.content}" data-translated="false" style="background:${bgColor};padding:4px 8px 2px 8px;border-radius:6px;display:inline-block;">
-            ${msg.content} ${emojiTag}
-        </span>` : "",
+            imgTag ? `<div style='margin-top:4px;'>${imgTag}</div>` : "",
+            // 相手のメッセージのみアバターと名前を表示
+            (msg.user_id != myId
+                ? `<div style=\"display:flex;align-items:center;justify-content:flex-start;gap:8px;\">${avatarTag}<strong>${nameTag}</strong></div>`
+                : `<!-- <div style=\"display:flex;align-items:center;justify-content:flex-start;gap:8px;\">${avatarTag}<strong>${nameTag}</strong></div> -->`),
 
-        `<div style='margin-top:4px;font-size:0.9em;color:gray;'>${readTag} ${timeTag}</div>`,
+            msg.content || emojiTag ? `<span id="msg-content-${msg.id}" data-original="${msg.content}" data-translated="false" style="background:${bgColor};padding:4px 8px 2px 8px;border-radius:6px;display:inline-block;">
+                ${msg.content} ${emojiTag}
+            </span>` : "",
 
-        reportTag,
-        translateTag,
-        deleteBtn,
-
-           `</div><div style='clear:both;'></div>`,
+            `<div style='margin-top:4px;font-size:0.9em;color:gray;'>${readTag} ${timeTag}</div>`,
+            reportTag,
+            translateTag,
+            deleteBtn,
+            `</div><div style='clear:both;'></div>`,
         ].join("");
-       }
+    }
 
-       // function to fetch and display message list
-        function displayMessages() {
+    // function to fetch and display message list
+    function displayMessages(reload=false) {
         // get selected user ID
         const to_user_id = document.getElementById('to_user_id')?.value || document.getElementById('form_to_user_id')?.value;
         if (!to_user_id) return;
+        if (reload) previousMessage = null; // * reset previousMessage if reloading all
+        if (reload) loadedMessages.clear(); // * clear loadedMessages if reloading all
+        const box = document.getElementById('chat-box');
+        if (reload) box.innerHTML = ''; // * Clear existing messages if reloading all
 
         // fetch message list from server
+        // * display each fetched message if not already loaded
+        // * reload messages if reload=true
         fetchMessages(to_user_id)
-            .then(data =>{
-                const box = document.getElementById('chat-box');
-                // box.innerHTML = ''; // * Clear previous messages - DELETED
+            .then(data => {
                 const myId = {{ auth()->id() }};
-                // * display each fetched message if not already loaded
                 data.messages.forEach(msg => {
                     if (loadedMessages.has(msg.id)) return; // * skip adding/modifying already loaded messages
 
@@ -316,17 +318,16 @@
                     loadedMessages.add(msg.id);
                     previousMessage = msg; // * Update previousMessage for next iteration
                 });
-                // box.scrollTop = box.scrollHeight; // auto scroll to bottom
+
+                if (reload) box.scrollTop = box.scrollHeight; // auto scroll to bottom
             });
-        }
+    }
 
-        // message delete process
-        displayMessages();
-        setInterval(displayMessages, 5000);
+    displayMessages();
+    setInterval(displayMessages, 5000);
 
-        // message send process
-        const form = document.getElementById('chat-form');
-        form.addEventListener('submit', function(e) {
+    const form = document.getElementById('chat-form');
+    form.addEventListener('submit', function(e) {
         e.preventDefault();
 
         // send message to server
@@ -351,35 +352,35 @@
     
     // open report modal and initialize steps
     function openReportModal(messageId, userName = '', userAvatar = '', userHandle = '') {
-     document.getElementById('report_message_id').value = messageId;
-     document.getElementById('report_user_name').textContent = userName;
-     document.getElementById('report_user_handle').textContent = userHandle;
+        document.getElementById('report_message_id').value = messageId;
+        document.getElementById('report_user_name').textContent = userName;
+        document.getElementById('report_user_handle').textContent = userHandle;
 
-     const avatarImg = document.getElementById('report_user_avatar');
-     const iconFallback = document.getElementById('report_user_icon');
+        const avatarImg = document.getElementById('report_user_avatar');
+        const iconFallback = document.getElementById('report_user_icon');
 
-  if (userAvatar && userAvatar.trim().length > 0) {
-    avatarImg.src = userAvatar;
-    avatarImg.style.display = 'inline-block';
-    iconFallback.style.display = 'none';
-  } else {
-    avatarImg.style.display = 'none';
-    iconFallback.style.display = 'inline-block';
-  }
+        if (userAvatar && userAvatar.trim().length > 0) {
+            avatarImg.src = userAvatar;
+            avatarImg.style.display = 'inline-block';
+            iconFallback.style.display = 'none';
+        } else {
+            avatarImg.style.display = 'none';
+            iconFallback.style.display = 'inline-block';
+        }
 
-    // reset form fields and show step 1
-    document.getElementById('report_reason').value = '';
-    document.getElementById('report_details').value = '';
-    document.getElementById('report_file').value = '';
-    document.getElementById('report-step-1').style.display = 'block';
-    document.getElementById('report-footer-1').style.display = 'flex';
-    document.getElementById('report-step-2').style.display = 'none';
-    document.getElementById('report-footer-2').style.display = 'none';
-    document.getElementById('report-step-3').style.display = 'none';
-    document.getElementById('report-footer-3').style.display = 'none';
+        // reset form fields and show step 1
+        document.getElementById('report_reason').value = '';
+        document.getElementById('report_details').value = '';
+        document.getElementById('report_file').value = '';
+        document.getElementById('report-step-1').style.display = 'block';
+        document.getElementById('report-footer-1').style.display = 'flex';
+        document.getElementById('report-step-2').style.display = 'none';
+        document.getElementById('report-footer-2').style.display = 'none';
+        document.getElementById('report-step-3').style.display = 'none';
+        document.getElementById('report-footer-3').style.display = 'none';
 
-    const modal = new bootstrap.Modal(document.getElementById('reportModal'));
-    modal.show();
+        const modal = new bootstrap.Modal(document.getElementById('reportModal'));
+        modal.show();
    }
 
 
@@ -389,80 +390,79 @@
         if (modal) modal.hide();
     }
 
-   // report modal step navigation
-  document.addEventListener ('DOMContentLoaded', function () {
-  const step1 = document.getElementById('report-step-1');
-  const step2 = document.getElementById('report-step-2');
-  const step3 = document.getElementById('report-step-3');
+    // report modal step navigation
+    document.addEventListener ('DOMContentLoaded', function () {
+        const step1 = document.getElementById('report-step-1');
+        const step2 = document.getElementById('report-step-2');
+        const step3 = document.getElementById('report-step-3');
 
-  const footer1 = document.getElementById('report-footer-1');
-  const footer2 = document.getElementById('report-footer-2');
-  const footer3 = document.getElementById('report-footer-3');
+        const footer1 = document.getElementById('report-footer-1');
+        const footer2 = document.getElementById('report-footer-2');
+        const footer3 = document.getElementById('report-footer-3');
 
-  document.getElementById('report-next-1').addEventListener('click', () => {
-    step1.style.display = 'none';
-    footer1.style.display = 'none';
-    step2.style.display = 'block';
-    footer2.style.display = 'flex';
-  });
+        document.getElementById('report-next-1').addEventListener('click', () => {
+        step1.style.display = 'none';
+        footer1.style.display = 'none';
+        step2.style.display = 'block';
+        footer2.style.display = 'flex';
+    });
 
-  document.getElementById('report-back-2').addEventListener('click', () => {
-    step2.style.display = 'none';
-    footer2.style.display = 'none';
-    step1.style.display = 'block';
-    footer1.style.display = 'flex';
-  });
+    document.getElementById('report-back-2').addEventListener('click', () => {
+        step2.style.display = 'none';
+        footer2.style.display = 'none';
+        step1.style.display = 'block';
+        footer1.style.display = 'flex';
+    });
 
- document.getElementById('report-submit-2').addEventListener('click', () => {
-  const messageId = document.getElementById('report_message_id').value;
-  const reasonId = document.getElementById('report_reason').value;
-  const details = document.getElementById('report_details').value;
-  const file = document.getElementById('report_file').files[0];
+    document.getElementById('report-submit-2').addEventListener('click', () => {
+    const messageId = document.getElementById('report_message_id').value;
+    const reasonId = document.getElementById('report_reason').value;
+    const details = document.getElementById('report_details').value;
+    const file = document.getElementById('report_file').files[0];
 
-  if (!reasonId) {
-    alert('Please select a reason for the report.');
-    document.getElementById('report_reason').classList.add('is-invalid');
-    return;
-  } else {
-    document.getElementById('report_reason').classList.remove('is-invalid');
-  }
+    if (!reasonId) {
+        alert('Please select a reason for the report.');
+        document.getElementById('report_reason').classList.add('is-invalid');
+        return;
+    } else {
+        document.getElementById('report_reason').classList.remove('is-invalid');
+    }
 
-   const fd = new FormData();
+    const fd = new FormData();
     fd.append('violation_reason_id', reasonId);
     fd.append('detail', details);
     if (file) {
         fd.append('file', file);
     }
- 
 
-fetch(`/chat/report/${messageId}`, {
-  method: 'POST',
-  headers: {
-    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-  },
-  body: fd,
-   credentials: 'same-origin'
-})
-.then(async res => {
-  if (!res.ok) {
-    const errorData = await res.json();
-    console.error('Validation error:', errorData);
-    alert('Failed to report.: ' + (errorData.message || 'Unknown error'));
-    throw new Error('Validation failed');
-  }
-  return res.json();
-})
-.then(data => {
-  document.getElementById('report-step-2').style.display = 'none';
-  document.getElementById('report-footer-2').style.display = 'none';
-  document.getElementById('report-step-3').style.display = 'block';
-  document.getElementById('report-footer-3').style.display = 'flex';
-})
-.catch(error => {
-  console.error('❌ Report error:', error);
-  alert('An error occurred while sending the report.');
-});
- });
+    fetch(`/chat/report/${messageId}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: fd,
+        credentials: 'same-origin'
+    })
+        .then(async res => {
+        if (!res.ok) {
+                const errorData = await res.json();
+                console.error('Validation error:', errorData);
+                alert('Failed to report.: ' + (errorData.message || 'Unknown error'));
+                throw new Error('Validation failed');
+            }
+            return res.json();
+        })
+        .then(data => {
+            document.getElementById('report-step-2').style.display = 'none';
+            document.getElementById('report-footer-2').style.display = 'none';
+            document.getElementById('report-step-3').style.display = 'block';
+            document.getElementById('report-footer-3').style.display = 'flex';
+        })
+        .catch(error => {
+            console.error('❌ Report error:', error);
+            alert('An error occurred while sending the report.');
+            });
+        });
 });
 
 function translateMessage(messageId, content) {
