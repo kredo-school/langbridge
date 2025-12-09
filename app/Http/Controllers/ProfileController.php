@@ -23,15 +23,17 @@ class ProfileController extends Controller
             abort(404);
         }
         $user = $profile->user;
+        $interests = $user->interests;
 
-    return view('profile', compact('profile', 'user'));
+    return view('profile', compact('profile', 'user', 'interests'));
     }
     public function edit(){
         $profile = $this->profile->findOrFail(auth()->id());
 
         $user = auth()->user();
+        $interests = Interest::all();
 
-        return view('editprofile', compact('profile', 'user'));
+        return view('editprofile', compact('profile', 'user', 'interests'));
 
     }
 
@@ -70,6 +72,7 @@ class ProfileController extends Controller
         $user = $profile->user;
         $request->validate([
             'handle' => 'required|string|unique:profiles,handle,' . $profile->user_id . ',user_id',
+            'interests' => 'array',
         ]);
 
         $levelMap = [
@@ -94,6 +97,8 @@ class ProfileController extends Controller
         $user->country = $request->country;
         $user->region = $request->region;
         $user->save();
+
+        $user->interests()->sync($request->input('interests', []));
 
         return redirect()->route('profile.show', $profile->user_id);
     }

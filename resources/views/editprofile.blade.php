@@ -64,6 +64,16 @@
             <input type="file" name="avatar" class="form-control">
         </div>
 
+        <div class="interests-grid">
+            @foreach($interests as $interest)
+                <label class="interest-card">
+                    <input type="checkbox" name="interests[]" value="{{ $interest->id }}"
+                           {{ $user->interests->pluck('id')->contains($interest->id) ? 'checked' : '' }}>
+                   <div class="interest-card-content">{{ $interest->name }}</div>
+                </label>
+            @endforeach
+        </div>
+
         <button type="submit" class="btn btn-primary">Edit</button>
     </form>
 </div>
