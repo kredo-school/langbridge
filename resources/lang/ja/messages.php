@@ -15,6 +15,8 @@ return [
     'update' => '保存',
     'status' => 'ステータス',
     'next' => '次へ',
+    'start' => '開始',
+    'max' => '上限',
     //ログインページ
     'welcome' => 'LangBridgeへようこそ',
     //興味・関心

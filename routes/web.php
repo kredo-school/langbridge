@@ -10,6 +10,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\VocabularyController;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\TranslateController;
 
@@ -53,8 +54,13 @@ Route::middleware(['auth'])->group(function () {
     Route::group(["prefix" => "vocabulary", "as" => "vocabulary."], function () {
         Route::get('/index', [VocabularyController::class, 'index'])->name('index');
         Route::delete('/destroy/{vocabulary_id}',[VocabularyController::class, 'destroy'])->name('delete');
-        Route::get('/quiz/settings',[VocabularyController::class, 'settings'])->name('settings');
-        // Route::post('/quiz/settings/step1',[VocabularyController::class, 'step1'])->name('settings.step1');
+    });
+
+    Route::group(["prefix" => "quiz", "as" => "quiz."], function () {
+        Route::get('/settings', [QuizController::class, 'settings'])->name('settings');
+        Route::post('/settings/step1', [QuizController::class, 'step1'])->name('settings.step1');
+        Route::post('/start', [QuizController::class, 'start'])->name('start');
+        Route::get('/card', [QuizController::class, 'card'])->name('card');
     });
 
     Route::group(['prefix' => 'chat', 'as' => 'chat.'], function () {

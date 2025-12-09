@@ -15,6 +15,8 @@ return [
     'update' => 'Update',
     'status' => 'Status',
     'next' => 'Next',
+    'start' => 'Start',
+    'max' => 'Max',
     //ログインページ
     'welcome' => 'Welcome to LangBridge',
     //興味・関心

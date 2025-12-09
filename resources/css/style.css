@@ -112,17 +112,6 @@
     z-index: 1050;
 }
 
-/* Temporary debug: prevent modal overlay from blocking page and devtools
-   This makes overlay non-blocking while preserving modal-content interactivity.
-   Remove or adjust after debugging. */
-.modal-backdrop {
-    pointer-events: none !important;
-    background-color: rgba(0,0,0,0.25) !important;
-}
-.modal-backdrop .modal-content {
-    pointer-events: auto !important;
-}
-
 .modal-content {
     background-color: white;
     padding: 1.5rem;
