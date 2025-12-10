@@ -12,7 +12,7 @@ class DeepLService
         // 日本語っぽいかどうかを簡易判定（正規表現）
         $isJapanese = preg_match('/\p{Han}|\p{Hiragana}|\p{Katakana}/u', $text);
 
-        $targetLang = $isJapanese ? 'en' : 'ja';
+        $targetLang = $isJapanese ? 'en-US' : 'ja';
 
         try {
             $authKey = config('services.deepl.key');
@@ -35,6 +35,5 @@ class DeepLService
                 'error' => 'DeepL Client initialization failed',
             ];
         }
-
     }
 }

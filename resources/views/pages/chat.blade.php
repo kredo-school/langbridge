@@ -2,7 +2,7 @@
 
 {{-- chat screen main template --}}
 @section('content')
-<div class="container w-75">
+<div class="container w-75 h-100 my-4">
     <div style="display:flex;gap:24px;">
 
         {{-- left side: chat partner selection form --}}
@@ -68,7 +68,14 @@
                             <option value="🥺">🥺</option>
                             <option value="😎">😎</option>
                             <option value="😭">😭</option>
+                            <option value="😡">😡</option>
+                            <option value="💖">💖</option>
+                            <option value="💡">💡</option>
+                            <option value="🔥">🔥</option>
+                            <option value="🌟">🌟</option>
+                            <option value="🐈">🐈</option>
                         </datalist>
+                        {{-- send button --}}
                         <button type="submit" class="btn btn-primary"
                             style="position:absolute;right:0;top:0;width:40px;min-width:40px;height:100%;padding:0;display:flex;align-items:center;justify-content:center;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
@@ -88,7 +95,7 @@
             <div class="modal-content">
                 <!-- Header -->
                 <div class="modal-header">
-                    <h4 class="modal-title">User Report</h4>
+                    <h4 class="modal-title">Report</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
@@ -111,7 +118,7 @@
                                 <span id="report_user_handle" style="color:gray;font-size:0.9em;"></span>
                             </div>
                         </div>
-                        <p>Are you sure you want to report this user?</p>
+                        <p>Are you sure you want to report this message?</p>
                     </div>
 
                     <!-- Step 2: Details -->
@@ -122,7 +129,7 @@
                                 <option value="" selected disabled>{{ __('Select a reason') }}</option>
                                 @foreach($violationReasons as $reason)
                                 <option value="{{ $reason->id }}">
-                                    {{ app()->getLocale() === 'ja' ? $reason->name_JP : $reason->name_EN }}
+                                    {{ $reason->name }}
                                 </option>
                                 @endforeach
                             </select>
@@ -276,18 +283,19 @@
             border-radius:8px;max-width:70%;display:inline-block;float:${align};
             clear:both;position:relative;'>`,
 
-
-            imgTag ? `<div style='margin-top:4px;'>${imgTag}</div>` : "",
-            // 相手のメッセージのみアバターと名前を表示
+            // 相手のメッセージのみアバターと名前を先に表示
             (msg.user_id != myId
-                ? `<div style=\"display:flex;align-items:center;justify-content:flex-start;gap:8px;\">${avatarTag}<strong>${nameTag}</strong></div>`
-                : `<!-- <div style=\"display:flex;align-items:center;justify-content:flex-start;gap:8px;\">${avatarTag}<strong>${nameTag}</strong></div> -->`),
+                ? `<div style=\"display:flex;align-items:center;justify-content:flex-start;gap:8px;\" class="mb-1">${avatarTag}<strong class="mx-0">${nameTag}</strong></div>`
+                : `<!-- <div style=\"display:flex;align-items:center;justify-content:flex-start;gap:8px;\" class="mb-1">${avatarTag}<strong class="mx-0">${nameTag}</strong></div> -->`),
+            
+            // 画像を後に表示
+            imgTag ? `<div style='margin-top:4px;' class="mb-1">${imgTag}</div>` : "",
 
             msg.content || emojiTag ? `<span id="msg-content-${msg.id}" data-original="${msg.content}" data-translated="false" style="background:${bgColor};padding:4px 8px 2px 8px;border-radius:6px;display:inline-block;">
                 ${msg.content} ${emojiTag}
             </span>` : "",
 
-            `<div style='margin-top:4px;font-size:0.9em;color:gray;'>${readTag} ${timeTag}</div>`,
+            `<div id="msg-meta-${msg.id}" style='margin-top:4px;font-size:0.9em;color:gray;'>${readTag} ${timeTag}</div>`,
             reportTag,
             translateTag,
             deleteBtn,
@@ -305,14 +313,22 @@
         const box = document.getElementById('chat-box');
         if (reload) box.innerHTML = ''; // * Clear existing messages if reloading all
 
-        // fetch message list from server
-        // * display each fetched message if not already loaded
-        // * reload messages if reload=true
         fetchMessages(to_user_id)
             .then(data => {
                 const myId = {{ auth()->id() }};
                 data.messages.forEach(msg => {
-                    if (loadedMessages.has(msg.id)) return; // * skip adding/modifying already loaded messages
+                    if (loadedMessages.has(msg.id)) {
+                        // Update read status if already loaded
+                        const metaTag = document.getElementById(`msg-meta-${msg.id}`);
+                        if (metaTag) {
+                            if (msg.is_read) {
+                                metaTag.innerHTML = metaTag.innerHTML.replace('(Unread)', '(Read)');
+                            } else {
+                                metaTag.innerHTML = metaTag.innerHTML.replace('(Read)', '(Unread)');
+                            }
+                        }
+                        return; // * skip adding/modifying already loaded messages
+                    }
 
                     formatMessage(msg, box, myId, previousMessage); // * format and add message to chat box
                     loadedMessages.add(msg.id);

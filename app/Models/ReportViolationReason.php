@@ -10,7 +10,8 @@ class ReportViolationReason extends Model
 
     protected $fillable = [
         'category',
-        'name_JP',
-        'name_EN',
+        // 'name_JP',
+        // 'name_EN',
+        'name',
     ];
 }
