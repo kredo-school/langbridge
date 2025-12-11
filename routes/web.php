@@ -21,6 +21,7 @@ Auth::routes();
 
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
+Route::get('/register-test-user', [ChatController::class, 'createTestUser'])->name('register.testuser');
 
 
 Route::middleware(['auth'])->group(function () {

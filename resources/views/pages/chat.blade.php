@@ -12,6 +12,7 @@
                 <div class="mb-2">
                     <label>Select Chat Partner:</label>
                     <div style="max-height:320px;overflow-y:auto;">
+
                         @foreach($users as $user)
                         <button type="submit" name="to_user_id" value="{{ $user->id }}" class="btn btn-light w-100 mb-2"
                             style="display:flex;align-items:center;gap:10px;padding:6px 10px;text-align:left;">
@@ -28,6 +29,7 @@
                 </div>
             </form>
         </div>
+
 
         {{-- right side: chat main body --}}
         <div style="flex:1;">
@@ -105,24 +107,6 @@
                     <input type="hidden" id="report_message_id">
 
                     <!-- Step 1: Confirm -->
-                    {{-- <div id="report-step-1">
-                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-                            <span id="report_user_avatar_wrapper">
-                                <img id="report_user_avatar" src="" class="rounded-circle"
-                                    style="width:40px;height:40px;object-fit:cover;display:none;">
-                                <i id="report_user_icon" class="fas fa-user-circle"
-                                    style="font-size:40px;color:#bbb;display:none;"></i>
-                            </span>
-                            <div>
-                                <strong id="report_user_name" style="font-size:1.1em;"></strong><br>
-                                <span id="report_user_handle" style="color:gray;font-size:0.9em;"></span>
-                            </div>
-                        </div>
-                        <p>Are you sure you want to report this message?</p>
-                    </div> --}}
-
-
-
                     <div id="report-step-1">
                         <div style="margin-bottom:10px;">
                             <!-- メッセージ画像（あれば表示） -->
@@ -143,7 +127,7 @@
                     <div id="report-step-2" style="display:none;">
                         <div class="mb-3">
                             <div class="form-label mb-3 fw-bold">Please provide details</div>
-                            <select id="report_reason" name="violation_reason_id" class="form-select" required>F
+                            <select id="report_reason" name="violation_reason_id" class="form-select" required>
                                 <option value="" selected disabled>{{ __('Select a reason') }}</option>
                                 @foreach($violationReasons as $reason)
                                 <option value="{{ $reason->id }}">
@@ -270,19 +254,7 @@
         // name tag
         let nameTag = msg.user_name;
 
-        // report icon (相手のみ)
-        // let reportTag =
-        //     msg.user_id != myId
-        //     ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;' title='Report'
-        //     onclick='openReportModal(${msg.id}, "${msg.user_name}", "${msg.partner_avatar ?? ''}", "${msg.partner_handle ?? ''}")'>
-        //     <i class="fa-solid fa-flag"></i></span>`
-        //     : "";
-        // let reportTag = msg.user_id != myId
-        // ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;' title='Report'
-        //  onclick='openReportModal(${msg.id}, \`${msg.content}\`, \`${msg.image_path ?? ""}\`)'>
-        //  <i class="fa-solid fa-flag"></i></span>`
-        //  : "";
-
+        // report icon (相手のメッセージかつ絵文字のみでない場合に表示)
          let isEmojiOnly = (!msg.content || msg.content.trim() === "") && msg.emoji;
          let reportTag = msg.user_id != myId && !isEmojiOnly
          ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;' title='Report'
@@ -396,38 +368,6 @@
         });
     });
     
-    // open report modal and initialize steps
-    // function openReportModal(messageId, userName = '', userAvatar = '', userHandle = '') {
-    //     document.getElementById('report_message_id').value = messageId;
-    //     document.getElementById('report_user_name').textContent = userName;
-    //     document.getElementById('report_user_handle').textContent = userHandle;
-
-    //     const avatarImg = document.getElementById('report_user_avatar');
-    //     const iconFallback = document.getElementById('report_user_icon');
-
-    //     if (userAvatar && userAvatar.trim().length > 0) {
-    //         avatarImg.src = userAvatar;
-    //         avatarImg.style.display = 'inline-block';
-    //         iconFallback.style.display = 'none';
-    //     } else {
-    //         avatarImg.style.display = 'none';
-    //         iconFallback.style.display = 'inline-block';
-    //     }
-
-        // reset form fields and show step 1
-//         document.getElementById('report_reason').value = '';
-//         document.getElementById('report_details').value = '';
-//         document.getElementById('report_file').value = '';
-//         document.getElementById('report-step-1').style.display = 'block';
-//         document.getElementById('report-footer-1').style.display = 'flex';
-//         document.getElementById('report-step-2').style.display = 'none';
-//         document.getElementById('report-footer-2').style.display = 'none';
-//         document.getElementById('report-step-3').style.display = 'none';
-//         document.getElementById('report-footer-3').style.display = 'none';
-
-//         const modal = new bootstrap.Modal(document.getElementById('reportModal'));
-//         modal.show();
-//    }
 
    function openReportModal(messageId, messageContent = '', messageImage = '') {
     document.getElementById('report_message_id').value = messageId;

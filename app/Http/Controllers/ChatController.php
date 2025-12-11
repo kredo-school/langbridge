@@ -39,12 +39,23 @@ class ChatController extends Controller
             ->get();
 
         $to_user_id = $request->input('to_user_id');
-        $violationReasons = ReportViolationReason::where('category', 'message')->get();
+        $violationReasons = ReportViolationReason::where('category', 'chat')->get();
 
         return view('pages.chat', compact('users', 'to_user_id', 'violationReasons'));
     }
 
-
+    public function createTestUser()
+    {
+        $testUser = User::firstOrCreate(
+            [
+                'email' => 'testuser@example.com',
+                'name' => 'Test User',
+                'target_language' => 'en',
+                'country' => 'US',
+                'password' => bcrypt('password'),
+            ]
+        );
+    }
 
     // send message
     public function send(Request $request)
@@ -90,6 +101,7 @@ class ChatController extends Controller
         if (empty($to_user_id)) {
             return response()->json(['messages' => []]);
         }
+
         $messages = Message::where(function ($q) use ($user_id, $to_user_id) {
             $q->where('user_id', $user_id)->where('to_user_id', $to_user_id);
         })->orWhere(function ($q) use ($user_id, $to_user_id) {
