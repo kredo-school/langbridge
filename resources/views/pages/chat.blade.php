@@ -109,12 +109,12 @@
                     <!-- Step 1: Confirm -->
                     <div id="report-step-1">
                         <div style="margin-bottom:10px;">
-                            <!-- メッセージ画像（あれば表示） -->
+                            <!-- message image (if any) -->
                             <span id="report_message_image_wrapper" style="display:none;">
                                 <img id="report_message_image" src=""
                                     style="max-width:100px;max-height:100px;border-radius:8px;">
                             </span>
-                            <!-- メッセージ内容 -->
+                            <!-- message content -->
                             <div>
                                 <strong>Reported Message:</strong>
                                 <p id="report_message_content" style="font-size:1.1em;word-break:break-all;"></p>
@@ -228,7 +228,7 @@
         if (previousMessage) {
             let prevDateString = new Date(previousMessage.sent_at + 'Z').toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
             if (dateString.split(' ')[0] === prevDateString.split(' ')[0]) {
-                dateTag = ""; // 同じ日の場合は日付表示を省略
+                dateTag = ""; // no date tag if same date as previous message
             }
         }
 
@@ -254,7 +254,7 @@
         // name tag
         let nameTag = msg.user_name;
 
-        // report icon (相手のメッセージかつ絵文字のみでない場合に表示)
+        // report icon (not for own messages or emoji-only messages)
          let isEmojiOnly = (!msg.content || msg.content.trim() === "") && msg.emoji;
          let reportTag = msg.user_id != myId && !isEmojiOnly
          ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;' title='Report'
@@ -262,13 +262,13 @@
          <i class="fa-solid fa-flag"></i></span>`
          : "";
  
-        // translate icon (常に表示)
+        // translate icon (always shown)
         let translateTag =
             `<span style='cursor:pointer;color:#1976d2;font-size:1.0em;margin-left:4px;' title='Translate'
             onclick="translateMessage(${msg.id}, \`${msg.content}\`)">
             <i class="fa-solid fa-language"></i></span>`;
 
-        // delete icon (自分のみ)
+        // delete icon (only for own messages)
         let deleteBtn =
             msg.user_id == myId
                 ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;margin-left:8px;' title='Delete'
@@ -276,8 +276,7 @@
                 <i class="fa-regular fa-trash-can"></i></span>`
                 : "";
 
-        // 本文にIDと属性を付与
-
+        // append formatted message to chat box
         box.innerHTML += [
             `<div style='text-align:center;'>${dateTag}</div>`,
 
@@ -285,12 +284,12 @@
             border-radius:8px;max-width:70%;display:inline-block;float:${align};
             clear:both;position:relative;'>`,
 
-            // 相手のメッセージのみアバターと名前を先に表示
+            //name and avatar display
             (msg.user_id != myId
                 ? `<div style=\"display:flex;align-items:center;justify-content:flex-start;gap:8px;\" class="mb-1">${avatarTag}<strong class="mx-0">${nameTag}</strong></div>`
                 : `<!-- <div style=\"display:flex;align-items:center;justify-content:flex-start;gap:8px;\" class="mb-1">${avatarTag}<strong class="mx-0">${nameTag}</strong></div> -->`),
             
-            // 画像を後に表示
+            // image display
             imgTag ? `<div style='margin-top:4px;' class="mb-1">${imgTag}</div>` : "",
 
             msg.content || emojiTag ? `<span id="msg-content-${msg.id}" data-original="${msg.content}" data-translated="false" style="background:${bgColor};padding:4px 8px 2px 8px;border-radius:6px;display:inline-block;">
@@ -372,10 +371,10 @@
    function openReportModal(messageId, messageContent = '', messageImage = '') {
     document.getElementById('report_message_id').value = messageId;
 
-    // メッセージ内容をセット
+    //set message content
     document.getElementById('report_message_content').textContent = messageContent;
 
-    // メッセージ画像をセット（あれば表示、なければ非表示）
+    // set message image (if any)
     const imageWrapper = document.getElementById('report_message_image_wrapper');
     const imageTag = document.getElementById('report_message_image');
     if (messageImage && messageImage.trim().length > 0) {
@@ -386,7 +385,7 @@
         imageWrapper.style.display = 'none';
     }
 
-    // フォーム初期化＆step1表示
+    // reset form fields and steps
     document.getElementById('report_reason').value = '';
     document.getElementById('report_details').value = '';
     document.getElementById('report_file').value = '';
@@ -487,14 +486,14 @@ function translateMessage(messageId, content) {
     const target = document.querySelector(`#msg-content-${messageId}`);
     if (!target) return;
 
-    // すでに翻訳済みなら元に戻す
+    //reverse translation if already translated
     if (target.dataset.translated === "true") {
         target.textContent = target.dataset.original;
         target.dataset.translated = "false";
         return;
     }
 
-    // 未翻訳ならAPI呼び出し
+    // call API if not translated
     fetch('/translate', {
         method: 'POST',
         headers: {
@@ -505,7 +504,7 @@ function translateMessage(messageId, content) {
     })
     .then(async res => {
         if (!res.ok) {
-            // HTMLエラーページなどをそのまま返す
+            // Return HTML error page as is
             const text = await res.text();
             throw new Error(`Server error ${res.status}: ${text}`);
         }
@@ -514,7 +513,7 @@ function translateMessage(messageId, content) {
     .then(data => {
         if (data.translated) {
             target.textContent = data.translated;
-            target.dataset.translated = "true"; // 翻訳済みフラグ
+            target.dataset.translated = "true"; //flag as translated
         } else {
             throw new Error('No translated text in response');
         }

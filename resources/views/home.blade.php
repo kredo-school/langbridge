@@ -26,8 +26,6 @@
                 </div>
             @endforeach
         </div>
-        
-        
     </div> 
 
     {{-- Suggested Users --}}
