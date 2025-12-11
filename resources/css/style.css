@@ -127,7 +127,7 @@
     min-height: 70px;
     width: 100%;
     padding: 10px;
-    border: 2px solid #a855f7;
+    border: 2px solid #F5A59E;
     border-radius: 12px;
     text-align: center;
     background-color: #fff;
@@ -137,21 +137,21 @@
   
   /* hover時の色変化 */
   .interest-card:hover .interest-card-content {
-    background-color: #f3e8ff;
+    background-color: #fad2cec5;
   }
   
   /* 選択済み（DBにある）場合 → 初期表示で色付き */
   .interest-card.selected .interest-card-content {
-    background-color: #a855f7;
+    background-color: #F5A59E;
     color: #fff;
-    border-color: #7c3aed;
+    border-color: #F5A59E;
   }
   
   /* 今クリックした場合 → 即座に色付き */
   .interest-card input[type="checkbox"]:checked ~ .interest-card-content {
-    background-color: #a855f7;
+    background-color: #F5A59E;
     color: #fff;
-    border-color: #7c3aed;
+    border-color: #F5A59E;
   }
   
 

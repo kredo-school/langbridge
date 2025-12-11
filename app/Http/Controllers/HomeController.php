@@ -39,10 +39,13 @@ class HomeController extends Controller
             ->groupBy('partner_id')
             ->orderByDesc('last_chat_at')
             ->get();
-    
+        $partnerIds = $partners->pluck('partner_id')->toArray();
         // 相手ユーザー情報をまとめて取得
-        $recentChats = User::whereIn('id', $partners->pluck('partner_id'))->get();
-    
+        $recentChats = User::whereIn('id', $partnerIds)->get()
+         ->sortBy(function ($user) use ($partnerIds) {
+        return array_search($user->id, $partnerIds);
+         })
+         ->values();
         // 自分の言語設定
         $myPreference = $user->target_language;
     
@@ -52,6 +55,9 @@ class HomeController extends Controller
         // ランダムに10人取得（自分以外）
         $otherUsers = User::where('target_language', $otherPreference)
             ->where('id', '!=', $user->id)
+            ->whereHas('profile', function ($query) {
+                $query->where('hidden', false);
+            })
             ->inRandomOrder()
             ->take(10)
             ->get();

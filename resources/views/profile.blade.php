@@ -8,7 +8,7 @@
             @if($profile->avatar)
              <img src="{{ $profile->avatar }}" alt="Avatar" class="rounded-circle" width="120">
             @else
-             <i class="fa-solid fa-circle-user text-secondary icon-sm"></i>
+             <i class="fa-solid fa-circle-user text-secondary" style="ont-size: 100px;"></i>
             @endif
         </div>
         <div class="mb-3">

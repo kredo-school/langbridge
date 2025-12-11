@@ -72,6 +72,7 @@
                    <div class="interest-card-content">{{ $interest->name }}</div>
                 </label>
             @endforeach
+            
         </div>
 
         <button type="submit" class="btn btn-primary">Edit</button>
