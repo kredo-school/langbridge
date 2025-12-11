@@ -12,9 +12,9 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\TranslateController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Auth::routes();
 
@@ -37,12 +37,6 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/', [SettingController::class, 'update'])->name('update');
     });
 
-    Route::group(["prefix" => "register", "as" => "register."], function () {
-        Route::get('/register/1', [RegisterController::class, 'show1'])->name('show1');
-        Route::get('/register/2', [RegisterController::class, 'show2'])->name('show2');
-        Route::post('/register/1', [RegisterController::class, 'store1'])->name('store1');
-        Route::post('/register/2', [RegisterController::class, 'store2'])->name('store2');
-    });
 
     Route::group(["prefix" => "user", "as" => "user."], function () {
         Route::delete('/destroy', [UserController::class, 'destroy'])->name('delete');
