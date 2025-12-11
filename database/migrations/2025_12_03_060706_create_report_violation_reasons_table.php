@@ -10,7 +10,7 @@ return new class extends Migration {
     {
         Schema::create('report_violation_reasons', function (Blueprint $table) {
             $table->id();
-            $table->string('category'); // ReportCategory E（例: 'message', 'profile'）
+            $table->string('category');
             $table->string('name');
         });
 

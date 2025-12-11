@@ -525,9 +525,6 @@ function translateMessage(messageId, content) {
     });
 }
 
-
-
-
 </script>
 
 @endsection
