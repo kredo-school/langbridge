@@ -116,7 +116,7 @@ class ChatController extends Controller
                 $msg->partner_handle = $user->profile->handle ?? '';
             }
 
-    
+
             $msg->content = $msg->content ?? '';
             $msg->emoji = $msg->emoji ?? '';
             $msg->image_path = (!empty($msg->image_path) && $msg->image_path !== 'null') ? $msg->image_path : '';
@@ -167,7 +167,7 @@ class ChatController extends Controller
         }
 
         Report::create([
-            'reporter_id' => $user->id,
+            'reporter_id' => auth()->id(),
             'category' => 'message',
             'violation_reason_id' => $request->violation_reason_id,
             'detail' => $request->detail,

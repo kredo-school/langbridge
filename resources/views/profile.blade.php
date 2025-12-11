@@ -1,14 +1,18 @@
 @extends('layouts.app')
 
+@push('scripts')
+<script src="{{ asset('js/translate.js') }}" defer></script>
+@endpush
+
 @section('content')
 <div class="container">
     <h2>Profile</h2>
     <div class="card p-4">
         <div>
             @if($profile->avatar)
-             <img src="{{ $profile->avatar }}" alt="Avatar" class="rounded-circle" width="120">
+            <img src="{{ $profile->avatar }}" alt="Avatar" class="rounded-circle" width="120">
             @else
-             <i class="fa-solid fa-circle-user text-secondary icon-sm"></i>
+            <i class="fa-solid fa-circle-user text-secondary icon-sm"></i>
             @endif
         </div>
         <div class="mb-3">
@@ -18,10 +22,10 @@
             <strong>Handle:</strong> {{ $profile->handle }}
         </div>
         <div class="mb-3">
-            <strong>Age:</strong> 
+            <strong>Age:</strong>
             @if($user->profile->age_hidden)
-             <span class="text-muted">Private</span>
-            @else 
+            <span class="text-muted">Private</span>
+            @else
             {{ $user->age }}
             @endif
         </div>
@@ -31,12 +35,12 @@
                 <i class="fa fa-language"></i>
             </button>
         </div>
-               
+
         <p id="bio-text">{{ $profile->bio }}</p>
 
         <div id="translation-result" class="mt-2"></div>
 
-        
+
         <div class="mb-3">
             <strong>Japanese Level:</strong> {{ $profile->JP_level }}
         </div>
@@ -44,18 +48,18 @@
             <strong>English Level:</strong> {{ $profile->EN_level }}
         </div>
         <div class="mb-3">
-            <strong>Country:</strong> 
+            <strong>Country:</strong>
             @if($user->profile->country_hidden)
-             <span class="text-muted">Private</span>
-            @else 
+            <span class="text-muted">Private</span>
+            @else
             {{ $profile->user->country }}
             @endif
         </div>
         <div class="mb-3">
-            <strong>Region:</strong> 
+            <strong>Region:</strong>
             @if($user->profile->region_hidden)
-             <span class="text-muted">Private</span>
-            @else 
+            <span class="text-muted">Private</span>
+            @else
             {{ $profile->user->region }}
             @endif
         </div>
@@ -63,20 +67,21 @@
             <strong>interest:</strong>
             <div class="interests-grid">
                 @foreach($interests as $interest)
-                  <div class="interest-card {{ $user->interests->pluck('id')->contains($interest->id) ? 'selected' : '' }}">
+                <div
+                    class="interest-card {{ $user->interests->pluck('id')->contains($interest->id) ? 'selected' : '' }}">
                     <div class="interest-card-content">{{ $interest->name }}</div>
-                  </div>
+                </div>
                 @endforeach
-              </div>
-              
+            </div>
+
 
         </div>
         @if (auth()->id() === $profile->user_id)
-            <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary">Edit</a>
+        <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary">Edit</a>
         @endif
     </div>
 </div>
 @endsection
 
-@vite(['resources/js/translate.js'])
-
+{{-- @vite(['resources/js/translate.js'])
+@vite(['resources/js/app.js']) --}}

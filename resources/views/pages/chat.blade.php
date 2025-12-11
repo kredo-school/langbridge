@@ -105,7 +105,7 @@
                     <input type="hidden" id="report_message_id">
 
                     <!-- Step 1: Confirm -->
-                    <div id="report-step-1">
+                    {{-- <div id="report-step-1">
                         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
                             <span id="report_user_avatar_wrapper">
                                 <img id="report_user_avatar" src="" class="rounded-circle"
@@ -119,13 +119,31 @@
                             </div>
                         </div>
                         <p>Are you sure you want to report this message?</p>
+                    </div> --}}
+
+
+
+                    <div id="report-step-1">
+                        <div style="margin-bottom:10px;">
+                            <!-- メッセージ画像（あれば表示） -->
+                            <span id="report_message_image_wrapper" style="display:none;">
+                                <img id="report_message_image" src=""
+                                    style="max-width:100px;max-height:100px;border-radius:8px;">
+                            </span>
+                            <!-- メッセージ内容 -->
+                            <div>
+                                <strong>Reported Message:</strong>
+                                <p id="report_message_content" style="font-size:1.1em;word-break:break-all;"></p>
+                            </div>
+                        </div>
+                        <p class="mb-0">Are you sure you want to report this message?</p>
                     </div>
 
                     <!-- Step 2: Details -->
                     <div id="report-step-2" style="display:none;">
                         <div class="mb-3">
                             <div class="form-label mb-3 fw-bold">Please provide details</div>
-                            <select id="report_reason" name="violation_reason_id" class="form-select" required>
+                            <select id="report_reason" name="violation_reason_id" class="form-select" required>F
                                 <option value="" selected disabled>{{ __('Select a reason') }}</option>
                                 @foreach($violationReasons as $reason)
                                 <option value="{{ $reason->id }}">
@@ -253,13 +271,25 @@
         let nameTag = msg.user_name;
 
         // report icon (相手のみ)
-        let reportTag =
-            msg.user_id != myId
-            ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;' title='Report'
-            onclick='openReportModal(${msg.id}, "${msg.user_name}", "${msg.partner_avatar ?? ''}", "${msg.partner_handle ?? ''}")'>
-            <i class="fa-solid fa-flag"></i></span>`
-            : "";
+        // let reportTag =
+        //     msg.user_id != myId
+        //     ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;' title='Report'
+        //     onclick='openReportModal(${msg.id}, "${msg.user_name}", "${msg.partner_avatar ?? ''}", "${msg.partner_handle ?? ''}")'>
+        //     <i class="fa-solid fa-flag"></i></span>`
+        //     : "";
+        // let reportTag = msg.user_id != myId
+        // ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;' title='Report'
+        //  onclick='openReportModal(${msg.id}, \`${msg.content}\`, \`${msg.image_path ?? ""}\`)'>
+        //  <i class="fa-solid fa-flag"></i></span>`
+        //  : "";
 
+         let isEmojiOnly = (!msg.content || msg.content.trim() === "") && msg.emoji;
+         let reportTag = msg.user_id != myId && !isEmojiOnly
+         ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;' title='Report'
+         onclick='openReportModal(${msg.id}, \`${msg.content}\`, \`${msg.image_path ?? ""}\`)'>
+         <i class="fa-solid fa-flag"></i></span>`
+         : "";
+ 
         // translate icon (常に表示)
         let translateTag =
             `<span style='cursor:pointer;color:#1976d2;font-size:1.0em;margin-left:4px;' title='Translate'
@@ -367,37 +397,69 @@
     });
     
     // open report modal and initialize steps
-    function openReportModal(messageId, userName = '', userAvatar = '', userHandle = '') {
-        document.getElementById('report_message_id').value = messageId;
-        document.getElementById('report_user_name').textContent = userName;
-        document.getElementById('report_user_handle').textContent = userHandle;
+    // function openReportModal(messageId, userName = '', userAvatar = '', userHandle = '') {
+    //     document.getElementById('report_message_id').value = messageId;
+    //     document.getElementById('report_user_name').textContent = userName;
+    //     document.getElementById('report_user_handle').textContent = userHandle;
 
-        const avatarImg = document.getElementById('report_user_avatar');
-        const iconFallback = document.getElementById('report_user_icon');
+    //     const avatarImg = document.getElementById('report_user_avatar');
+    //     const iconFallback = document.getElementById('report_user_icon');
 
-        if (userAvatar && userAvatar.trim().length > 0) {
-            avatarImg.src = userAvatar;
-            avatarImg.style.display = 'inline-block';
-            iconFallback.style.display = 'none';
-        } else {
-            avatarImg.style.display = 'none';
-            iconFallback.style.display = 'inline-block';
-        }
+    //     if (userAvatar && userAvatar.trim().length > 0) {
+    //         avatarImg.src = userAvatar;
+    //         avatarImg.style.display = 'inline-block';
+    //         iconFallback.style.display = 'none';
+    //     } else {
+    //         avatarImg.style.display = 'none';
+    //         iconFallback.style.display = 'inline-block';
+    //     }
 
         // reset form fields and show step 1
-        document.getElementById('report_reason').value = '';
-        document.getElementById('report_details').value = '';
-        document.getElementById('report_file').value = '';
-        document.getElementById('report-step-1').style.display = 'block';
-        document.getElementById('report-footer-1').style.display = 'flex';
-        document.getElementById('report-step-2').style.display = 'none';
-        document.getElementById('report-footer-2').style.display = 'none';
-        document.getElementById('report-step-3').style.display = 'none';
-        document.getElementById('report-footer-3').style.display = 'none';
+//         document.getElementById('report_reason').value = '';
+//         document.getElementById('report_details').value = '';
+//         document.getElementById('report_file').value = '';
+//         document.getElementById('report-step-1').style.display = 'block';
+//         document.getElementById('report-footer-1').style.display = 'flex';
+//         document.getElementById('report-step-2').style.display = 'none';
+//         document.getElementById('report-footer-2').style.display = 'none';
+//         document.getElementById('report-step-3').style.display = 'none';
+//         document.getElementById('report-footer-3').style.display = 'none';
 
-        const modal = new bootstrap.Modal(document.getElementById('reportModal'));
-        modal.show();
-   }
+//         const modal = new bootstrap.Modal(document.getElementById('reportModal'));
+//         modal.show();
+//    }
+
+   function openReportModal(messageId, messageContent = '', messageImage = '') {
+    document.getElementById('report_message_id').value = messageId;
+
+    // メッセージ内容をセット
+    document.getElementById('report_message_content').textContent = messageContent;
+
+    // メッセージ画像をセット（あれば表示、なければ非表示）
+    const imageWrapper = document.getElementById('report_message_image_wrapper');
+    const imageTag = document.getElementById('report_message_image');
+    if (messageImage && messageImage.trim().length > 0) {
+        imageTag.src = messageImage;
+        imageWrapper.style.display = 'inline-block';
+    } else {
+        imageTag.src = '';
+        imageWrapper.style.display = 'none';
+    }
+
+    // フォーム初期化＆step1表示
+    document.getElementById('report_reason').value = '';
+    document.getElementById('report_details').value = '';
+    document.getElementById('report_file').value = '';
+    document.getElementById('report-step-1').style.display = 'block';
+    document.getElementById('report-footer-1').style.display = 'flex';
+    document.getElementById('report-step-2').style.display = 'none';
+    document.getElementById('report-footer-2').style.display = 'none';
+    document.getElementById('report-step-3').style.display = 'none';
+    document.getElementById('report-footer-3').style.display = 'none';
+
+    const modal = new bootstrap.Modal(document.getElementById('reportModal'));
+    modal.show();
+}
 
 
     // close modal (for Bootstrap)
