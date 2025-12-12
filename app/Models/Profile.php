@@ -77,6 +77,33 @@ class Profile extends Model
         return $this->user ? $this->user->interests : collect();
     }
 
+
+
+    public const LEVEL_MAP = [
+        'Beginner' => 1,
+        'Intermediate' => 2,
+        'Advanced' => 3,
+        'Native' => 4,
+    ];
+
+    public const LEVEL_MAP_REVERSE = [
+        1 => 'Beginner',
+        2 => 'Intermediate',
+        3 => 'Advanced',
+        4 => 'Native',
+    ];
+
+    public function getJPLevelTextAttribute()
+    {
+        return self::LEVEL_MAP_REVERSE[$this->JP_level] ?? '';
+    }
+
+    public function getENLevelTextAttribute()
+    {
+        return self::LEVEL_MAP_REVERSE[$this->EN_level] ?? '';
+    }
+
+
    
 
 }
