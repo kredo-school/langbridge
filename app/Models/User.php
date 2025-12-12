@@ -27,7 +27,7 @@ class User extends Authenticatable
         'country',
         'region',
         'is_admin',
-
+        
     ];
     public function isAdmin(): bool
     {
@@ -67,9 +67,8 @@ class User extends Authenticatable
     }
 
 
-    public function getAgeAttribute()
-    {
-        return Carbon::parse($this->birthday)->age;
+    public function getAgeAttribute(){
+    return Carbon::parse($this->birthday)->age;
     }
     public function vocabularies()
     {
@@ -77,9 +76,11 @@ class User extends Authenticatable
     }
 
     public function recentChats()
-    {
-        return $this->belongsToMany(User::class, 'chat_sessions', 'user_id', 'partner_id')
-            ->withTimestamps()
-            ->orderBy('chat_sessions.updated_at', 'desc');
-    }
+{
+    return $this->belongsToMany(User::class, 'chat_sessions', 'user_id', 'partner_id')
+                ->withTimestamps()
+                ->orderBy('chat_sessions.updated_at', 'desc');
 }
+
+}
+
