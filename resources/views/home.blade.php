@@ -6,7 +6,7 @@
 <div class="container">
     {{-- page header --}}
     <div class="home-header">
-        <h1>LangBridge</h1>
+        <h1><img src="{{ asset('images/logo.png') }}" alt="Site Logo" class="logo-img">LangBridge</h1>
         <p class="subtitle">Connect through language. Learn through friendship.</p>
       </div>
     {{-- Recent Chat --}}
