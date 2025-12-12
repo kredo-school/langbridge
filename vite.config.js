@@ -8,7 +8,8 @@ export default defineConfig({
                 "resources/sass/app.scss",
                 "resources/js/app.js",
                 "resources/css/style.css", // ← 追加
-                "resources/js/profile.js", // ← 追加
+                "resources/js/translate.js",
+                // "resources/js/profile.js", // ← 追加
             ],
             refresh: true,
         }),
