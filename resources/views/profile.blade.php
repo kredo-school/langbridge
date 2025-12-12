@@ -83,5 +83,4 @@
 </div>
 @endsection
 
-{{-- @vite(['resources/js/translate.js'])
-@vite(['resources/js/app.js']) --}}
+
