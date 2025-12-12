@@ -13,7 +13,7 @@
     <section class="recent-chats-section">
         <h2 class="section-title">Recent Chats</h2> 
         <div class="chat-list">
-            <div class="chat-inner">
+            
             @foreach($recentChats as $user)
                 <div class="chat-card">
                     @if($user->profile && $user->profile->avatar)
@@ -22,13 +22,13 @@
                     </a>
                     @else
                     <a href="{{ route('chat.chat', ['to_user_id' => $user->id]) }}">
-                        <i class="fa-solid fa-circle-user text-secondary"></i>
+                        <i class="fa-solid fa-circle-user text-secondary icon-bd"></i>
                     </a>
                         @endif
                     <div class="name">{{ $user->profile->nickname }}</div>
                     <div class="handle">{{ $user->profile->handle }}</div>
                 </div>
-                </div>
+                
             @endforeach
         </div>
         
@@ -47,7 +47,7 @@
                     </a>
                     @else
                     <a href="{{ route('profile.show', $user->id) }}">
-                    <i class="fa-solid fa-circle-user text-secondary"></i>
+                    <i class="fa-solid fa-circle-user text-secondary icon-bd"></i>
                     </a>
                     @endif
                     <div class="suggested-info">

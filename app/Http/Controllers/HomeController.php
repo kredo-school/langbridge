@@ -58,6 +58,8 @@ class HomeController extends Controller
             ->whereHas('profile', function ($query) {
                 $query->where('hidden', false);
             })
+            ->whereNotIn('id', $partnerIds)
+            ->where('is_admin', false) 
             ->inRandomOrder()
             ->take(10)
             ->get();
