@@ -1,0 +1,133 @@
+.home-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.home-header h1 {
+    font-size: 3em;
+    color: #293E5C; /* Orange accent */
+    font-family: "Noto", "MontSerrat";
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.home-header .subtitle {
+    font-size: 1.2em;
+    color: #555;
+    font-style: italic;
+}
+
+/* Section backgrounds */
+.recent-chats-section {
+    background-color: #EDF1F9; /* Lavender mist */
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 50px;
+    display: flex;         
+    gap: 16px;             
+    flex-wrap: wrap;       
+    
+}
+
+.suggested-users-section {
+    background-color: #FCEDD7; /* Cream */
+    padding: 20px;
+    border-radius: 16px;
+}
+
+/* Section titles */
+.section-title {
+    color: #ECA133; /* Orange accent */
+    font-family: "Nunito", sans-serif;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+/* Cards */
+.suggested-card {
+    background-color: #FADAD8; /* Soft pink */
+    border-radius: 12px;
+    padding: 12px;
+    margin: 10px 0;
+    max-width: 600px;
+    margin: 10px auto;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chat-card:hover, .suggested-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Avatar */
+.avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+/* Info text */
+.name {
+    font-weight: bold;
+    margin: 0;
+}
+
+.bio {
+    font-size: 0.9em;
+    color: #555;
+}
+
+.icon-bd{
+    font-size:60px;
+}
+
+/* Chat button */
+.chat-btn {
+    margin-left: auto; /* Push button to the right */
+    background-color: #F5A59E; /* Rose pink */
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.chat-btn:hover {
+    background-color: #ECA133; /* Orange accent */
+}
+
+.chat-list {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.chat-card {
+    background-color: #FADAD8;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+    width: 160px;
+    text-align: center;
+}
+
+
+.recent-chats-section,
+.suggested-users-section {
+    max-width: 700px;   
+    margin: 0 auto;
+    border-radius: 16px;
+}
+
+.logo-img {
+    width: 100px; 
+    height: auto; 
+}
+
