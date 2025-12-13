@@ -5,26 +5,29 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Quiz extends Model
+class DailyStatistic extends Model
 {
     use HasFactory;
 
+    protected $table = 'daily_statistics';
+
     protected $fillable = [
         'user_id',
-        'vocabulary_id',
-        'is_correct',
-        'attempt_number'
+        'date',
+        'total_questions',
+        'correct_questions',
+        'accuracy',
+        'attempt_number',
     ];
 
-    // ユーザーとのリレーション
+    protected $casts = [
+        'date' => 'date',
+        'accuracy' => 'float'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // 単語とのリレーション
-    public function vocabulary()
-    {
-        return $this->belongsTo(Vocabulary::class);
-    }
 }

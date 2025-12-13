@@ -16,7 +16,12 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet"> <!--Localize CDN after finally decided which font we will use-->
 
     <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js','resources/css/style.css','resources/js/profile.js','resources/js/vocabulary-modal.js'])
+    @vite(['resources/sass/app.scss', 
+           'resources/js/app.js',
+           'resources/css/style.css',
+           'resources/js/profile.js',
+           'resources/js/vocabulary-modal.js',
+           'resources/js/quiz.js'])
 </head>
 <body class="lang-blue">
     <div id="app" class="d-flex">

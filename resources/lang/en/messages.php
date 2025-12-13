@@ -17,6 +17,7 @@ return [
     'next' => 'Next',
     'start' => 'Start',
     'max' => 'Max',
+    'loading' => 'Loading',
     //ログインページ
     'welcome' => 'Welcome to LangBridge',
     //興味・関心
@@ -62,5 +63,11 @@ return [
     'on' => 'ON',
     'off' => 'OFF',
     'question_side' => 'Question Side',
-    'nofq' => 'Number of Questions'
+    'nofq' => 'Number of Questions',
+    'show_answer' => 'Show Answer',
+    'correct' => 'Correct',
+    'incorrect' => 'Incorrect',
+    'quiz_result' => 'Vocabulary Quiz Result',
+    'quiz_try_again' => 'Try Again',
+    'go_list' => 'Back to List'
 ];

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Quiz;
 use App\Models\Vocabulary;
+use App\Models\DailyStatistic;
 use Illuminate\Support\Facades\Auth;
 
 class QuizController extends Controller
@@ -41,23 +42,107 @@ class QuizController extends Controller
 
         $query = Vocabulary::where('user_id', $user_id);
 
-        if($only_unmastered) {
+        if ($only_unmastered) {
             $query->where('status', '!=', 'mastered');
         }
 
-        if($order === 'random'){
+        if ($order === 'random') {
             $query->inRandomOrder();
-        }else{
+        } else {
             $query->orderBy('created_at', 'asc');
-        } 
+        }
 
         $questions = $query->limit($count)->get();
 
+        $today = now()->toDateString();
+
+        $todayCount = Quiz::where('user_id', Auth::id())
+            ->whereDate('created_at', $today)
+            ->max('attempt_number');
+
+        $attemptNumber = $todayCount ? $todayCount + 1 : 1;
+    
+        session([
+            'quiz_questions' => $questions,
+            'quiz_side' => $side,
+            'quiz_attempt_number' => $attemptNumber,
+        ]);
+
+        return redirect()->route('quiz.run', ['index' => 0]);
+    }
+
+    public function run(Request $request)
+    {
+        $questions = session('quiz_questions');
+        $side = session('quiz_side');
+        $index = $request->index ?? 0;
+
+        if (!$questions || $index >= count($questions)) {
+            $user_id = Auth::id();
+            $today = now()->toDateString();
+
+            $latest_attempt = Quiz::where('user_id', $user_id)
+                ->latest('id')
+                ->value('attempt_number');
+
+            $total = Quiz::where('user_id', $user_id)
+                ->where('attempt_number', $latest_attempt)
+                ->count();
+
+            $correct = Quiz::where('user_id', $user_id)
+                ->where('attempt_number', $latest_attempt)
+                ->where('is_correct', true)
+                ->count();
+
+            $accuracy = $total > 0 ? round(($correct / $total) * 100, 2) : 0;
+
+            DailyStatistic::create([
+                'user_id' => $user_id,
+                'date' => $today,
+                'total_questions' => $total,
+                'correct_questions' => $correct,
+                'accuracy' => $accuracy,
+                'attempt_number' => $latest_attempt,
+            ]);
+
+            return redirect()->route('quiz.result')->with([
+                'attempt_number' => $latest_attempt,
+                'total' => $total,
+                'correct' => $correct
+            ]);
+        }
+
+        $question = $questions[$index];
+
         return view('pages.quiz.card', [
-            'questions' => $questions,
-            'side' => $side
+            'question' => $question,
+            'side' => $side,
+            'index' => $index,
+            'total' => count($questions),
         ]);
     }
+
+    public function record(Request $request)
+    {
+        $user_id = Auth::id();
+
+        Quiz::create([
+            'user_id' => $user_id,
+            'vocabulary_id' => $request->vocabulary_id,
+            'is_correct' => $request->is_correct,
+            'attempt_number' => session('quiz_attempt_number')
+        ]);
+
+        $next_index = $request->index + 1;
+
+        return redirect()->route('quiz.run', ['index' => $next_index]);
+    }
+
+    public function result()
+    {
+        return view('pages.quiz.result');
+    }
+
 
     public function card()
     {

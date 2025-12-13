@@ -17,6 +17,7 @@ return [
     'next' => '次へ',
     'start' => '開始',
     'max' => '上限',
+    'loading' => '読み込み中',
     //ログインページ
     'welcome' => 'LangBridgeへようこそ',
     //興味・関心
@@ -62,5 +63,11 @@ return [
     'on' => 'オン',
     'off' => 'オフ',
     'question_side' => '出題面',
-    'nofq' => '出題数'
+    'nofq' => '出題数',
+    'show_answer' => '正解を見る',
+    'correct' => '正解',
+    'incorrect' => '不正解',
+    'quiz_result' => '単語クイズ結果',
+    'quiz_try_again' => 'もう一度挑戦',
+    'go_list' => '単語リストに戻る'
 ];

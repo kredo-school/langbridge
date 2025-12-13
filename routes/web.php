@@ -60,6 +60,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/settings', [QuizController::class, 'settings'])->name('settings');
         Route::post('/settings/step1', [QuizController::class, 'step1'])->name('settings.step1');
         Route::post('/start', [QuizController::class, 'start'])->name('start');
+        Route::get('/run', [QuizController::class, 'run'])->name('run');
+        Route::post('/record', [QuizController::class, 'record'])->name('record');
+        Route::get('/result', [QuizController::class, 'result'])->name('result');
         Route::get('/card', [QuizController::class, 'card'])->name('card');
     });
 
