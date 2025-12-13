@@ -17,11 +17,11 @@
             @foreach($recentChats as $user)
                 <div class="chat-card">
                     @if($user->profile && $user->profile->avatar)
-                    <a href="{{ route('chat.chat', ['to_user_id' => $user->id]) }}">    
+                    <a href="{{ route('pages.chat', ['to_user_id' => $user->id]) }}">    
                     <img src="{{ $user->profile->avatar }}" class="avatar rounded-circle" > 
                     </a>
                     @else
-                    <a href="{{ route('chat.chat', ['to_user_id' => $user->id]) }}">
+                    <a href="{{ route('pages.chat', ['to_user_id' => $user->id]) }}">
                         <i class="fa-solid fa-circle-user text-secondary icon-bd"></i>
                     </a>
                         @endif

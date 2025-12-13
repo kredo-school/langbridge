@@ -43,6 +43,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::group(['prefix' => 'chat', 'as' => 'chat.'], function () {
         Route::get('/', [ChatController::class, 'index'])->name('chat');
+
+        // Route::get('/chat/{to_user_id}', [ChatController::class, 'index'])
+            // ->name('pages.chat');
+
         Route::post('/send', [ChatController::class, 'send'])->name('send');
         Route::get('/fetch', [ChatController::class, 'fetch'])->name('fetch');
         Route::delete('/delete/{id}', [ChatController::class, 'destroy'])->name('destroy');
