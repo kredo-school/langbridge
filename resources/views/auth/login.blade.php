@@ -11,7 +11,7 @@
                         @csrf
 
                         <div class="input-group mb-3">
-                            <span class="input-group-text bg-white"><i class="bi bi-envelope"></i></span>
+                            <span class="input-group-text bg-white"><i class="fa-solid fa-envelope"></i></span>
                             <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="email" required autocomplete="email" autofocus>
 
                                 @error('email')
@@ -22,7 +22,7 @@
                         </div>
 
                         <div class="input-group mb-3">
-                            <span class="input-group-text bg-white"><i class="bi bi-key"></i></span>
+                            <span class="input-group-text bg-white"><i class="fa-solid fa-key"></i></span>
                             <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="password" required autocomplete="current-password">
 
                                 @error('password')

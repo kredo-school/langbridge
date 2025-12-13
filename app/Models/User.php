@@ -75,12 +75,12 @@ class User extends Authenticatable
         return $this->hasMany(Vocabulary::class);
     }
 
-//     public function recentChats()
-// {
-//     return $this->belongsToMany(User::class, 'chat_sessions', 'user_id', 'partner_id')
-//                 ->withTimestamps()
-//                 ->orderBy('chat_sessions.updated_at', 'desc');
-// }
+    public function recentChats()
+{
+    return $this->belongsToMany(User::class, 'chat_sessions', 'user_id', 'partner_id')
+                ->withTimestamps()
+                ->orderBy('chat_sessions.updated_at', 'desc');
+}
 
 }
 

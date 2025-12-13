@@ -2,7 +2,7 @@
 
     <!-- ロゴ -->
     <div class="my-3">
-        <a href="{{ url('/') }}"> <!--Homeページへのルートを入れる-->
+        <a href="{{ route('home') }}"> <!--Homeページへのルートを入れる-->
             <img src="{{ asset('images/logo.png') }}" alt="Logo" class="nav-logo">
         </a>
     </div>
@@ -27,7 +27,7 @@
     </a>
 
     <!-- 固定アイコン：設定 -->
-    <a class="nav-link mb-4" href=""> <!--settingページへのルートを入れる-->
+    <a class="nav-link mb-4" href="{{ route('setting.index')}}"> <!--settingページへのルートを入れる-->
         <i class="fa-solid fa-cog fa-lg"></i>
     </a>
 

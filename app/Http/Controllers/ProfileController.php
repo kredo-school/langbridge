@@ -83,6 +83,7 @@ class ProfileController extends Controller
         ];
 
         $profile->nickname = $request->nickname;
+        $profile->handle = $request->handle;
         $profile->bio = $request->bio;
         $profile->JP_level = $levelMap[$request->JP_level];
         $profile->EN_level = $levelMap[$request->EN_level];

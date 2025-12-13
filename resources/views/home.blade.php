@@ -1,42 +1,63 @@
 @extends('layouts.app')
 
+
+
 @section('content')
 <div class="container">
+    {{-- page header --}}
     <div class="home-header">
-        <h1>LangBridge</h1>
+        <h1><img src="{{ asset('images/logo.png') }}" alt="Site Logo" class="logo-img">LangBridge</h1>
         <p class="subtitle">Connect through language. Learn through friendship.</p>
       </div>
-    {{-- Chat user --}}
-    <div class="recent-chats mb-4">
-        <h2>Chat</h2> 
-        {{-- <div class="chat-list">
+    {{-- Recent Chat --}}
+    <section class="recent-chats-section">
+        <h2 class="section-title">Recent Chats</h2> 
+        <div class="chat-list">
+            
             @foreach($recentChats as $user)
                 <div class="chat-card">
-                    <img src="{{ $profile->avatar }}" class="avatar">
-                    <div class="name">{{ $profile->nickname }}</div>
-                    <div class="handle">@{{ $profile->handle }}</div>
+                    @if($user->profile && $user->profile->avatar)
+                    <a href="{{ route('chat.chat', ['to_user_id' => $user->id]) }}">    
+                    <img src="{{ $user->profile->avatar }}" class="avatar rounded-circle" > 
+                    </a>
+                    @else
+                    <a href="{{ route('chat.chat', ['to_user_id' => $user->id]) }}">
+                        <i class="fa-solid fa-circle-user text-secondary icon-bd"></i>
+                    </a>
+                        @endif
+                    <div class="name">{{ $user->profile->nickname }}</div>
+                    <div class="handle">{{ $user->profile->handle }}</div>
                 </div>
+                
             @endforeach
         </div>
-    </div> --}} 
+        
+        
+    </section> 
 
     {{-- Suggested Users --}}
-    <div class="suggested-users">
-        <h2>Suggested Users</h2>
+    <section class="suggested-users-section">
+        <h2 class="section-title">Suggested Users</h2>
         <div class="suggested-list">
             @foreach($otherUsers as $user)
-                <div class="suggested-card pt-3">
+                <div class="suggested-card">
                     @if($user->profile->avatar)
-                    <img src="{{ $user->profile->avatar }}" alt="Avatar" class="rounded-circle" width="80">
+                    <a href="{{ route('profile.show', $user->id) }}">
+                    <img src="{{ $user->profile->avatar }}" alt="Avatar" class="avatar rounded-circle" >
+                    </a>
                     @else
-                    <i class="fa-solid fa-circle-user text-secondary" style="font-size: 60px;"></i>
+                    <a href="{{ route('profile.show', $user->id) }}">
+                    <i class="fa-solid fa-circle-user text-secondary icon-bd"></i>
+                    </a>
                     @endif
-                    <div class="user-meta">
-                        <div class="name">{{ $user->profile->nickname }}</div>
-                        <div class="handle">{{ $user->profile->handle }}</div>
-                        <div class="bio">{{ $user->profile->bio }}</div>
+                    <div class="suggested-info">
+                        <p class="name">{{ $user->profile->nickname }}</p>
+                        <p class="handle">{{ $user->profile->handle }}</p>
+                        <p class="bio">{{ $user->profile->bio }}</p>
                     </div>
-                    <button class="start-chat">Start Chat</button>
+                    <button class="chat-btn"  onclick="window.location.href='{{ route('chat.chat', ['to_user_id' => $user->id]) }}'">
+                        <i class="fa-regular fa-comment"></i>Start Chat
+                    </button>
                 </div>
             @endforeach
         </div>
