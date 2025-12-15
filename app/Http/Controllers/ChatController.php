@@ -98,6 +98,7 @@ class ChatController extends Controller
     {
         $to_user_id = $request->input('to_user_id');
         $user_id = Auth::id();
+
         if (empty($to_user_id)) {
             return response()->json(['messages' => []]);
         }

@@ -42,16 +42,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/users/search', [SearchController::class, 'search'])->name('users.search');
 
     Route::group(['prefix' => 'chat', 'as' => 'chat.'], function () {
-        Route::get('/', [ChatController::class, 'index'])->name('chat');
-
-        // Route::get('/chat/{to_user_id}', [ChatController::class, 'index'])
-            // ->name('pages.chat');
-
+        Route::get('/', [ChatController::class, 'index'])->name('pages.chat');
         Route::post('/send', [ChatController::class, 'send'])->name('send');
         Route::get('/fetch', [ChatController::class, 'fetch'])->name('fetch');
         Route::delete('/delete/{id}', [ChatController::class, 'destroy'])->name('destroy');
         Route::post('/report/{id}', [ChatController::class, 'report'])->name('report');
     });
+
 
     Route::post('/translate', [TranslateController::class, 'translate'])->name('translate');
 });

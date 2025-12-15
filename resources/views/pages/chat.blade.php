@@ -226,7 +226,8 @@
         : "";
 
         if (previousMessage) {
-            let prevDateString = new Date(previousMessage.sent_at + 'Z').toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            let prevDateString = new Date(previousMessage.sent_at + 'Z').toLocaleString('ja-JP', { timeZone: tz|| 'Asia/Tokyo' }).slice(0, -3);
             if (dateString.split(' ')[0] === prevDateString.split(' ')[0]) {
                 dateTag = ""; // no date tag if same date as previous message
             }
