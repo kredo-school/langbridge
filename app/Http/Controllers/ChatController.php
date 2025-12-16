@@ -44,18 +44,6 @@ class ChatController extends Controller
         return view('pages.chat', compact('users', 'to_user_id', 'violationReasons'));
     }
 
-    public function createTestUser()
-    {
-        $testUser = User::firstOrCreate(
-            [
-                'email' => 'testuser@example.com',
-                'name' => 'Test User',
-                'target_language' => 'en',
-                'country' => 'US',
-                'password' => bcrypt('password'),
-            ]
-        );
-    }
 
     // send message
     public function send(Request $request)
