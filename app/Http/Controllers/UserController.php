@@ -16,18 +16,4 @@ class UserController extends Controller
        return redirect()->route('login')->with('deleted', true);
    }
 
-//    // 管理者による削除
-//    public function adminDestroy($id){
-//        $user = User::findOrFail($id);
-//        $user->delete();
-
-//        return redirect()->route('#')->with('deleted', true);
-//    }
-//    // 管理者による復元
-//    public function restore($id){
-//        $user = User::withTrashed()->findOrFail($id);
-//        $user->restore();
-
-//        return redirect()->route('#')->with('restored', true);
-//    }
 }

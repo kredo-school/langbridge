@@ -11,7 +11,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\TranslateController;
-
+use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AdminReportController;
+use App\Http\Middleware\IsAdmin;
 
 
 Auth::routes();
@@ -51,3 +53,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/translate', [TranslateController::class, 'translate'])->name('translate');
 });
+
+Route::middleware(['auth', IsAdmin::class])->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+        Route::get('/reports/users', [AdminReportController::class, 'users'])->name('admin.reports.users');
+        Route::get('/reports/messages', [AdminReportController::class, 'messages'])->name('admin.reports.messages');
+    });
+});
+

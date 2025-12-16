@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ReportViolationReason;
+use App\Models\User;
+
 
 class Report extends Model
 {
@@ -17,4 +19,12 @@ class Report extends Model
         'reported_content_type',
         'action_status',
     ];
+
+    public function reporter(){
+        return $this->belongsTo(User::class, 'reporter_id');
+    }
+
+    public function reportedContent(){
+        return $this->morphTo();
+    }
 }
