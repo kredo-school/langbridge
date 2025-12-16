@@ -13,7 +13,7 @@ class Quiz extends Model
         'user_id',
         'vocabulary_id',
         'is_correct',
-        'attempt_number'
+        'attempt_number',
     ];
 
     // ユーザーとのリレーション

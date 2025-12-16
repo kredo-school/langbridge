@@ -99,6 +99,9 @@
                 </label>
             </div>
 
+            <!--TimeZone(hidden)-->
+            <input type="hidden" name="timezone" id="timezone" value="DEBUG"> <!--後で消す-->
+
             <!-- Register button -->
             <button type="submit" class="btn btn-primary w-100">Register</button>
         </form>

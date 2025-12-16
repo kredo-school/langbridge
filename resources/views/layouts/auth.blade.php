@@ -21,7 +21,9 @@
            'resources/css/style.css',
            'resources/js/translate.js',
            'resources/js/vocabulary-modal.js',
-           'resources/js/quiz.js'])
+           'resources/js/quiz.js',
+           'resources/css/home.css',
+           'resources/js/timezone.js'])
 </head>
 <body class="lang-blue">
     <div id="app" class="d-flex">

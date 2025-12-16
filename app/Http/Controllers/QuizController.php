@@ -39,6 +39,10 @@ class QuizController extends Controller
         $only_unmastered = $request->only_unmastered;
         $side = $request->question_side;
         $count = (int)$request->count;
+        $user_timezone = Auth::user()->timezone ?? 'UTC';
+
+        $today_start = now($user_timezone)->startOfDay()->setTimezone('UTC');
+        $today_end   = now($user_timezone)->endOfDay()->setTimezone('UTC');
 
         $query = Vocabulary::where('user_id', $user_id);
 
@@ -54,10 +58,8 @@ class QuizController extends Controller
 
         $questions = $query->limit($count)->get();
 
-        $today = now()->toDateString();
-
         $todayCount = Quiz::where('user_id', Auth::id())
-            ->whereDate('created_at', $today)
+            ->whereBetween('created_at', [$today_start, $today_end])
             ->max('attempt_number');
 
         $attemptNumber = $todayCount ? $todayCount + 1 : 1;
