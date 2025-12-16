@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Services\DeepLService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class TranslateController extends Controller
 {
-   
     public function translate(Request $request, DeepLService $deepl)
     {
         try {
@@ -17,7 +15,6 @@ class TranslateController extends Controller
 
             return $result;
         } catch (\Exception $e) {
-            Log::error('Translation failed: ' . $e->getMessage());
             return response()->json([
                 'error' => 'Translation failed',
                 'message' => $e->getMessage(),
