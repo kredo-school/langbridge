@@ -9,12 +9,16 @@ class TranslateController extends Controller
 {
     public function translate(Request $request, DeepLService $deepl)
     {
-        $text = $request->input('text');
-        $result = $deepl->translateBidirectional($text);
+        try {
+            $text = $request->input('text');
+            $result = $deepl->translateBidirectional($text);
 
-        return response()->json([
-            'original' => $result['original'],
-            'translated' => $result['translated'],
-        ]);
+            return $result;
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Translation failed',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

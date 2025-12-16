@@ -21,7 +21,7 @@
     'resources/sass/app.scss',
     'resources/js/app.js',
     'resources/css/style.css',
-    'resources/js/profile.js',
+    'resources/js/translate.js',
     'resources/css/home.css'
     ])
     <!-- Bootstrap -->
