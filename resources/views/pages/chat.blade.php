@@ -2,7 +2,7 @@
 
 {{-- chat screen main template --}}
 @section('content')
-<div class="container w-75">
+<div class="container w-75 h-100 my-4">
     <div style="display:flex;gap:24px;">
 
         {{-- left side: chat partner selection form --}}
@@ -12,6 +12,7 @@
                 <div class="mb-2">
                     <label>Select Chat Partner:</label>
                     <div style="max-height:320px;overflow-y:auto;">
+
                         @foreach($users as $user)
                         <button type="submit" name="to_user_id" value="{{ $user->id }}" class="btn btn-light w-100 mb-2"
                             style="display:flex;align-items:center;gap:10px;padding:6px 10px;text-align:left;">
@@ -28,6 +29,7 @@
                 </div>
             </form>
         </div>
+
 
         {{-- right side: chat main body --}}
         <div style="flex:1;">
@@ -68,7 +70,14 @@
                             <option value="🥺">🥺</option>
                             <option value="😎">😎</option>
                             <option value="😭">😭</option>
+                            <option value="😡">😡</option>
+                            <option value="💖">💖</option>
+                            <option value="💡">💡</option>
+                            <option value="🔥">🔥</option>
+                            <option value="🌟">🌟</option>
+                            <option value="🐈">🐈</option>
                         </datalist>
+                        {{-- send button --}}
                         <button type="submit" class="btn btn-primary"
                             style="position:absolute;right:0;top:0;width:40px;min-width:40px;height:100%;padding:0;display:flex;align-items:center;justify-content:center;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
@@ -88,7 +97,7 @@
             <div class="modal-content">
                 <!-- Header -->
                 <div class="modal-header">
-                    <h4 class="modal-title">User Report</h4>
+                    <h4 class="modal-title">Report</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
@@ -99,19 +108,19 @@
 
                     <!-- Step 1: Confirm -->
                     <div id="report-step-1">
-                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-                            <span id="report_user_avatar_wrapper">
-                                <img id="report_user_avatar" src="" class="rounded-circle"
-                                    style="width:40px;height:40px;object-fit:cover;display:none;">
-                                <i id="report_user_icon" class="fas fa-user-circle"
-                                    style="font-size:40px;color:#bbb;display:none;"></i>
+                        <div style="margin-bottom:10px;">
+                            <!-- message image (if any) -->
+                            <span id="report_message_image_wrapper" style="display:none;">
+                                <img id="report_message_image" src=""
+                                    style="max-width:100px;max-height:100px;border-radius:8px;">
                             </span>
+                            <!-- message content -->
                             <div>
-                                <strong id="report_user_name" style="font-size:1.1em;"></strong><br>
-                                <span id="report_user_handle" style="color:gray;font-size:0.9em;"></span>
+                                <strong>Reported Message:</strong>
+                                <p id="report_message_content" style="font-size:1.1em;word-break:break-all;"></p>
                             </div>
                         </div>
-                        <p>Are you sure you want to report this user?</p>
+                        <p class="mb-0">Are you sure you want to report this message?</p>
                     </div>
 
                     <!-- Step 2: Details -->
@@ -122,7 +131,7 @@
                                 <option value="" selected disabled>{{ __('Select a reason') }}</option>
                                 @foreach($violationReasons as $reason)
                                 <option value="{{ $reason->id }}">
-                                    {{ app()->getLocale() === 'ja' ? $reason->name_JP : $reason->name_EN }}
+                                    {{ $reason->name }}
                                 </option>
                                 @endforeach
                             </select>
@@ -171,12 +180,15 @@
 
 {{-- JavaScript for chat functionality --}}
 <script>
-    function fetchMessages(to_user_id){
+    const loadedMessages = new Set();  // * Global set to track loaded message IDs
+    let previousMessage = null; // * To track previous message for date comparison
+
+    function fetchMessages(to_user_id){// fetch message list from server
         return fetch(`/chat/fetch?to_user_id=${to_user_id}`)
             .then(res => res.json())
     }
 
-    function deleteMessage(messageId) {
+    function deleteMessage(messageId) {// delete a message by ID
         if (!confirm('Do you want to delete this message?')) return;
         fetch(`/chat/delete/${messageId}`, {
             method: 'DELETE',
@@ -186,17 +198,16 @@
         })
         .then(res => res.json())
         .then(() => {
-            displayMessages();
+            displayMessages(true); // * reload all messages after deletion of one message
         });
     }
 
-    function formatMessage(msg, box, myId) {
+    function formatMessage(msg, box, myId, previousMessage) {// format a single message for display
         // image tag
         let imgTag = (msg.image_path && msg.image_path !== 'null' && msg.image_path.length > 0)
             ? `<img src='${msg.image_path}' style='max-width:100px;'>`
             : "";
 
-    
         // emoji tag
         let emojiTag = msg.emoji ? msg.emoji : "";
 
@@ -206,9 +217,25 @@
             : '<span style="color:gray;">(Unread)</span>';
 
         // time tag(Japanese time zone)
-        let timeTag = msg.sent_at
-        ? `<span style='color:gray;font-size:0.9em;'>${new Date(msg.sent_at + 'Z').toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })}</span>`
+        let dateString = new Date(msg.sent_at + 'Z').toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }).slice(0, -3);
+
+         // date tag (only if different from previous message)
+
+        let dateTag = msg.sent_at
+        ? `<span style='color:gray;font-size:0.9em;'>${dateString.split(' ')[0]}</span>`
         : "";
+
+        if (previousMessage) {
+            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            let prevDateString = new Date(previousMessage.sent_at + 'Z').toLocaleString('ja-JP', { timeZone: tz|| 'Asia/Tokyo' }).slice(0, -3);
+            if (dateString.split(' ')[0] === prevDateString.split(' ')[0]) {
+                dateTag = ""; // no date tag if same date as previous message
+            }
+        }
+
+        let timeTag = msg.sent_at
+            ? `<span style='color:gray;font-size:0.9em;'>${dateString.split(' ')[1]}</span>`
+            : "";
 
         // alignment, background color, and name
         let align = msg.user_id == myId ? "right" : "left";
@@ -224,66 +251,104 @@
                 ? `<img src='${msg.partner_avatar}' class="rounded-circle" style="width:32px;height:32px;">`
                 : `<i class="fas fa-user-circle" style="font-size:32px;color:#bbb;"></i>`;
         }
-
-        // always display sender's name
+        
+        // name tag
         let nameTag = msg.user_name;
 
-        // flag icon (received messages only)
-        let reportTag =
-        msg.user_id != myId
-        ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.2em;' title='Report' onclick='openReportModal(${msg.id}, "${msg.user_name}", "${msg.partner_avatar ?? ''}", "${msg.partner_handle ?? ''}")'><i class="fa-solid fa-flag"></i></span>`
-        : "";
+        // report icon (not for own messages or emoji-only messages)
+         let isEmojiOnly = (!msg.content || msg.content.trim() === "") && msg.emoji;
+         let reportTag = msg.user_id != myId && !isEmojiOnly
+         ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;' title='Report'
+         onclick='openReportModal(${msg.id}, \`${msg.content}\`, \`${msg.image_path ?? ""}\`)'>
+         <i class="fa-solid fa-flag"></i></span>`
+         : "";
+ 
+        // translate icon (always shown)
+        let translateTag =
+            `<span style='cursor:pointer;color:#1976d2;font-size:1.0em;margin-left:4px;' title='Translate'
+            onclick="translateMessage(${msg.id}, \`${msg.content}\`)">
+            <i class="fa-solid fa-language"></i></span>`;
 
-        // delete button (only for own messages)
-        let deleteBtn = "";
-        if (msg.user_id == myId) {
-            deleteBtn = `<button onclick="deleteMessage(${msg.id})" style="margin-left:8px;background:none; border:none;" class="btn btn-danger btn-sm">
-           <i class="fas fa-trash-alt" style="color:#d32f2f;"></i></button>`;
-        }
+        // delete icon (only for own messages)
+        let deleteBtn =
+            msg.user_id == myId
+                ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;margin-left:8px;' title='Delete'
+                onclick='deleteMessage(${msg.id})'>
+                <i class="fa-regular fa-trash-can"></i></span>`
+                : "";
 
-        // message display HTML (avatar and name left-aligned)
+        // append formatted message to chat box
         box.innerHTML += [
-            `<div style='text-align:${align};background:${bgColor};margin:5px 0;padding:5px;border-radius:8px;max-width:70%;display:inline-block;float:${align};clear:both;position:relative;'>`,
-            `<div style="display:flex;align-items:center;justify-content:flex-start;gap:8px;">${avatarTag}<strong>${nameTag}</strong></div>`,
-            ` ${msg.content} ${emojiTag}`,
-            imgTag ? `<div style='margin-top:4px;'>${imgTag}</div>` : "",
-            `<div style='margin-top:4px;font-size:0.9em;'>${timeTag} ${readTag}</div>`,
+            `<div style='text-align:center;'>${dateTag}</div>`,
+
+            `<div style='text-align:${align};margin:5px 0;padding:5px;
+            border-radius:8px;max-width:70%;display:inline-block;float:${align};
+            clear:both;position:relative;'>`,
+
+            //name and avatar display
+            (msg.user_id != myId
+                ? `<div style=\"display:flex;align-items:center;justify-content:flex-start;gap:8px;\" class="mb-1">${avatarTag}<strong class="mx-0">${nameTag}</strong></div>`
+                : `<!-- <div style=\"display:flex;align-items:center;justify-content:flex-start;gap:8px;\" class="mb-1">${avatarTag}<strong class="mx-0">${nameTag}</strong></div> -->`),
+            
+            // image display
+            imgTag ? `<div style='margin-top:4px;' class="mb-1">${imgTag}</div>` : "",
+
+            msg.content || emojiTag ? `<span id="msg-content-${msg.id}" data-original="${msg.content}" data-translated="false" style="background:${bgColor};padding:4px 8px 2px 8px;border-radius:6px;display:inline-block;">
+                ${msg.content} ${emojiTag}
+            </span>` : "",
+
+            `<div id="msg-meta-${msg.id}" style='margin-top:4px;font-size:0.9em;color:gray;'>${readTag} ${timeTag}</div>`,
             reportTag,
+            translateTag,
             deleteBtn,
             `</div><div style='clear:both;'></div>`,
         ].join("");
     }
 
-       // function to fetch and display message list
-        function displayMessages() {
+    // function to fetch and display message list
+    function displayMessages(reload=false) {
         // get selected user ID
         const to_user_id = document.getElementById('to_user_id')?.value || document.getElementById('form_to_user_id')?.value;
         if (!to_user_id) return;
+        if (reload) previousMessage = null; // * reset previousMessage if reloading all
+        if (reload) loadedMessages.clear(); // * clear loadedMessages if reloading all
+        const box = document.getElementById('chat-box');
+        if (reload) box.innerHTML = ''; // * Clear existing messages if reloading all
 
-        // fetch message list from server
         fetchMessages(to_user_id)
-            .then(data =>{
-                const box = document.getElementById('chat-box');
-                box.innerHTML = '';
+            .then(data => {
                 const myId = {{ auth()->id() }};
-                // display each fetched message
                 data.messages.forEach(msg => {
-                    formatMessage(msg, box, myId);
+                    if (loadedMessages.has(msg.id)) {
+                        // Update read status if already loaded
+                        const metaTag = document.getElementById(`msg-meta-${msg.id}`);
+                        if (metaTag) {
+                            if (msg.is_read) {
+                                metaTag.innerHTML = metaTag.innerHTML.replace('(Unread)', '(Read)');
+                            } else {
+                                metaTag.innerHTML = metaTag.innerHTML.replace('(Read)', '(Unread)');
+                            }
+                        }
+                        return; // * skip adding/modifying already loaded messages
+                    }
+
+                    formatMessage(msg, box, myId, previousMessage); // * format and add message to chat box
+                    loadedMessages.add(msg.id);
+                    previousMessage = msg; // * Update previousMessage for next iteration
                 });
-                box.scrollTop = box.scrollHeight;
+
+                if (reload) box.scrollTop = box.scrollHeight; // auto scroll to bottom
             });
     }
 
-        // message delete process
-        displayMessages();
-        setInterval(displayMessages, 5000);
+    displayMessages();
+    setInterval(displayMessages, 5000);
 
-        // message send process
-        const form = document.getElementById('chat-form');
-        form.addEventListener('submit', function(e) {
+    const form = document.getElementById('chat-form');
+    form.addEventListener('submit', function(e) {
         e.preventDefault();
-        // send message to server
 
+        // send message to server
         const fd = new FormData(form);
         fetch('/chat/send', {
             method: 'POST',
@@ -303,25 +368,25 @@
         });
     });
     
-    // open report modal and initialize steps
-    function openReportModal(messageId, userName = '', userAvatar = '', userHandle = '') {
-     document.getElementById('report_message_id').value = messageId;
-     document.getElementById('report_user_name').textContent = userName;
-     document.getElementById('report_user_handle').textContent = userHandle;
 
-     const avatarImg = document.getElementById('report_user_avatar');
-     const iconFallback = document.getElementById('report_user_icon');
+   function openReportModal(messageId, messageContent = '', messageImage = '') {
+    document.getElementById('report_message_id').value = messageId;
 
-  if (userAvatar && userAvatar.trim().length > 0) {
-    avatarImg.src = userAvatar;
-    avatarImg.style.display = 'inline-block';
-    iconFallback.style.display = 'none';
-  } else {
-    avatarImg.style.display = 'none';
-    iconFallback.style.display = 'inline-block';
-  }
+    //set message content
+    document.getElementById('report_message_content').textContent = messageContent;
 
-    // reset form fields and show step 1
+    // set message image (if any)
+    const imageWrapper = document.getElementById('report_message_image_wrapper');
+    const imageTag = document.getElementById('report_message_image');
+    if (messageImage && messageImage.trim().length > 0) {
+        imageTag.src = messageImage;
+        imageWrapper.style.display = 'inline-block';
+    } else {
+        imageTag.src = '';
+        imageWrapper.style.display = 'none';
+    }
+
+    // reset form fields and steps
     document.getElementById('report_reason').value = '';
     document.getElementById('report_details').value = '';
     document.getElementById('report_file').value = '';
@@ -334,7 +399,7 @@
 
     const modal = new bootstrap.Modal(document.getElementById('reportModal'));
     modal.show();
-   }
+}
 
 
     // close modal (for Bootstrap)
@@ -343,82 +408,123 @@
         if (modal) modal.hide();
     }
 
-   // report modal step navigation
-  document.addEventListener ('DOMContentLoaded', function () {
-  const step1 = document.getElementById('report-step-1');
-  const step2 = document.getElementById('report-step-2');
-  const step3 = document.getElementById('report-step-3');
+    // report modal step navigation
+    document.addEventListener ('DOMContentLoaded', function () {
+        const step1 = document.getElementById('report-step-1');
+        const step2 = document.getElementById('report-step-2');
+        const step3 = document.getElementById('report-step-3');
 
-  const footer1 = document.getElementById('report-footer-1');
-  const footer2 = document.getElementById('report-footer-2');
-  const footer3 = document.getElementById('report-footer-3');
+        const footer1 = document.getElementById('report-footer-1');
+        const footer2 = document.getElementById('report-footer-2');
+        const footer3 = document.getElementById('report-footer-3');
 
-  document.getElementById('report-next-1').addEventListener('click', () => {
-    step1.style.display = 'none';
-    footer1.style.display = 'none';
-    step2.style.display = 'block';
-    footer2.style.display = 'flex';
-  });
+        document.getElementById('report-next-1').addEventListener('click', () => {
+        step1.style.display = 'none';
+        footer1.style.display = 'none';
+        step2.style.display = 'block';
+        footer2.style.display = 'flex';
+    });
 
-  document.getElementById('report-back-2').addEventListener('click', () => {
-    step2.style.display = 'none';
-    footer2.style.display = 'none';
-    step1.style.display = 'block';
-    footer1.style.display = 'flex';
-  });
+    document.getElementById('report-back-2').addEventListener('click', () => {
+        step2.style.display = 'none';
+        footer2.style.display = 'none';
+        step1.style.display = 'block';
+        footer1.style.display = 'flex';
+    });
 
- document.getElementById('report-submit-2').addEventListener('click', () => {
-  const messageId = document.getElementById('report_message_id').value;
-  const reasonId = document.getElementById('report_reason').value;
-  const details = document.getElementById('report_details').value;
-  const file = document.getElementById('report_file').files[0];
+    document.getElementById('report-submit-2').addEventListener('click', () => {
+    const messageId = document.getElementById('report_message_id').value;
+    const reasonId = document.getElementById('report_reason').value;
+    const details = document.getElementById('report_details').value;
+    const file = document.getElementById('report_file').files[0];
 
-  if (!reasonId) {
-    alert('Please select a reason for the report.');
-    document.getElementById('report_reason').classList.add('is-invalid');
-    return;
-  } else {
-    document.getElementById('report_reason').classList.remove('is-invalid');
-  }
+    if (!reasonId) {
+        alert('Please select a reason for the report.');
+        document.getElementById('report_reason').classList.add('is-invalid');
+        return;
+    } else {
+        document.getElementById('report_reason').classList.remove('is-invalid');
+    }
 
-   const fd = new FormData();
+    const fd = new FormData();
     fd.append('violation_reason_id', reasonId);
     fd.append('detail', details);
     if (file) {
         fd.append('file', file);
     }
- 
 
-fetch(`/chat/report/${messageId}`, {
-  method: 'POST',
-  headers: {
-    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-  },
-  body: fd,
-   credentials: 'same-origin'
-})
-.then(async res => {
-  if (!res.ok) {
-    const errorData = await res.json();
-    console.error('Validation error:', errorData);
-    alert('Failed to report.: ' + (errorData.message || 'Unknown error'));
-    throw new Error('Validation failed');
-  }
-  return res.json();
-})
-.then(data => {
-  document.getElementById('report-step-2').style.display = 'none';
-  document.getElementById('report-footer-2').style.display = 'none';
-  document.getElementById('report-step-3').style.display = 'block';
-  document.getElementById('report-footer-3').style.display = 'flex';
-})
-.catch(error => {
-  console.error('❌ Report error:', error);
-  alert('An error occurred while sending the report.');
+    fetch(`/chat/report/${messageId}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: fd,
+        credentials: 'same-origin'
+    })
+        .then(async res => {
+        if (!res.ok) {
+                const errorData = await res.json();
+                console.error('Validation error:', errorData);
+                alert('Failed to report.: ' + (errorData.message || 'Unknown error'));
+                throw new Error('Validation failed');
+            }
+            return res.json();
+        })
+        .then(data => {
+            document.getElementById('report-step-2').style.display = 'none';
+            document.getElementById('report-footer-2').style.display = 'none';
+            document.getElementById('report-step-3').style.display = 'block';
+            document.getElementById('report-footer-3').style.display = 'flex';
+        })
+        .catch(error => {
+            console.error('❌ Report error:', error);
+            alert('An error occurred while sending the report.');
+            });
+        });
 });
 
- });
-});
+function translateMessage(messageId, content) {
+    const target = document.querySelector(`#msg-content-${messageId}`);
+    if (!target) return;
+
+    //reverse translation if already translated
+    if (target.dataset.translated === "true") {
+        target.textContent = target.dataset.original;
+        target.dataset.translated = "false";
+        return;
+    }
+
+    // call API if not translated
+    fetch('/translate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ text: content })
+    })
+    .then(async res => {
+        if (!res.ok) {
+            // Return HTML error page as is
+            const text = await res.text();
+            throw new Error(`Server error ${res.status}: ${text}`);
+        }
+        return res.json();
+    })
+    .then(data => {
+        if (data.translated) {
+            target.textContent = data.translated;
+            target.dataset.translated = "true"; //flag as translated
+        } else {
+            throw new Error('No translated text in response');
+        }
+    })
+    .catch(err => {
+        console.error('Translation error:', err);
+        alert('Failed to translate.');
+    });
+}
+
 </script>
 
 @endsection

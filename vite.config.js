@@ -8,9 +8,13 @@ export default defineConfig({
                 "resources/sass/app.scss",
                 "resources/js/app.js",
                 "resources/css/style.css", // ← 追加
-                "resources/js/profile.js", // ← 追加
+                "resources/js/translate.js",
+                "resources/css/home.css",
             ],
             refresh: true,
         }),
     ],
+    build: {
+        outDir: "public/build", // ← ここに追加
+    },
 });

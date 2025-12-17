@@ -2,17 +2,15 @@
 
     <!-- ロゴ -->
     <div class="my-3">
-        <a href="{{ route('home') }}"> <!--Homeページへのルートを入れる-->
+        <a href="{{ route('home') }}">
+            <!--Homeページへのルートを入れる-->
             <img src="{{ asset('images/logo.png') }}" alt="Logo" class="nav-logo">
         </a>
     </div>
 
     <!-- ハンバーガーメニュー -->
-    <button class="btn mb-3 border-0" type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#sidebarMenuContent"
-            aria-expanded="false"
-            >
+    <button class="btn mb-3 border-0" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenuContent"
+        aria-expanded="false">
         <span><i class="fa-solid fa-bars"></i></span>
     </button>
 
@@ -27,7 +25,8 @@
     </a>
 
     <!-- 固定アイコン：設定 -->
-    <a class="nav-link mb-4" href="{{ route('setting.index')}}"> <!--settingページへのルートを入れる-->
+    <a class="nav-link mb-4" href="{{ route('setting.index')}}">
+        <!--settingページへのルートを入れる-->
         <i class="fa-solid fa-cog fa-lg"></i>
     </a>
 
@@ -38,7 +37,8 @@
             <ul class="list-group list-group-flush">
 
                 <li class="list-group-item">
-                    <a href="" class="text-decoration-none text-dark"> <!--chatページへのルートを入れる-->
+                    <a href="{{ route('chat.pages.chat') }}" class="text-decoration-none text-dark">
+                        <!--chatページへのルートを入れる-->
                         <i class="fa-solid fa-comment me-2"></i>{{ __('messages.chat')}}
                     </a>
                 </li>
@@ -50,28 +50,28 @@
                 </li>
 
                 @guest
-                    @if (Route::has('login'))
-                        <li class="list-group-item">
-                            <a class="text-decoration-none text-dark" href="{{ route('login') }}">{{__('messages.login')}}</a>
-                        </li>
-                    @endif
-                    @if (Route::has('register'))
-                        <li class="list-group-item">
-                            <a class="text-decoration-none text-dark" href="{{ route('register') }}">{{__('messages.register')}}</a>
-                        </li>
-                    @endif
+                @if (Route::has('login'))
+                <li class="list-group-item">
+                    <a class="text-decoration-none text-dark" href="{{ route('login') }}">{{__('messages.login')}}</a>
+                </li>
+                @endif
+                @if (Route::has('register'))
+                <li class="list-group-item">
+                    <a class="text-decoration-none text-dark"
+                        href="{{ route('register') }}">{{__('messages.register')}}</a>
+                </li>
+                @endif
                 @else
-                    <li class="list-group-item">
-                        <a class="text-decoration-none text-dark"
-                           href="{{ route('logout') }}"
-                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="fa-solid fa-right-from-bracket me-2"></i> {{__('messages.logout')}}
-                        </a>
+                <li class="list-group-item">
+                    <a class="text-decoration-none text-dark" href="{{ route('logout') }}"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="fa-solid fa-right-from-bracket me-2"></i> {{__('messages.logout')}}
+                    </a>
 
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                            @csrf
-                        </form>
-                    </li>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </li>
                 @endguest
 
             </ul>

@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@push('scripts')
+<script src="{{ asset('js/translate.js') }}" defer></script>
+@endpush
+
 @section('content')
 <div class="container">
     <h2 class="text-center"><img src="{{ asset('images/logo.png') }}" alt="Site Logo" class="logo-img">Profile</h2>
@@ -9,7 +13,7 @@
         <label class="mb-3">Avatar</label>
         <div>
             @if($profile->avatar)
-             <img src="{{ $profile->avatar }}" alt="Avatar" class="rounded-circle" width="120">
+            <img src="{{ $profile->avatar }}" alt="Avatar" class="rounded-circle" width="120">
             @else
              <i class="fa-solid fa-circle-user text-secondary icon-bd" ></i>
             @endif
@@ -35,24 +39,24 @@
         <div class="form-group">
             <label>Age</label>
             @if($user->profile->age_hidden)
-             <span class="text-muted">Private</span>
-            @else 
-            {{ $user->age }}<!--生年月日から年齢を計算して表示するようにする-->
+            <span class="text-muted">Private</span>
+            @else
+            {{ $user->age }}
             @endif
         </div>
         <div class="form-group">
             <label>Country</label>
             @if($user->profile->country_hidden)
-             <span class="text-muted">Private</span>
-            @else 
+            <span class="text-muted">Private</span>
+            @else
             {{ $profile->user->country }}
             @endif
         </div>
         <div class="form-group">
             <label>Region</label>
             @if($user->profile->region_hidden)
-             <span class="text-muted">Private</span>
-            @else 
+            <span class="text-muted">Private</span>
+            @else
             {{ $profile->user->region }}
             @endif
         </div>
@@ -90,5 +94,4 @@
 </div>
 @endsection 
 
-@vite(['resources/js/translate.js'])
 
