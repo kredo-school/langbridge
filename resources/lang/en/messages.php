@@ -13,6 +13,11 @@ return [
     'cancel' => 'Cancel',
     'optional' => 'Optional',
     'update' => 'Update',
+    'status' => 'Status',
+    'next' => 'Next',
+    'start' => 'Start',
+    'max' => 'Max',
+    'loading' => 'Loading',
     //ログインページ
     'welcome' => 'Welcome to LangBridge',
     //興味・関心
@@ -38,9 +43,31 @@ return [
     'interest_categories' => 'Interest Tags',
     'no_profile' => 'No matching users found.',
     //単語リスト
+    'vocabulary_list' => 'Vocabulary List',
     'add_vocabulary' => 'Add Vocabulary',
     'edit_vocabulary' => 'Edit Vocabulary',
     'front' => 'Front',
     'back' => 'Back',
-    'note' => 'Note'
+    'note' => 'Note',
+    'no_vocabulary' => 'No words registered.',
+    //単語クイズ
+    'vocabulary_quiz' => 'Vocabulary Quiz',
+    'quiz_settings' => 'Quiz Settings',
+    'unlearned' => 'unlearned',
+    'learning' => 'learning',
+    'mastered' => 'mastered',
+    'order' => 'Order',
+    'added' => 'Added',
+    'random' => 'Random',
+    'only_unmastered' => 'Only Unmastered Items',
+    'on' => 'ON',
+    'off' => 'OFF',
+    'question_side' => 'Question Side',
+    'nofq' => 'Number of Questions',
+    'show_answer' => 'Show Answer',
+    'correct' => 'Correct',
+    'incorrect' => 'Incorrect',
+    'quiz_result' => 'Vocabulary Quiz Result',
+    'quiz_try_again' => 'Try Again',
+    'go_list' => 'Back to List'
 ];

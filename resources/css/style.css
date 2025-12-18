@@ -34,13 +34,46 @@
     border-radius: 4px;
 }
 
-.btn-search {
+.btn-yellow {
+    display: inline-flex; 
+    align-items: center;  
+    justify-content: center;
     font-size: medium;
     border: 1px solid ;
     padding: 8px 14px;
     border-radius: 8px;
     background: #eca133;
     color: #ffffff;
+    text-decoration: none;
+    line-height: 1;
+}
+
+.btn-red {
+    display: inline-flex; 
+    align-items: center;  
+    justify-content: center;
+    font-size: medium;
+    border: 1px solid ;
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #F5A59E;
+    color: #ffffff;
+    text-decoration: none;
+    line-height: 1;
+}
+
+.btn-gray {
+    display: inline-flex; 
+    align-items: center;  
+    justify-content: center;
+    font-size: medium;
+    border: 1px solid #ccc;
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #ccc;
+    color: #333;
+    text-decoration: none;
+    line-height: 1;
 }
 
 .image-md {
@@ -64,6 +97,12 @@
     height: 40px;
 }
 
+.menu-size {
+    top: 70px; 
+    left: 80px; 
+    width: 180px;
+}
+
 .modal-backdrop {
     position: fixed;
     inset: 0;
@@ -79,35 +118,37 @@
     border-radius: 0.5rem;
     width: 400px;
     max-width: 90%;
+    z-index: 1060;
 }
 
-.btn-add {
-    background-color: #F5A59E;
+/* Pagination Styling */
+.pagination .page-link {
+    color: #5b84bd;
+    border-color: #dee2e6;
+}
+
+.pagination .page-link:hover {
+    color: #5b84bd;
+    background-color: #f0f0f0;
+    border-color: #dee2e6;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #5b84bd;
+    border-color: #5b84bd;
     color: white;
-    margin-right: 0.5rem;
-}
-
-.btn-edit {
-    background-color: #eca133;
-    color: white;
-    margin-right: 0.5rem;
-}
-
-.btn-cancel {
-    background-color: #ccc;
-    color: #333;
 }
 
 .interests-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 20px;
+    gap: 12px;
     align-items: stretch;
   }
   
   .interest-card {
     position: relative;       
-   
+    display: block;
     cursor: pointer;
     user-select: none;
   }
@@ -124,10 +165,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 50px;
+    min-height: 70px;
     width: 100%;
-    padding: 8px;
-    border: 2px solid #F5A59E;
+    padding: 10px;
+    border: 2px solid #a855f7;
     border-radius: 12px;
     text-align: center;
     background-color: #fff;
@@ -137,139 +178,23 @@
   
   /* hover時の色変化 */
   .interest-card:hover .interest-card-content {
-    background-color: #fad2cec5;
+    background-color: #f3e8ff;
   }
   
   /* 選択済み（DBにある）場合 → 初期表示で色付き */
   .interest-card.selected .interest-card-content {
-    background-color: #F5A59E;
+    background-color: #a855f7;
     color: #fff;
-    border-color: #F5A59E;
+    border-color: #7c3aed;
   }
   
   /* 今クリックした場合 → 即座に色付き */
   .interest-card input[type="checkbox"]:checked ~ .interest-card-content {
-    background-color: #F5A59E;
+    background-color: #a855f7;
     color: #fff;
-    border-color: #F5A59E;
+    border-color: #7c3aed;
   }
   
-  body {
-    font-family: "Nunito", sans-serif;
-    background-color: #fff;
-    margin: 0;
-    padding: 20px;
-  }
-  
-  .profile-form {
-    max-width: 900px;
-    margin: 0 auto;
-    background-color: #FCEDD7;
-    padding: 24px;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-  
-  .form-title {
-    text-align: center;
-    color: #ECA133;
-    margin-bottom: 20px;
-  }
-  
-  .profile-top {
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    gap: 20px;
-  }
-  
-  .avatar-section {
-    background-color: #FADAD8;
-    border-radius: 12px;
-    padding: 16px;
-    text-align: center;
-  }
- 
-  
-  
-  .input-columns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-  }
-  .bio-group {
-    grid-column: span 2; 
-  }
-  
-  .empty-cell {
-    
-  }
 
-  .form-group label {
-    font-weight: bold;
-    color: #ECA133;
-    margin-bottom: 6px;
-  }
-  
-  input, select, textarea {
-    border: 1px solid #ccc;
-    border-radius: 12px;
-    padding: 10px;
-    font-size: 1em;
-  }
-  
-  .bio-group {
-    grid-column: span 2;
-  }
-  
-  .bio-group textarea {
-    min-height: 120px;
-  }
-  
-  .interest-section {
-    background-color: #EDF1F9;
-    padding: 16px;
-    border-radius: 16px;
-    margin-top: 30px;
-    max-width: 900px;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  .interest-title {
-    font-weight: bold;
-    font-size: large;
-    color: #ECA133;
-    margin-bottom: 10px;
-    text-align: center;
-  }
-  
-  .edit-btn {
-    display: block;
-    margin: 30px auto 0;
-    background-color: #F5A59E;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 10px 20px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  .btn-sm{
-    width: 70px;
-  }
-  
-  .profile-wrapper {
-    background-color: #FFF3E8; 
-    border-radius: 20px;
-    padding: 24px;
-    max-width: 900px;
-    margin: 0 auto 24px;
-  }
-  
+
 

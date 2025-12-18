@@ -27,7 +27,7 @@ class User extends Authenticatable
         'country',
         'region',
         'is_admin',
-        
+        'timezone',
     ];
     public function isAdmin(): bool
     {
@@ -73,6 +73,11 @@ class User extends Authenticatable
     public function vocabularies()
     {
         return $this->hasMany(Vocabulary::class);
+    }
+
+    public function dailyStatistics()
+    {
+        return $this->hasMany(DailyStatistic::class);
     }
 
     public function recentChats()
