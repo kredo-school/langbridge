@@ -75,6 +75,11 @@ class User extends Authenticatable
         return $this->hasMany(Vocabulary::class);
     }
 
+    public function dailyStatistics()
+    {
+        return $this->hasMany(DailyStatistic::class);
+    }
+
     public function recentChats()
 {
     return $this->belongsToMany(User::class, 'chat_sessions', 'user_id', 'partner_id')

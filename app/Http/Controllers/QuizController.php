@@ -7,9 +7,12 @@ use App\Models\Quiz;
 use App\Models\Vocabulary;
 use App\Models\DailyStatistic;
 use Illuminate\Support\Facades\Auth;
+use App\Services\VocabularyStatusService;
+use Carbon\Carbon;
 
 class QuizController extends Controller
 {
+
     public function settings()
     {
         return view('pages.quiz.settings');
@@ -39,10 +42,8 @@ class QuizController extends Controller
         $only_unmastered = $request->only_unmastered;
         $side = $request->question_side;
         $count = (int)$request->count;
-        $user_timezone = Auth::user()->timezone ?? 'UTC';
 
-        $today_start = now($user_timezone)->startOfDay()->setTimezone('UTC');
-        $today_end   = now($user_timezone)->endOfDay()->setTimezone('UTC');
+        [$today_start, $today_end] = $this->getTodayUtcRange($user_id);
 
         $query = Vocabulary::where('user_id', $user_id);
 
@@ -73,15 +74,19 @@ class QuizController extends Controller
         return redirect()->route('quiz.run', ['index' => 0]);
     }
 
-    public function run(Request $request)
+    public function run(Request $request, VocabularyStatusService $statusService)
     {
         $questions = session('quiz_questions');
         $side = session('quiz_side');
         $index = $request->index ?? 0;
 
+        [$today_start, $today_end] = $this->getTodayUtcRange(Auth::id());
+
         if (!$questions || $index >= count($questions)) {
             $user_id = Auth::id();
             $today = now()->toDateString();
+
+            $statusService->promoteLearningToMastered($user_id);
 
             $latest_attempt = Quiz::where('user_id', $user_id)
                 ->latest('id')
@@ -89,11 +94,13 @@ class QuizController extends Controller
 
             $total = Quiz::where('user_id', $user_id)
                 ->where('attempt_number', $latest_attempt)
+                ->whereBetween('created_at', [$today_start, $today_end])
                 ->count();
 
             $correct = Quiz::where('user_id', $user_id)
                 ->where('attempt_number', $latest_attempt)
                 ->where('is_correct', true)
+                ->whereBetween('created_at', [$today_start, $today_end])
                 ->count();
 
             $accuracy = $total > 0 ? round(($correct / $total) * 100, 2) : 0;
@@ -135,6 +142,12 @@ class QuizController extends Controller
             'attempt_number' => session('quiz_attempt_number')
         ]);
 
+        // unlearned → learning
+        Vocabulary::where('id', $request->vocabulary_id)
+            ->where('user_id', $user_id)
+            ->where('status', 'unlearned')
+            ->update(['status' => 'learning']);
+
         $next_index = $request->index + 1;
 
         return redirect()->route('quiz.run', ['index' => $next_index]);
@@ -149,5 +162,20 @@ class QuizController extends Controller
     public function card()
     {
         return view('pages.quiz.card');
+    }
+
+    private function getTodayUtcRange(): array
+    {
+        $user_timezone = Auth::user()->timezone ?? 'UTC';
+
+        $start = Carbon::now($user_timezone)
+            ->startOfDay()
+            ->setTimezone('UTC');
+
+        $end = Carbon::now($user_timezone)
+            ->endOfDay()
+            ->setTimezone('UTC');
+
+        return [$start, $end];
     }
 }
