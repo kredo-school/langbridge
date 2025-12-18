@@ -21,7 +21,7 @@
         @foreach($reports as $report)
         <tr>
             <td class="px-4 py-2 border">{{ $report->id }}</td>
-            <td class="px-4 py-2 border">{{ $report->reported_content_type }}</td>
+            <td class="px-4 py-2 border">{{ class_basename($report->reported_content_type) }}</td>
             <td class="px-4 py-2 border">{{ $report->reported_content_id }}</td>
             <td class="px-4 py-2 border">{{ $report->violation_reason_id }}</td>
             <td class="px-4 py-2 border">{{ $report->detail }}</td>

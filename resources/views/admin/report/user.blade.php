@@ -21,25 +21,38 @@
         @foreach($reports as $report)
         <tr>
             <td class="px-4 py-2 border">{{ $report->id }}</td>
-            <td class="px-4 py-2 border">{{ $report->reported_content_type }}</td>
+            <td class="px-4 py-2 border">{{ class_basename($report->reported_content_type) }}</td>
             <td class="px-4 py-2 border">{{ $report->reported_content_id }}</td>
             <td class="px-4 py-2 border">{{ $report->violation_reason_id }}</td>
             <td class="px-4 py-2 border">{{ $report->detail }}</td>
             <td class="px-4 py-2 border">{{ $report->file }}</td>
             <td class="px-4 py-2 border">{{ $report->created_at }}</td>
             <td class="px-4 py-2 border">{{ $report->reporter->name }}</td>
-            <td class="px-4 py-2 border">
+            <td>
                 <form action="{{ route('admin.reports.action', $report->id) }}" method="POST">
                     @csrf
-                    <select name="action" class="border rounded px-2 py-1">
-                        <option value="warn">warned</option>
-                        <option value="suspend">suspended</option>
-                        <option value="delete">delete</option>
-                        <option value="restore">restore</option>
-                    </select>
-                    <button type="submit" class="ml-2 px-3 py-1 bg-blue-500 text-white rounded">実行</button>
+                    @php
+                        $labels = [
+                            'pending'     => 'Warn',
+                            'warn'         => 'Suspend',
+                            'suspend'      => 'SoftDelete',
+                            'user_deleted' => 'Restore',
+                            'restore'     => 'Pending',
+                        ];
+                        $current = $report->action_status ?? 'pending';
+                    @endphp
+                    <button type="submit" class="btn btn-primary">
+                        {{ $labels[$current] ?? 'Warn' }}
+                    </button>
                 </form>
+                {{-- <form method="POST" action="{{ route('admin.reports.action', $report->id) }}">
+                    @csrf
+                    <button type="submit" class="px-3 py-1 bg-blue-500 text-black rounded">
+                        {{ $report->nextActionLabel() }}
+                    </button>
+                </form> --}}
             </td>
+            
         </tr>
         @endforeach
     </tbody>

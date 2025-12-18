@@ -59,6 +59,8 @@ Route::middleware(['auth', IsAdmin::class])->group(function () {
         Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users.index');
         Route::get('/reports/users', [AdminReportController::class, 'users'])->name('admin.reports.users');
         Route::get('/reports/messages', [AdminReportController::class, 'messages'])->name('admin.reports.messages');
+        Route::post('/reports/{id}/action', [AdminReportController::class, 'action'])->name('admin.reports.action');
+
     });
 });
 

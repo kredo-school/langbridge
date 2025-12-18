@@ -15,6 +15,7 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, SoftDeletes;
 
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -29,6 +30,9 @@ class User extends Authenticatable
         'country',
         'region',
         'is_admin',
+        'suspended',
+        'deleted_at',
+        'updated_at',
         
     ];
     public function isAdmin(): bool
@@ -55,6 +59,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'suspended' => 'boolean',
+            'deleted_at' => 'datetime',
         ];
     }
 
@@ -84,7 +90,7 @@ class User extends Authenticatable
                 ->orderBy('chat_sessions.updated_at', 'desc');
 }
 
-use SoftDeletes;
+
 
     public function reports(){
         return $this->morphMany(Report::class, 'reportedContent');

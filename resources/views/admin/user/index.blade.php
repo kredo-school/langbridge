@@ -1,7 +1,16 @@
 @extends('admin.layout')
 
-@section('content')
+@section('admin-content')
 
+<div class="block w-full text-right mb-4">
+    <form method="GET" action="{{ route(Route::currentRouteName()) }}" class="flex items-center gap-2">
+        <input type="text" name="keyword" value="{{ request('keyword') }}"
+               placeholder="Search User" class="px-3 py-2 border rounded-lg">
+        <button type="submit" class="px-3 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+    </form>
+</div>
 <table class="table-auto w-full border">
     <thead>
         <tr>

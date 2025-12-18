@@ -163,7 +163,7 @@ class ChatController extends Controller
             'detail' => $request->detail,
             'file' => $filePath,
             'reported_content_id' => $id,
-            'reported_content_type' => 'message',
+            'reported_content_type' => \App\Models\Message::class,
             'action_status' => 'pending',
         ]);
 
