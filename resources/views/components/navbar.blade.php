@@ -34,7 +34,7 @@
             <ul class="list-group list-group-flush">
 
                 <li class="list-group-item">
-                    <a href="" class="text-decoration-none text-dark"> <!--chatページへのルートを入れる-->
+                    <a href="{{ route('chat.pages.chat') }}" class="text-decoration-none text-dark"> <!--chatページへのルートを入れる-->
                         <i class="fa-solid fa-comment me-2"></i>{{ __('messages.chat')}}
                     </a>
                 </li>
