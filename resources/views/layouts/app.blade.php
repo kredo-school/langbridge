@@ -22,7 +22,10 @@
     'resources/js/app.js',
     'resources/css/style.css',
     'resources/js/translate.js',
-    'resources/css/home.css'
+    'resources/js/vocabulary-modal.js',
+    'resources/js/quiz.js',
+    'resources/css/home.css',
+    'resources/js/timezone.js'
     ])
     <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

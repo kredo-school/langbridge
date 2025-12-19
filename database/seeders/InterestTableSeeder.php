@@ -62,6 +62,30 @@ class InterestTableSeeder extends Seeder
             [
                 'name' => 'Books & Literature'
             ]
+
+            ,[
+                'category' => 'user',
+                'name' => 'Inappropriate or false information'
+            ],
+            [
+                'category' => 'user',
+                'name' => 'External links or social media promotion'
+            ],
+            [
+                'category' => 'user',
+                'name' => 'Self-promotion or solicitation'
+            ],
+            [
+                'category' => 'user',
+                'name' => 'Offensive or inappropriate language'
+            ],
+            [
+                'category' => 'user',
+                'name' => 'Other'
+            ],
+                
+
+
         ]);
     }
 }

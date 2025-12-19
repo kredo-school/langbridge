@@ -68,6 +68,7 @@ class RegisterController extends Controller
             'birthday' => $data['birthday'],
             'country' => $data['country'],
             'region' => $data['region'],
+            'timezone' => request('timezone') ?? 'UTC',
         ]);
 
         Profile::create([
@@ -88,6 +89,7 @@ class RegisterController extends Controller
         'role' => ['required', 'string'],
         'country' => ['nullable', 'string'],
         'region' => ['nullable', 'string'],
+        'timezone' => ['nullable', 'string', 'max:64'],
     ]);
 }
 
