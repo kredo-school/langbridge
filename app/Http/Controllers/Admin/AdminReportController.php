@@ -32,65 +32,50 @@ class AdminReportController extends Controller
     }
 
     /** Action to report */
-    public function action(Request $request, $id)
-    {
-        $report = Report::findOrFail($id);
-        $target = $report->reportedContent; 
+    public function action(Request $request, $id){
+    $report = Report::findOrFail($id);
     
-        if (!$target) {
-            return back()->with('error', 'not found the target');
-        }
-        // if ($target instanceof User) {
-        //     $user = User::withTrashed()->findOrFail($report->reported_content_id);
-        if ($report->reported_content_type === User::class) {
-            $user = User::withTrashed()->findOrFail($report->reported_content_id);
-        //     // User 
-            switch ($report->action_status) {
-                case 'pending':
-                    $report->action_status = 'warn';
-                    break;
-        
-                case 'warn':
-                    $report->action_status = 'suspend';
-                    $user->update(['suspended' => true]);
-                    $user->save();
-                    break;
-        
-                case 'suspend':
-                    
-                    $user->delete(); // soft delete
-                    $report->action_status = 'user_deleted';
-                    break;                    
-                
-                case 'user_deleted':
+   
+    $target = $report->reportedContent;
+
     
-    $user->update([
-        'deleted_at' => null,
-        'suspended' => false,
-    ]);
-    $report->update(['action_status' => 'restore']);
-    break;
-                    // $user->restore();
-                    // $user->update(['suspended' => false]); 
-                    // $report->update(['action_status' => 'restore']); 
-                    // break;
-                    
-                case 'restore':
-                    $report->action_status = 'pending';
-                    break;
-            }
-        } elseif ($report->reported_content_type === Message::class) {
-            // Message 
-    // } elseif ($target instanceof Message) {
-            if ($report->action_status === 'pending') {
-                $target->forceDelete(); 
-                $report->action_status = 'deleted';
-            }
-        }
-        
-            $report->save();    
-    
-            return redirect()->back()->with('action_status', $report->action_status);
+    if (!$target) {
+        return back()->with('error', 'not found');
     }
+
+    // User
+    if ($target instanceof \App\Models\User) {
+        
+        $currentStatus = $report->action_status;
+
+        if ($currentStatus === 'pending') {
+            $report->action_status = 'warn';
+        } elseif ($currentStatus === 'warn') {
+            $target->update(['suspended' => true]);
+            $report->action_status = 'suspend';
+        } elseif ($currentStatus === 'suspend') {
+            $target->delete(); 
+            $report->action_status = 'user_deleted'; 
+        } elseif ($currentStatus === 'user_deleted') {
+            $target->restore(); 
+            $report->action_status = 'restore';
+        } elseif ($currentStatus === 'restore') {
+            $target->update(['suspended' => false]);
+            $report->action_status = 'pending'; 
+        }
+    } 
+    //  Message
+    elseif ($target instanceof \App\Models\Message) {
+        if ($report->action_status === 'pending') {
+            $target->forceDelete();
+            $report->action_status = 'deleted';
+        }
+    }
+
+    
+    $report->save();
+
+    return redirect()->back()->with('success', $report->action_status);
+}
 
 }

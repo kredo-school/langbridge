@@ -9,7 +9,8 @@ class AdminUserController extends Controller
 {
     public function index(Request $request){
         
-        $query = User::with('profile');
+        $search = $request->input('search');
+        $query = User::withTrashed();
 
         if($search = $request->input('search')){
             $query->where(function($userQuery) use ($search){
@@ -24,19 +25,28 @@ class AdminUserController extends Controller
         return view('admin.user.index', compact('users'));
     }
 
-  // softdelete by admin
-   public function adminDestroy($id){
-       $user = User::findOrFail($id);
-       $user->delete();
-
-       return redirect()->route('#')->with('deleted', true);
-   }
+  
    // restore by admin
    public function restore($id){
        $user = User::withTrashed()->findOrFail($id);
        $user->restore();
 
-       return redirect()->route('#')->with('restored', true);
+       return back()->with('success', 'restored');
    }
+
+   public function suspend($id) {
+    User::findOrFail($id)->update(['suspended' => 1]);
+    return back()->with('success', 'suspended');
+}
+
+public function unsuspend($id) {
+    User::findOrFail($id)->update(['suspended' => 0]);
+    return back()->with('success', 'active');
+}
+
+public function destroy($id) {
+    User::findOrFail($id)->delete();
+    return back()->with('success', 'deleted');
+}
 
 }

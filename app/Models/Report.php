@@ -27,17 +27,17 @@ class Report extends Model
     }
 
     public function reportedContent(){
-        return $this->morphTo();
+        return $this->morphTo()->withTrashed();
     }
 
     public function nextActionLabel()
     {
         $map = [
-            'reported'    => 'Warn',
-            'warned'      => 'Suspend',
-            'suspended'   => 'Delete',
+            'pending'    => 'Warn',
+            'warn'      => 'Suspend',
+            'suspend'   => 'SoftDelete',
             'user_deleted'=> 'Restore',
-            'restored'    => 'Report',
+            'restore'    => 'Pending',
         ];
     
         return $map[$this->action_status] ?? 'Pending';
