@@ -38,7 +38,7 @@
 <div class="row mb-4">
     <div class="col-auto d-flex align-items-center">
         @if($profile->avatar)
-            <img src="{{ $profile->avatar }}" alt="" class="rounded-circle image-md d-block mx-auto my-auto">
+            <img src="{{ $profile->avatar }}" alt="" class="rounded-circle image-md d-block">
         @else
             <i class="fa-solid fa-circle-user text-secondary icon-md d-block text-center"></i>
         @endif
