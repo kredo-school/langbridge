@@ -281,7 +281,6 @@
             `<div id="msg-meta-${msg.id}" style='margin-top:4px;font-size:0.9em;color:gray;'>${readTag} ${timeTag}</div>`,
             reportTag,
             translateTag,
-            // deleteBtn,
             `</div><div style='clear:both;'></div>`,
         ].join("");
     }
