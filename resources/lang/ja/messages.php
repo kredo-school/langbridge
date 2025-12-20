@@ -20,6 +20,11 @@ return [
     'loading' => '読み込み中',
     //ログインページ
     'welcome' => 'LangBridgeへようこそ',
+    //ホーム
+    'learning_journey' => '学習の記録',
+    'recent_chats' => '最近のチャット',
+    'suggested_users' => 'おすすめユーザ',
+    'start_chat' => 'チャットをはじめる',
     //興味・関心
     'interests' => [
         '1' => 'エンターテイメント',
