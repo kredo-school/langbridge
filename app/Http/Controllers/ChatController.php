@@ -115,33 +115,27 @@ class ChatController extends Controller
             return response()->json(['messages' => []]);
         }
 
+
         $messages = Message::where(function ($q) use ($user_id, $to_user_id) {
             $q->where('user_id', $user_id)->where('to_user_id', $to_user_id);
         })->orWhere(function ($q) use ($user_id, $to_user_id) {
             $q->where('user_id', $to_user_id)->where('to_user_id', $user_id);
         })->orderBy('sent_at', 'asc')->get();
 
-        // add username
         foreach ($messages as $msg) {
+            $sender = User::with('profile')->find($msg->user_id);
+            $receiver = User::with('profile')->find($msg->to_user_id);
+            $msg->user_name = $sender->name ?? '';
+            $msg->partner_name = $receiver->name ?? '';
+            $msg->user_avatar = $sender->profile->avatar ?? '';
+            // partner_avatarは「自分以外の相手」のアバター
             if ($msg->user_id == $user_id) {
-                $user = User::with('profile')->find($msg->user_id); // user himself
-                $partner = User::with('profile')->find($msg->to_user_id); // chat partner
-                $msg->user_name = $user->name ?? '';
-                $msg->partner_name = $partner->name ?? '';
-                $msg->user_avatar = $user->profile->avatar ?? '';
-                $msg->partner_avatar = $partner->profile->avatar ?? '';
-                $msg->partner_handle = $partner->profile->handle ?? '';
+                $msg->partner_avatar = $receiver->profile->avatar ?? '';
+                $msg->partner_handle = $receiver->profile->handle ?? '';
             } else {
-                $user = User::with('profile')->find($msg->user_id); // chat partner
-                $partner = User::with('profile')->find($msg->to_user_id); // user himself
-                $msg->user_name = $user->name ?? '';
-                $msg->partner_name = $partner->name ?? '';
-                $msg->user_avatar = $user->profile->avatar ?? '';
-                $msg->partner_avatar = $partner->profile->avatar ?? '';
-                $msg->partner_handle = $user->profile->handle ?? '';
+                $msg->partner_avatar = $sender->profile->avatar ?? '';
+                $msg->partner_handle = $sender->profile->handle ?? '';
             }
-
-
             $msg->content = $msg->content ?? '';
             $msg->emoji = $msg->emoji ?? '';
             $msg->image_path = (!empty($msg->image_path) && $msg->image_path !== 'null') ? $msg->image_path : '';
