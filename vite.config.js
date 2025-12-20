@@ -5,9 +5,10 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
+                "resources/css/app.css",
                 "resources/sass/app.scss",
                 "resources/js/app.js",
-                "resources/css/style.css", // ← 追加
+                "resources/css/style.css",
                 "resources/js/translate.js",
                 "resources/css/home.css",
             ],
