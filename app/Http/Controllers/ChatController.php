@@ -12,7 +12,6 @@ use App\Models\Report;
 use App\Models\ReportViolationReason;
 
 
-
 class ChatController extends Controller
 {
     public function index(Request $request)
@@ -39,6 +38,31 @@ class ChatController extends Controller
             ->get();
 
         $to_user_id = $request->input('to_user_id');
+
+        // hiddenユーザーでも、過去にチャット履歴があれば非hiddenユーザーから再開できる
+        if ($to_user_id) {
+            $toUser = User::with('profile')->find($to_user_id);
+            $isHidden = !$toUser || !$toUser->profile || $toUser->profile->hidden;
+
+            if ($isHidden) {
+                $me = Auth::user();
+                // 自分がhiddenでない場合のみ履歴チェック
+                if (!$me->profile || !$me->profile->hidden) {
+                    $hasHistory = \App\Models\Message::where(function ($q) use ($user_id, $to_user_id) {
+                        $q->where('user_id', $user_id)->where('to_user_id', $to_user_id);
+                    })->orWhere(function ($q) use ($user_id, $to_user_id) {
+                        $q->where('user_id', $to_user_id)->where('to_user_id', $user_id);
+                    })->exists();
+                    if (!$hasHistory) {
+                        abort(403, 'This user is not available for chat.');
+                    }
+                } else {
+                    // 自分もhiddenなら常に403
+                    abort(403, 'This user is not available for chat.');
+                }
+            }
+        }
+
         $violationReasons = ReportViolationReason::where('category', 'chat')->get();
 
         return view('pages.chat', compact('users', 'to_user_id', 'violationReasons'));
@@ -91,33 +115,27 @@ class ChatController extends Controller
             return response()->json(['messages' => []]);
         }
 
+
         $messages = Message::where(function ($q) use ($user_id, $to_user_id) {
             $q->where('user_id', $user_id)->where('to_user_id', $to_user_id);
         })->orWhere(function ($q) use ($user_id, $to_user_id) {
             $q->where('user_id', $to_user_id)->where('to_user_id', $user_id);
         })->orderBy('sent_at', 'asc')->get();
 
-        // add username
         foreach ($messages as $msg) {
+            $sender = User::with('profile')->find($msg->user_id);
+            $receiver = User::with('profile')->find($msg->to_user_id);
+            $msg->user_name = $sender->name ?? '';
+            $msg->partner_name = $receiver->name ?? '';
+            $msg->user_avatar = $sender->profile->avatar ?? '';
+            // partner_avatarは「自分以外の相手」のアバター
             if ($msg->user_id == $user_id) {
-                $user = User::with('profile')->find($msg->user_id); // user himself
-                $partner = User::with('profile')->find($msg->to_user_id); // chat partner
-                $msg->user_name = $user->name ?? '';
-                $msg->partner_name = $partner->name ?? '';
-                $msg->user_avatar = $user->profile->avatar ?? '';
-                $msg->partner_avatar = $partner->profile->avatar ?? '';
-                $msg->partner_handle = $partner->profile->handle ?? '';
+                $msg->partner_avatar = $receiver->profile->avatar ?? '';
+                $msg->partner_handle = $receiver->profile->handle ?? '';
             } else {
-                $user = User::with('profile')->find($msg->user_id); // chat partner
-                $partner = User::with('profile')->find($msg->to_user_id); // user himself
-                $msg->user_name = $user->name ?? '';
-                $msg->partner_name = $partner->name ?? '';
-                $msg->user_avatar = $user->profile->avatar ?? '';
-                $msg->partner_avatar = $partner->profile->avatar ?? '';
-                $msg->partner_handle = $user->profile->handle ?? '';
+                $msg->partner_avatar = $sender->profile->avatar ?? '';
+                $msg->partner_handle = $sender->profile->handle ?? '';
             }
-
-
             $msg->content = $msg->content ?? '';
             $msg->emoji = $msg->emoji ?? '';
             $msg->image_path = (!empty($msg->image_path) && $msg->image_path !== 'null') ? $msg->image_path : '';

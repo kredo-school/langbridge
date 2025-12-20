@@ -30,7 +30,6 @@
             </form>
         </div>
 
-
         {{-- right side: chat main body --}}
         <div style="flex:1;">
             {{-- chat room title --}}
@@ -188,20 +187,6 @@
             .then(res => res.json())
     }
 
-    function deleteMessage(messageId) {// delete a message by ID
-        if (!confirm('Do you want to delete this message?')) return;
-        fetch(`/chat/delete/${messageId}`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
-        .then(res => res.json())
-        .then(() => {
-            displayMessages(true); // * reload all messages after deletion of one message
-        });
-    }
-
     function formatMessage(msg, box, myId, previousMessage) {// format a single message for display
         // image tag
         let imgTag = (msg.image_path && msg.image_path !== 'null' && msg.image_path.length > 0)
@@ -269,14 +254,6 @@
             onclick="translateMessage(${msg.id}, \`${msg.content}\`)">
             <i class="fa-solid fa-language"></i></span>`;
 
-        // delete icon (only for own messages)
-        let deleteBtn =
-            msg.user_id == myId
-                ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;margin-left:8px;' title='Delete'
-                onclick='deleteMessage(${msg.id})'>
-                <i class="fa-regular fa-trash-can"></i></span>`
-                : "";
-
         // append formatted message to chat box
         box.innerHTML += [
             `<div style='text-align:center;'>${dateTag}</div>`,
@@ -292,15 +269,18 @@
             
             // image display
             imgTag ? `<div style='margin-top:4px;' class="mb-1">${imgTag}</div>` : "",
-
-            msg.content || emojiTag ? `<span id="msg-content-${msg.id}" data-original="${msg.content}" data-translated="false" style="background:${bgColor};padding:4px 8px 2px 8px;border-radius:6px;display:inline-block;">
-                ${msg.content} ${emojiTag}
-            </span>` : "",
-
+            
+            // translation display area
+            msg.content || emojiTag ? `
+            <span id="msg-content-${msg.id}" data-original="${msg.content}" data-translated="false" style="background:${bgColor};padding:4px 8px 2px 8px;border-radius:6px;display:inline-block;">
+            ${msg.content} ${emojiTag}
+            </span>
+            <div id="msg-translation-${msg.id}" style="color:#1976d2;margin-top:2px;"></div>
+            ` : "",
+            
             `<div id="msg-meta-${msg.id}" style='margin-top:4px;font-size:0.9em;color:gray;'>${readTag} ${timeTag}</div>`,
             reportTag,
             translateTag,
-            deleteBtn,
             `</div><div style='clear:both;'></div>`,
         ].join("");
     }
@@ -401,7 +381,6 @@
     modal.show();
 }
 
-
     // close modal (for Bootstrap)
     function closeReportModal() {
         var modal = bootstrap.Modal.getInstance(document.getElementById('reportModal'));
@@ -483,18 +462,20 @@
         });
 });
 
+// translation function
 function translateMessage(messageId, content) {
     const target = document.querySelector(`#msg-content-${messageId}`);
-    if (!target) return;
+    const translationDiv = document.querySelector(`#msg-translation-${messageId}`); // translation display area
+    if (!target || !translationDiv) return;
 
-    //reverse translation if already translated
+    // reverse translation
     if (target.dataset.translated === "true") {
-        target.textContent = target.dataset.original;
+        translationDiv.textContent = ""; 
         target.dataset.translated = "false";
         return;
     }
 
-    // call API if not translated
+    // call API
     fetch('/translate', {
         method: 'POST',
         headers: {
@@ -505,7 +486,6 @@ function translateMessage(messageId, content) {
     })
     .then(async res => {
         if (!res.ok) {
-            // Return HTML error page as is
             const text = await res.text();
             throw new Error(`Server error ${res.status}: ${text}`);
         }
@@ -513,8 +493,8 @@ function translateMessage(messageId, content) {
     })
     .then(data => {
         if (data.translated) {
-            target.textContent = data.translated;
-            target.dataset.translated = "true"; //flag as translated
+            translationDiv.textContent = data.translated; //display translated text
+            target.dataset.translated = "true";
         } else {
             throw new Error('No translated text in response');
         }
@@ -526,5 +506,4 @@ function translateMessage(messageId, content) {
 }
 
 </script>
-
 @endsection
