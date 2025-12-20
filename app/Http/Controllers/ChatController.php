@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Report;
 use App\Models\ReportViolationReason;
 
-
 class ChatController extends Controller
 {
     public function index(Request $request)
@@ -42,29 +41,37 @@ class ChatController extends Controller
         // hiddenユーザーでも、過去にチャット履歴があれば非hiddenユーザーから再開できる
         if ($to_user_id) {
             $toUser = User::with('profile')->find($to_user_id);
-            $isHidden = !$toUser || !$toUser->profile || $toUser->profile->hidden;
+            $exists = $toUser && $toUser->profile;
+            $isHidden =  $toUser->profile->hidden;
 
-            if ($isHidden) {
+            // hiddenユーザーとのチャットアクセス権限チェック
+            if ($exists) {
                 $me = Auth::user();
+
                 // 自分がhiddenでない場合のみ履歴チェック
                 if (!$me->profile || !$me->profile->hidden) {
-                    $hasHistory = \App\Models\Message::where(function ($q) use ($user_id, $to_user_id) {
-                        $q->where('user_id', $user_id)->where('to_user_id', $to_user_id);
-                    })->orWhere(function ($q) use ($user_id, $to_user_id) {
-                        $q->where('user_id', $to_user_id)->where('to_user_id', $user_id);
-                    })->exists();
-                    if (!$hasHistory) {
-                        abort(403, 'This user is not available for chat.');
-                    }
-                } else {
                     // 自分もhiddenなら常に403
                     abort(403, 'This user is not available for chat.');
                 }
+
+                // チャット履歴があるか確認
+                $hasHistory = Message::where(function ($q) use ($user_id, $to_user_id) {
+                    $q->where('user_id', $user_id)->where('to_user_id', $to_user_id);
+                })->orWhere(function ($q) use ($user_id, $to_user_id) {
+                    $q->where('user_id', $to_user_id)->where('to_user_id', $user_id);
+                })->exists();
+
+                if (!$hasHistory && $isHidden) {
+                    abort(403, 'This user is not available for chat (no history).');
+                }
+            } else {
+                // user doesn't exist or profile missing
+                abort(403, 'This user is not available for chat (user or profile missing).');
             }
         }
 
+        // checks passed, show chat page
         $violationReasons = ReportViolationReason::where('category', 'chat')->get();
-
         return view('pages.chat', compact('users', 'to_user_id', 'violationReasons'));
     }
 
