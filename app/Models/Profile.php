@@ -104,6 +104,4 @@ class Profile extends Model
     }
 
 
-   
-
 }
