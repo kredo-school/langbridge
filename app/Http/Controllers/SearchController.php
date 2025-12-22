@@ -12,12 +12,24 @@ class SearchController extends Controller
 {
     public function search(Request $request)
     {
-
         $users = collect(); //initialize empty collection
-
 
         $query = Profile::query()->where('hidden', false); //base query
 
+        // target_languageフィルタ
+        $currentUser = auth()->user();
+        if ($currentUser && $currentUser->target_language) {
+            $lang = strtolower($currentUser->target_language);
+            if ($lang === 'ja') {
+                $query->whereHas('user', function ($q) {
+                    $q->where('target_language', 'en');
+                });
+            } elseif ($lang === 'en') {
+                $query->whereHas('user', function ($q) {
+                    $q->where('target_language', 'ja');
+                });
+            }
+        }
 
         if ($request->filled('keyword')) { //keyword filter
             $query->where(function ($q) use ($request) { //grouped conditions
@@ -27,13 +39,11 @@ class SearchController extends Controller
             });
         }
 
-
         if ($request->filled('interests')) { //interests filter
             $query->whereHas('user.interests', function ($q) use ($request) { //filter by interests
                 $q->whereIn('interests.id', $request->interests); //match selected interests
             });
         }
-
 
         if (
             $request->filled('keyword') || //either filter is applied
@@ -42,9 +52,7 @@ class SearchController extends Controller
             $users = $query->with('user.interests')->paginate(10); //paginate results
         }
 
-
         $interests = Interest::all(); //get all interests for filter options
-
 
         return view('pages.search', [ //return view with data
             'users' => $users, //filtered users
