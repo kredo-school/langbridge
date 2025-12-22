@@ -47,26 +47,6 @@
                 </div>
             </section>
 
-            {{-- Suggested Users --}}
-            <section class="suggested-users-section">
-                <h2 class="section-title">{{__('messages.suggested_users')}}</h2>
-
-                <div class="suggested-list">
-                    @foreach($otherUsers as $user)
-                    <div class="suggested-card">
-                        <a href="{{ route('profile.show', $user->id) }}">
-                            @if($user->profile->avatar)
-                                <img src="{{ $user->profile->avatar }}" class="avatar rounded-circle">
-                            @else
-                                <i class="fa-solid fa-circle-user text-secondary icon-bd"></i>
-                            @endif
-                        </a>
-
-                        <div class="suggested-info">
-                            <p class="name">{{ $user->profile->nickname }}</p>
-                            <p class="handle">{{ $user->profile->handle }}</p>
-                            <p class="bio">{{ $user->profile->bio }}</p>
-                        </div>
 
     {{-- Suggested Users --}}
     <section class="suggested-users-section">
@@ -92,6 +72,7 @@
                             <i class="fa-regular fa-comment"></i> {{__('messages.start_chat')}}
                         </button>
                     </div>
+                </div>
                     @endforeach
                 </div>
             </section>
