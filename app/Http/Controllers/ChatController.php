@@ -11,28 +11,62 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Report;
 use App\Models\ReportViolationReason;
 
-
-
 class ChatController extends Controller
 {
-    // display chat interface
     public function index(Request $request)
     {
-        //get users with whom the logged-in user has chatted, ordered by last chat time
         $user_id = Auth::id();
+
         $users = User::where('users.id', '!=', $user_id)
-            ->leftJoin('messages', function ($join) use ($user_id) {
+            ->join('messages', function ($join) use ($user_id) {
                 $join->on('users.id', '=', 'messages.user_id')
                     ->orOn('users.id', '=', 'messages.to_user_id');
             })
-            ->select('users.id', 'users.name', 'users.email', DB::raw('MAX(messages.sent_at) as last_chat'))
+            ->where(function ($q) use ($user_id) {
+                $q->where('messages.user_id', $user_id)
+                    ->orWhere('messages.to_user_id', $user_id);
+            })
+            ->select(
+                'users.id',
+                'users.name',
+                'users.email',
+                DB::raw('MAX(messages.sent_at) as last_chat')
+            )
             ->groupBy('users.id', 'users.name', 'users.email')
             ->orderByDesc('last_chat')
             ->get();
+
         $to_user_id = $request->input('to_user_id');
 
-        $violationReasons = ReportViolationReason::where('category', 'message')->get();
+        // hiddenユーザーでも、過去にチャット履歴があれば非hiddenユーザーから再開できる
+        if ($to_user_id) {
+            $toUser = User::with('profile')->find($to_user_id);
+            $exists = $toUser && $toUser->profile;
+            $isHidden =  $toUser->profile->hidden;
 
+            // hiddenユーザーとのチャットアクセス権限チェック
+            if ($exists) {
+                // 相手がhiddenの場合、チャット履歴があれば会話可能
+                if ($isHidden) {
+                    // チャット履歴があるか確認
+                    $hasHistory = Message::where(function ($q) use ($user_id, $to_user_id) {
+                        $q->where('user_id', $user_id)->where('to_user_id', $to_user_id);
+                    })->orWhere(function ($q) use ($user_id, $to_user_id) {
+                        $q->where('user_id', $to_user_id)->where('to_user_id', $user_id);
+                    })->exists();
+
+                    if (!$hasHistory) {
+                        abort(403, 'This user is not available for chat (no history).');
+                    }
+                }
+            } else {
+                // user doesn't exist or profile missing
+                abort(403, 'This user is not available for chat (user or profile missing).');
+            }
+        }
+
+        // checks passed, show chat page
+        $violationReasons = ReportViolationReason::where('category', 'chat')->get();
         return view('pages.chat', compact('users', 'to_user_id', 'violationReasons'));
     }
 
@@ -78,35 +112,32 @@ class ChatController extends Controller
     {
         $to_user_id = $request->input('to_user_id');
         $user_id = Auth::id();
+
         if (empty($to_user_id)) {
             return response()->json(['messages' => []]);
         }
+
+
         $messages = Message::where(function ($q) use ($user_id, $to_user_id) {
             $q->where('user_id', $user_id)->where('to_user_id', $to_user_id);
         })->orWhere(function ($q) use ($user_id, $to_user_id) {
             $q->where('user_id', $to_user_id)->where('to_user_id', $user_id);
         })->orderBy('sent_at', 'asc')->get();
 
-        // add username
         foreach ($messages as $msg) {
+            $sender = User::with('profile')->find($msg->user_id);
+            $receiver = User::with('profile')->find($msg->to_user_id);
+            $msg->user_name = $sender->name ?? '';
+            $msg->partner_name = $receiver->name ?? '';
+            $msg->user_avatar = $sender->profile->avatar ?? '';
+            // partner_avatarは「自分以外の相手」のアバター
             if ($msg->user_id == $user_id) {
-                $user = User::with('profile')->find($msg->user_id); // user himself
-                $partner = User::with('profile')->find($msg->to_user_id); // chat partner
-                $msg->user_name = $user->name ?? '';
-                $msg->partner_name = $partner->name ?? '';
-                $msg->user_avatar = $user->profile->avatar ?? '';
-                $msg->partner_avatar = $partner->profile->avatar ?? '';
-                $msg->partner_handle = $partner->profile->handle ?? '';
+                $msg->partner_avatar = $receiver->profile->avatar ?? '';
+                $msg->partner_handle = $receiver->profile->handle ?? '';
             } else {
-                $user = User::with('profile')->find($msg->user_id); // chat partner
-                $partner = User::with('profile')->find($msg->to_user_id); // user himself
-                $msg->user_name = $user->name ?? '';
-                $msg->partner_name = $partner->name ?? '';
-                $msg->user_avatar = $user->profile->avatar ?? '';
-                $msg->partner_avatar = $partner->profile->avatar ?? '';
-                $msg->partner_handle = $user->profile->handle ?? '';
+                $msg->partner_avatar = $sender->profile->avatar ?? '';
+                $msg->partner_handle = $sender->profile->handle ?? '';
             }
-
             $msg->content = $msg->content ?? '';
             $msg->emoji = $msg->emoji ?? '';
             $msg->image_path = (!empty($msg->image_path) && $msg->image_path !== 'null') ? $msg->image_path : '';
@@ -157,7 +188,7 @@ class ChatController extends Controller
         }
 
         Report::create([
-            'reporter_id' => $user->id,
+            'reporter_id' => auth()->id(),
             'category' => 'message',
             'violation_reason_id' => $request->violation_reason_id,
             'detail' => $request->detail,

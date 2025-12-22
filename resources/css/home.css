@@ -6,7 +6,7 @@
 .home-header h1 {
     font-size: 3em;
     color: #293E5C; /* Orange accent */
-    font-family: "Noto", "MontSerrat";
+    font-family: "AppFont", sans-serif;
     margin-bottom: 10px;
     font-weight: bold;
 }
@@ -17,49 +17,22 @@
     font-style: italic;
 }
 
-/* Section backgrounds */
-.recent-chats-section {
-    background-color: #EDF1F9; /* Lavender mist */
-    padding: 20px;
-    border-radius: 16px;
-    margin-bottom: 50px;
-    display: flex;         
-    gap: 16px;             
-    flex-wrap: wrap;       
-    
-}
-
-.suggested-users-section {
-    background-color: #FCEDD7; /* Cream */
-    padding: 20px;
-    border-radius: 16px;
+/* 2カラムレイアウト */
+.home-body {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
 }
 
 /* Section titles */
 .section-title {
     color: #ECA133; /* Orange accent */
-    font-family: "Nunito", sans-serif;
+    font-family: "AppFont", sans-serif;
     margin-bottom: 15px;
     text-align: left;
-}
-
-/* Cards */
-.suggested-card {
-    background-color: #FADAD8; /* Soft pink */
-    border-radius: 12px;
-    padding: 12px;
-    margin: 10px 0;
-    max-width: 600px;
-    margin: 10px auto;
-    display: flex;
-    align-items: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.chat-card:hover, .suggested-card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 /* Avatar */
@@ -108,26 +81,104 @@
     justify-content: center;
 }
 
-.chat-card {
-    background-color: #FADAD8;
-    border-radius: 12px;
-    padding: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease;
-    width: 160px;
-    text-align: center;
-}
-
-
-.recent-chats-section,
-.suggested-users-section {
-    max-width: 700px;   
-    margin: 0 auto;
-    border-radius: 16px;
-}
-
 .logo-img {
     width: 100px; 
     height: auto; 
 }
+
+/* ===== Main Layout ===== */
+.home-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+}
+
+/* ===== Learning Journey ===== */
+.learning-journey {
+    flex: 1;
+    max-width: 500px;
+    background-color: #E9F5EC;
+    padding: 24px;
+    border-radius: 16px;
+}
+
+.streak-calendar-placeholder {
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    background: #fff;
+    border-radius: 12px;
+}
+
+/* ===== Connections ===== */
+.connections {
+    flex: 1;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* ===== Recent Chats ===== */
+.recent-chats-section {
+    background-color: #EDF1F9;
+    padding: 20px;
+    border-radius: 16px;
+    height: 220px;              /* 高さ固定 */
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-list {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;           /* 横スクロール */
+    padding-bottom: 10px;
+}
+
+/* ===== Suggested Users ===== */
+.suggested-users-section {
+    background-color: #FCEDD7;
+    padding: 20px;
+    border-radius: 16px;
+    height: 360px;              /* 高さ固定 */
+    display: flex;
+    flex-direction: column;
+}
+
+.suggested-list {
+    overflow-y: auto;           /* 縦スクロール */
+    padding-right: 6px;
+}
+
+/* ===== Cards ===== */
+.chat-card {
+    background-color: #FADAD8;
+    border-radius: 12px;
+    padding: 12px;
+    width: 160px;
+    text-align: center;
+    flex-shrink: 0;             /* 横スクロールで潰れない */
+}
+
+.suggested-card {
+    background-color: #FADAD8;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* ===== Hover ===== */
+.chat-card:hover,
+.suggested-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
 

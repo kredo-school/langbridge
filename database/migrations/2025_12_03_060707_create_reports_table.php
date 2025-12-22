@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('reporter_id'); //refers users.id
-            $table->string('category'); // ReportCategory E
+            $table->string('category'); // ReportCategory E reported_content_typeと被って冗長なのであとで消す！
             $table->unsignedBigInteger('violation_reason_id'); //refers report_violation_reasons.id 
             $table->text('detail')->nullable();
             $table->string('file')->nullable(); 

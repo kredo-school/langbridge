@@ -13,8 +13,18 @@ return [
     'cancel' => 'キャンセル',
     'optional' => '任意',
     'update' => '保存',
+    'status' => 'ステータス',
+    'next' => '次へ',
+    'start' => '開始',
+    'max' => '上限',
+    'loading' => '読み込み中',
     //ログインページ
     'welcome' => 'LangBridgeへようこそ',
+    //ホーム
+    'learning_journey' => '学習の記録',
+    'recent_chats' => '最近のチャット',
+    'suggested_users' => 'おすすめユーザ',
+    'start_chat' => 'チャットをはじめる',
     //興味・関心
     'interests' => [
         '1' => 'エンターテイメント',
@@ -38,9 +48,31 @@ return [
     'interest_categories' => '興味・関心タグ',
     'no_profile' => '該当するユーザは見つかりませんでした',
     //単語リスト
+    'vocabulary_list' => '単語帳',
     'add_vocabulary' => '単語帳に追加',
     'edit_vocabulary' => '単語を編集',
     'front' => '表',
     'back' => '裏',
-    'note' => 'メモ'
+    'note' => 'メモ',
+    'no_vocabulary' => '登録されている単語はありません',
+    //単語クイズ
+    'vocabulary_quiz' => '単語クイズ',
+    'quiz_settings' => '出題設定',
+    'unlearned' => '新規',
+    'learning' => '習得中',
+    'mastered' => '習得済',
+    'order' => '出題順',
+    'added' => '登録順',
+    'random' => 'ランダム',
+    'only_unmastered' => '未修得のみ出題',
+    'on' => 'オン',
+    'off' => 'オフ',
+    'question_side' => '出題面',
+    'nofq' => '出題数',
+    'show_answer' => '正解を見る',
+    'correct' => '正解',
+    'incorrect' => '不正解',
+    'quiz_result' => '単語クイズ結果',
+    'quiz_try_again' => 'もう一度挑戦',
+    'go_list' => '単語リストに戻る'
 ];

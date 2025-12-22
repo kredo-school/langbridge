@@ -34,6 +34,7 @@ class User extends Authenticatable
         'deleted_at',
         'updated_at',
         
+        'timezone',
     ];
     public function isAdmin(): bool
     {
@@ -81,6 +82,11 @@ class User extends Authenticatable
     public function vocabularies()
     {
         return $this->hasMany(Vocabulary::class);
+    }
+
+    public function dailyStatistics()
+    {
+        return $this->hasMany(DailyStatistic::class);
     }
 
     public function recentChats()

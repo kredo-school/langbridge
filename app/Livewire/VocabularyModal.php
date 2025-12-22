@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\On;
 use App\Models\Vocabulary;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,9 +15,7 @@ class VocabularyModal extends Component
     public $vocabularyId = null; // 編集時は既存の単語IDを入れる
     public $isOpen = false;      // モーダル表示フラグ
 
-    protected $listeners = [
-        'openVocabularyModal' => 'open',
-    ];
+    protected $listeners = ['openVocabularyModal' => 'open'];
 
     // モーダルを開く
     public function open($front = '', $back = '', $vocabularyId = null, $note = '')
@@ -26,6 +25,15 @@ class VocabularyModal extends Component
         $this->note = $note;
         $this->vocabularyId = $vocabularyId;
         $this->isOpen = true;
+    }
+
+    public function mount()
+    {
+        $this->isOpen = false;
+        $this->front = '';
+        $this->back = '';
+        $this->note = '';
+        $this->vocabularyId = null;
     }
 
     // 保存処理
@@ -49,7 +57,8 @@ class VocabularyModal extends Component
         );
 
         $this->close();
-        $this->emit('vocabularyAdded'); // 親コンポーネントで画面更新可能
+        $this->dispatch('vocabularyAdded'); // ページリロード用
+        $this->redirect('/vocabulary/index');
     }
 
     // モーダルを閉じる
@@ -60,6 +69,8 @@ class VocabularyModal extends Component
 
     public function render()
     {
-        return view('livewire.vocabulary-modal');
+        return view('livewire.vocabulary-modal', [
+            'componentId' => $this->getId()
+        ]);
     }
 }
