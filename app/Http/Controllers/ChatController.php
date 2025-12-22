@@ -46,23 +46,18 @@ class ChatController extends Controller
 
             // hiddenユーザーとのチャットアクセス権限チェック
             if ($exists) {
-                $me = Auth::user();
+                // 相手がhiddenの場合、チャット履歴があれば会話可能
+                if ($isHidden) {
+                    // チャット履歴があるか確認
+                    $hasHistory = Message::where(function ($q) use ($user_id, $to_user_id) {
+                        $q->where('user_id', $user_id)->where('to_user_id', $to_user_id);
+                    })->orWhere(function ($q) use ($user_id, $to_user_id) {
+                        $q->where('user_id', $to_user_id)->where('to_user_id', $user_id);
+                    })->exists();
 
-                // 自分がhiddenでない場合のみ履歴チェック
-                if (!$me->profile || !$me->profile->hidden) {
-                    // 自分もhiddenなら常に403
-                    abort(403, 'This user is not available for chat.');
-                }
-
-                // チャット履歴があるか確認
-                $hasHistory = Message::where(function ($q) use ($user_id, $to_user_id) {
-                    $q->where('user_id', $user_id)->where('to_user_id', $to_user_id);
-                })->orWhere(function ($q) use ($user_id, $to_user_id) {
-                    $q->where('user_id', $to_user_id)->where('to_user_id', $user_id);
-                })->exists();
-
-                if (!$hasHistory && $isHidden) {
-                    abort(403, 'This user is not available for chat (no history).');
+                    if (!$hasHistory) {
+                        abort(403, 'This user is not available for chat (no history).');
+                    }
                 }
             } else {
                 // user doesn't exist or profile missing
