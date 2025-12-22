@@ -17,8 +17,10 @@ class ProfileController extends Controller
         $this->profile = $profile;       
     }
     public function show($user_id){
-        $profile = $this->profile->findOrFail($user_id);
-
+        try {
+            $actualId = is_numeric($user_id) ? $user_id : decrypt($user_id);
+            $profile = Profile::where('user_id', $actualId)->firstOrFail();
+          
         if ($profile->hidden && auth()->id() !== $profile->user_id && !auth()->user()?->isAdmin()) {
             abort(404);
         }
@@ -26,6 +28,9 @@ class ProfileController extends Controller
         $interests = $user->interests;
 
     return view('profile', compact('profile', 'user', 'interests'));
+    } catch (\Exception $e) {
+    abort(404);
+    }       
     }
     public function edit(){
         $profile = $this->profile->findOrFail(auth()->id());

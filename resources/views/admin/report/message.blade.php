@@ -31,22 +31,34 @@
         <tr>
             <td class="px-4 py-2 border">{{ $report->id }}</td>
             <td class="px-4 py-2 border">{{ class_basename($report->reported_content_type) }}</td>
-            <td class="px-4 py-2 border">{{ $report->reported_content_id }}</td>
+            <td class="px-4 py-2 border">
+                @if($report->reported_content_id)
+                <a href="{{ route('chat.chat', ['id' => encrypt($report->reported_content_id)]) }}" 
+                class="text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1">
+                <span>{{ $report->reported_content_id }}</span> 
+                </a>
+                @else
+                <span class="text-gray-400 text-xs">No Data</span>
+                @endif
+            </td>
             <td class="px-4 py-2 border">{{ $report->violation_reason_id }}</td>
             <td class="px-4 py-2 border">{{ $report->detail }}</td>
             <td class="px-4 py-2 border">{{ $report->file }}</td>
             <td class="px-4 py-2 border">{{ $report->created_at }}</td>
-            <td class="px-4 py-2 border">{{ $report->reporter->name }}</td>
+            <td class="px-4 py-2 border">{{ $report->reporter->profile->handle }}</td>
             <td class="px-4 py-2 border">
                 
-                <form action="{{ route('admin.reports.action', $report->id) }}" method="POST">
+                @if(!$report->message)
+                    <span class="text-gray-400 text-sm font-bold uppercase tracking-wider">Deleted</span>
+                @else
+                    <form action="{{ route('admin.reports.action', $report->id) }}" method="POST" onsubmit="return confirm('完全に削除しますか？');">
                     @csrf
                     <button type="submit" name="action" value="delete"
-                            class="px-3 py-1 bg-red-500 text-white rounded">
-                            <i class="fa-solid fa-trash-can text-danger"></i>
+                    class="bg-white border-none p-2 text-red-500 hover:text-red-700 transition-colors cursor-pointer">
+                    <i class="fa-solid fa-trash-can"></i>
                     </button>
-                </form>
-                
+                    </form>
+                @endif
             </td>
         </tr>
         @endforeach

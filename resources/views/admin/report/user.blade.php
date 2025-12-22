@@ -31,12 +31,21 @@
         <tr>
             <td class="px-4 py-2 border">{{ $report->id }}</td>
             <td class="px-4 py-2 border">{{ class_basename($report->reported_content_type) }}</td>
-            <td class="px-4 py-2 border">{{ $report->reported_content_id }}</td>
+            <td class="px-4 py-2 border">
+                @php
+            $encryptedId = encrypt($report->reported_content_id);
+                @endphp
+ 
+           <a href="{{ route('profile.show', ['user_id' => $encryptedId]) }}" 
+           class="text-cyan-600 hover:underline font-bold">
+           {{ $report->reported_content_id }} 
+           </a>
+            </td>
             <td class="px-4 py-2 border">{{ $report->violation_reason_id }}</td>
             <td class="px-4 py-2 border">{{ $report->detail }}</td>
             <td class="px-4 py-2 border">{{ $report->file }}</td>
             <td class="px-4 py-2 border">{{ $report->created_at }}</td>
-            <td class="px-4 py-2 border">{{ $report->reporter->name }}</td>
+            <td class="px-4 py-2 border">{{ $report->reporter->profile->handle }}</td>
             <td>
 
                 @if(stripos($report->reported_content_type, 'user') !== false)

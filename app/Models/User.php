@@ -96,5 +96,10 @@ class User extends Authenticatable
         return $this->morphMany(Report::class, 'reportedContent');
     }
 
+    public function getRouteKey()
+{
+    return encrypt($this->getKey());
+}
+
 }
 

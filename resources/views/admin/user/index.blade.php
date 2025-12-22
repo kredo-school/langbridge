@@ -37,7 +37,11 @@
                 <tr class="hover:bg-gray-50/50">
                     <td class="px-4 py-2 border border-gray-200 text-sm">{{ $user->id }}</td>
                     <td class="px-4 py-2 border border-gray-200 text-sm">{{ $user->name }}</td>
-                    <td class="px-4 py-2 border border-gray-200 text-sm text-gray-500"><a href="{{ route('profile.show', ['user_id' => $user->id])}}">{{ $user->profile->handle }}</a></td>
+                    <td class="px-4 py-2 border border-gray-200 text-sm text-gray-500">
+                        <a href="{{ route('profile.show', ['user_id' => encrypt($user->id)]) }}" class="text-cyan-600 hover:underline">
+                            {{ $user->profile->handle }}
+                        </a>
+                    </td>
                     <td class="px-4 py-2 border border-gray-200 text-sm text-gray-500">{{ $user->email }}</td>
                     <td class="px-4 py-2 border border-gray-200 text-sm text-gray-500">{{ $user->target_language }}</td>
                     <td class="px-4 py-2 border border-gray-200 text-sm text-gray-500">{{ $user->age }}</td>

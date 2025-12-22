@@ -42,11 +42,11 @@
             @foreach($otherUsers as $user)
                 <div class="suggested-card">
                     @if($user->profile->avatar)
-                    <a href="{{ route('profile.show', $user->id) }}">
+                    <a href="{{ route('profile.show', ['user_id' => encrypt($user->id)]) }}">
                     <img src="{{ $user->profile->avatar }}" alt="Avatar" class="avatar rounded-circle" >
                     </a>
                     @else
-                    <a href="{{ route('profile.show', $user->id) }}">
+                    <a href="{{ route('profile.show', ['user_id' => encrypt($user->id)]) }}">
                     <i class="fa-solid fa-circle-user text-secondary icon-bd"></i>
                     </a>
                     @endif
