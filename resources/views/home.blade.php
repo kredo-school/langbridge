@@ -5,7 +5,7 @@
 
     {{-- page header --}}
     <div class="home-header">
-        <h1>
+        <h1 class="logo-title">
             <img src="{{ asset('images/logo.png') }}" alt="Site Logo" class="logo-img">
             LangBridge
         </h1>

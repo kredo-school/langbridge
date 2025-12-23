@@ -169,7 +169,7 @@
     min-height: 70px;
     width: 100%;
     padding: 10px;
-    border: 2px solid #a855f7;
+    border: 2px solid #F5A59E;
     border-radius: 12px;
     text-align: center;
     background-color: #fff;
@@ -179,22 +179,47 @@
   
   /* hover時の色変化 */
   .interest-card:hover .interest-card-content {
-    background-color: #f3e8ff;
+    background-color: #f9dcd9;
   }
   
   /* 選択済み（DBにある）場合 → 初期表示で色付き */
   .interest-card.selected .interest-card-content {
-    background-color: #a855f7;
+    background-color: #F5A59E;
     color: #fff;
-    border-color: #7c3aed;
+    border-color: #F5A59E;
   }
   
   /* 今クリックした場合 → 即座に色付き */
   .interest-card input[type="checkbox"]:checked ~ .interest-card-content {
-    background-color: #a855f7;
+    background-color: #F5A59E;
     color: #fff;
-    border-color: #7c3aed;
+    border-color: #F5A59E;
   }
+  
+  .avatar-section {
+    background-color: #FFE0CC;
+    padding: 16px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .profile-top {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 24px;
+  }
+  
+  .input-columns { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; /* ← 2列にする */ 
+    gap: 16px; 
+    background-color: #EDF1F9; 
+    padding: 16px; 
+    border-radius: 16px; 
+}
   
 
   .form-group label {
