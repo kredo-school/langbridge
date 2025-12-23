@@ -1,6 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
+
+@php
+    use Carbon\Carbon;
+
+    $start = Carbon::parse($fromDate);
+    $end = Carbon::parse($today);
+
+    function contributionLevel(int $count): string
+        {
+            return match (true) {
+                $count === 0 => 'level-0',
+                $count < 5   => 'level-1',
+                $count < 10  => 'level-2',
+                $count < 20  => 'level-3',
+                default      => 'level-4',
+            };
+        }
+@endphp
+
 <div class="container home-main">
 
     {{-- page header --}}
@@ -17,9 +36,54 @@
         <section class="learning-journey">
             <h2 class="section-title">{{__('messages.learning_journey')}}</h2>
 
-            {{-- TODO: streak calendar --}}
+            {{-- streak calendar --}}
             <div class="streak-calendar-placeholder">
-                <p>Streak calendar will appear here</p>
+                <div class="calendar-header">
+                    <a href="{{ route('home', [
+                        'year' => $startOfMonth->copy()->subMonth()->year,
+                        'month' => $startOfMonth->copy()->subMonth()->month,
+                    ]) }}">◀</a>
+
+                    <h3>
+                        {{ __('messages.month.' . strtolower($startOfMonth->format('M'))) }}
+                        {{ $year }}
+                    </h3>
+
+                    <a href="{{ route('home', [
+                        'year' => $startOfMonth->copy()->addMonth()->year,
+                        'month' => $startOfMonth->copy()->addMonth()->month,
+                    ]) }}">▶</a>
+                </div>
+                <div class="calendar-grid calendar-weekdays">
+                    @foreach(['mon','tue','wed','thu','fri','sat','sun'] as $day)
+                        <div class="weekday">{{ __('messages.day_of_week.'.$day) }}</div>
+                    @endforeach
+                </div>
+                @php
+                    $firstDay = $startOfMonth->copy();
+                    $startWeekday = $firstDay->dayOfWeekIso; // 1(Mon)〜7(Sun)
+                @endphp
+
+                <div class="calendar-grid calendar-days">
+
+                    {{-- 月初までの空白 --}}
+                    @for ($i = 1; $i < $startWeekday; $i++)
+                        <div class="day empty"></div>
+                    @endfor
+
+                    {{-- 日付 --}}
+                    @for ($day = 1; $day <= $startOfMonth->daysInMonth; $day++)
+                        @php
+                            $date = $startOfMonth->copy()->day($day)->toDateString();
+                            $count = $dailyStats[$date]->total_questions ?? 0;
+                        @endphp
+
+                        <div class="day {{ contributionLevel($count) }}"
+                            title="{{ $date }} : {{ $count }} questions">
+                            {{ $day }}
+                        </div>
+                    @endfor
+                </div>
             </div>
         </section>
 

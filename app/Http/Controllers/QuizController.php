@@ -8,6 +8,7 @@ use App\Models\Vocabulary;
 use App\Models\DailyStatistic;
 use Illuminate\Support\Facades\Auth;
 use App\Services\VocabularyStatusService;
+use App\Services\UserDateService;
 use Carbon\Carbon;
 
 class QuizController extends Controller
@@ -34,7 +35,7 @@ class QuizController extends Controller
 
     }
 
-    public function start(Request $request)
+    public function start(Request $request, UserDateService $userDate)
     {
         $user_id = Auth::id();
 
@@ -43,7 +44,7 @@ class QuizController extends Controller
         $side = $request->question_side;
         $count = (int)$request->count;
 
-        [$today_start, $today_end] = $this->getTodayUtcRange($user_id);
+        [$today_start, $today_end] = $userDate->getTodayUtcRange($user_id);
 
         $query = Vocabulary::where('user_id', $user_id);
 
@@ -74,17 +75,17 @@ class QuizController extends Controller
         return redirect()->route('quiz.run', ['index' => 0]);
     }
 
-    public function run(Request $request, VocabularyStatusService $statusService)
+    public function run(Request $request, VocabularyStatusService $statusService, UserDateService $userDate)
     {
         $questions = session('quiz_questions');
         $side = session('quiz_side');
         $index = $request->index ?? 0;
 
-        [$today_start, $today_end] = $this->getTodayUtcRange(Auth::id());
+        [$today_start, $today_end] = $userDate->getTodayUtcRange(Auth::id());
 
         if (!$questions || $index >= count($questions)) {
             $user_id = Auth::id();
-            $today = now()->toDateString();
+            $today = $userDate->getTodayDateString($user_id);
 
             $statusService->promoteLearningToMastered($user_id);
 
@@ -164,18 +165,4 @@ class QuizController extends Controller
         return view('pages.quiz.card');
     }
 
-    private function getTodayUtcRange(): array
-    {
-        $user_timezone = Auth::user()->timezone ?? 'UTC';
-
-        $start = Carbon::now($user_timezone)
-            ->startOfDay()
-            ->setTimezone('UTC');
-
-        $end = Carbon::now($user_timezone)
-            ->endOfDay()
-            ->setTimezone('UTC');
-
-        return [$start, $end];
-    }
 }

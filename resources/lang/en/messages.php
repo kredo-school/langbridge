@@ -18,6 +18,15 @@ return [
     'start' => 'Start',
     'max' => 'Max',
     'loading' => 'Loading',
+    'day_of_week' => [
+        'sun' => 'Sun',
+        'mon' => 'Mon',
+        'tue' => 'Tue',
+        'wed' => 'Wed',
+        'thu' => 'Thu',
+        'fri' => 'Fri',
+        'sat' => 'Sat'
+    ],
     //ログインページ
     'welcome' => 'Welcome to LangBridge',
     //ホーム

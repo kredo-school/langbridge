@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\ReportViolationReason;
 use App\Models\Message;
+use App\Models\DailyStatistic;
+use App\Services\UserDateService;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -25,12 +28,24 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(UserDateService $userDate)
     {
         $user = Auth::user();
-    
-        // 最近チャットした相手を messages テーブルから取得
         $myId = $user->id;
+        $userTz = $userDate->getUserTimezone($myId);
+        $todayUser = Carbon::now($userTz);
+        $year = request('year')?? $todayUser->year;
+        $month = request('month')?? $todayUser->month;
+
+        $startOfMonth = Carbon::create($year, $month, 1,0,0,0,$userTz);
+        $endOfMonth = $startOfMonth->copy()->endOfMonth();
+
+        //学習履歴の取得
+        $dailyStats = DailyStatistic::where('user_id', $myId)
+            ->whereBetween('date', [$startOfMonth->toDateString(), $endOfMonth->toDateString()])
+            ->keyBy('date');
+
+        // 最近チャットした相手を messages テーブルから取得
         $partners = Message::selectRaw('CASE WHEN user_id = ? THEN to_user_id ELSE user_id END as partner_id, MAX(sent_at) as last_chat_at', [$myId])
             ->where(function ($query) use ($myId) {
                 $query->where('user_id', $myId)
@@ -64,8 +79,8 @@ class HomeController extends Controller
             ->take(10)
             ->get();
     
-        // recentChats と otherUsers を両方ビューに渡す
-        return view('home', compact('recentChats', 'otherUsers'));
+        // recentChats と otherUsers とその他カレンダー関係のデータをビューに渡す
+        return view('home', compact('recentChats', 'otherUsers', 'dailyStats', 'year', 'month','startOfMonth'));
     }
     
    

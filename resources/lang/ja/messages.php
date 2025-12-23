@@ -18,6 +18,15 @@ return [
     'start' => '開始',
     'max' => '上限',
     'loading' => '読み込み中',
+    'day_of_week' => [
+        'sun' => '日',
+        'mon' => '月',
+        'tue' => '火',
+        'wed' => '水',
+        'thu' => '木',
+        'fri' => '金',
+        'sat' => '土'
+    ],
     //ログインページ
     'welcome' => 'LangBridgeへようこそ',
     //ホーム
