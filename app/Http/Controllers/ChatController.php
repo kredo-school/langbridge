@@ -38,6 +38,12 @@ class ChatController extends Controller
 
         $to_user_id = $request->input('to_user_id');
 
+        try {
+            $to_user_id = decrypt($to_user_id);
+        } catch (\Exception $e) {
+            // 暗号化されていなければそのままの値を維持
+        }
+
         // hiddenユーザーでも、過去にチャット履歴があれば非hiddenユーザーから再開できる
         if ($to_user_id) {
             $toUser = User::with('profile')->find($to_user_id);
