@@ -42,4 +42,10 @@ class Report extends Model
     
         return $map[$this->action_status] ?? 'Pending';
 }
+
+public function message()
+{
+    return $this->belongsTo(Message::class, 'message_id'); 
+}
+
 }
