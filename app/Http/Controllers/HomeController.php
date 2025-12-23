@@ -57,7 +57,7 @@ class HomeController extends Controller
         ->where('id', '!=', $user->id) 
         ->whereHas('profile', function ($query) { $query->where('hidden', false); }) 
         ->whereNotIn('id', $partnerIds) // すでにチャットした人を除外 
-        ->where('inadmin', false) // 管理者を除外 
+        ->where('is_admin', false) // 管理者を除外 
         ->inRandomOrder() 
         ->take(10) 
         ->get();
