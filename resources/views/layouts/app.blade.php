@@ -32,8 +32,9 @@
 <body class="lang-blue">
     <div id="app" class="d-flex">
         <x-navbar />
-        <div class="main-content flex-grow-1 rounded-3">
-            <main class="py-4">
+        <div class="main-content flex-grow-1 rounded-3 d-flex">
+            @yield('sidebar')
+            <main class="py-4 flex-grow-1">
                 @yield('content')
             </main>
         </div>

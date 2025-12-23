@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use App\Models\Report;
 
 class Message extends Model
 {
@@ -27,5 +28,9 @@ class Message extends Model
     public function toUser()
     {
         return $this->belongsTo(User::class, 'to_user_id');
+    }
+
+    public function reports(){
+        return $this->morphMany(Report::class, 'reportedContent');
     }
 }

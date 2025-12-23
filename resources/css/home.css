@@ -181,4 +181,13 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-
+.logo-title { 
+    display: flex; 
+    align-items: center;  
+    justify-content: center; 
+    gap: 12px; 
+} 
+.site-title { 
+    font-size: 1.8em; 
+    margin: 0; 
+}

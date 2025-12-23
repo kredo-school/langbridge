@@ -17,8 +17,10 @@ class ProfileController extends Controller
         $this->profile = $profile;       
     }
     public function show($user_id){
-        $profile = $this->profile->findOrFail($user_id);
-
+        try {
+            $actualId = is_numeric($user_id) ? $user_id : decrypt($user_id);
+            $profile = Profile::where('user_id', $actualId)->firstOrFail();
+          
         if ($profile->hidden && auth()->id() !== $profile->user_id && !auth()->user()?->isAdmin()) {
             abort(404);
         }
@@ -26,6 +28,9 @@ class ProfileController extends Controller
         $interests = $user->interests;
 
     return view('profile', compact('profile', 'user', 'interests'));
+    } catch (\Exception $e) {
+    abort(404);
+    }       
     }
     public function edit(){
         $profile = $this->profile->findOrFail(auth()->id());
@@ -104,6 +109,40 @@ class ProfileController extends Controller
         return redirect()->route('profile.show', $profile->user_id);
     }
 
+    public function report(Request $request, $id)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'violation_reason_id' => 'required|exists:report_violation_reasons,id',
+            'detail' => 'nullable|string',
+            'file' => 'nullable|file|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $filePath = null;
+        if ($request->hasFile('file')) {
+            $filePath = $request->file('file')->store('reports', 'public');
+        }
+
+        Report::create([
+            'reporter_id' => $user->id,
+            'violation_reason_id' => $request->violation_reason_id,
+            'detail' => $request->detail,
+            'file' => $filePath,
+            'reported_content_id' => $id,
+            'reported_content_type' => User::class, 
+            'action_status' => 'pending',
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'User report saved.']);
+    }
 
 
     public function destroy(Profile $profile)

@@ -169,7 +169,7 @@
     min-height: 70px;
     width: 100%;
     padding: 10px;
-    border: 2px solid #a855f7;
+    border: 2px solid #F5A59E;
     border-radius: 12px;
     text-align: center;
     background-color: #fff;
@@ -179,21 +179,21 @@
   
   /* hover時の色変化 */
   .interest-card:hover .interest-card-content {
-    background-color: #f3e8ff;
+    background-color: #f9dcd9;
   }
   
   /* 選択済み（DBにある）場合 → 初期表示で色付き */
   .interest-card.selected .interest-card-content {
-    background-color: #a855f7;
+    background-color: #F5A59E;
     color: #fff;
-    border-color: #7c3aed;
+    border-color: #F5A59E;
   }
   
   /* 今クリックした場合 → 即座に色付き */
   .interest-card input[type="checkbox"]:checked ~ .interest-card-content {
-    background-color: #a855f7;
+    background-color: #F5A59E;
     color: #fff;
-    border-color: #7c3aed;
+    border-color: #F5A59E;
   }
 
   /* カレンダー */
@@ -218,6 +218,163 @@
 
 
   
+  .avatar-section {
+    background-color: #FFE0CC;
+    padding: 16px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .profile-top {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 24px;
+  }
+  
+  .input-columns { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; /* ← 2列にする */ 
+    gap: 16px; 
+    background-color: #EDF1F9; 
+    padding: 16px; 
+    border-radius: 16px; 
+}
+  
+
+  .form-group label {
+    font-weight: bold;
+    color: #ECA133;
+    margin-bottom: 6px;
+  }
+  
+  input, select, textarea {
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 1em;
+  }
+  
+  .bio-group {
+    grid-column: span 2;
+  }
+  
+  .bio-group textarea {
+    min-height: 120px;
+  }
+  
+  .interest-section {
+    background-color: #EDF1F9;
+    padding: 16px;
+    border-radius: 16px;
+    margin-top: 30px;
+    max-width: 900px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .interest-title {
+    font-weight: bold;
+    font-size: large;
+    color: #ECA133;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .edit-btn {
+    display: block;
+    margin: 30px auto 0;
+    background-color: #F5A59E;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .btn-sm{
+    width: 70px;
+  }
+  
+  .profile-wrapper {
+    background-color: #FFF3E8; 
+    border-radius: 20px;
+    padding: 24px;
+    max-width: 900px;
+    margin: 0 auto 24px;
+  }
+  
+  .report-title {
+    background-color: #edf1f9; 
+  }
+
+  /* status badge */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* each status color */
+.status-active { background-color: #ecfeff; color: #0891b2; }    
+.status-suspended { background-color: #fef2f2; color: #ef4444; } 
+.status-deleted { background-color: #f3f4f6; color: #6b7280; }   
+
+/* ••• */
+.btn-ellipsis {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none !important;
+    background: transparent !important;
+    color: #9ca3af;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-ellipsis:hover {
+    background-color: #f3f4f6 !important;
+    color: #4b5563;
+}
 
 
+/* dropdown menu */
+.dropdown-menu-custom {
+    background: transparent !important; 
+    border: none !important;           
+    box-shadow: none !important;        
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
 
+.dropdown-menu-custom form {
+    background-color: white;
+    border: 1px solid #f3f4f6;
+    border-radius: 12px;                
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); 
+    overflow: hidden;
+}
+
+.dropdown-item {
+    width: 100%;
+    text-align: left;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    border: none !important;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.2s;
+}
