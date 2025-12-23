@@ -72,7 +72,7 @@
     </div>
     <div class="interest-section">
         <div class="interest-title">Interest</div>
-        <div class="interest-grid">
+        <div class="interests-grid">
             
                 @foreach($interests as $interest)
                     <label class="interest-card">

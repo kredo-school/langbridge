@@ -179,7 +179,7 @@
   
   /* hover時の色変化 */
   .interest-card:hover .interest-card-content {
-    background-color: #f3e8ff;
+    background-color: #f9dcd9;
   }
   
   /* 選択済み（DBにある）場合 → 初期表示で色付き */
@@ -195,6 +195,31 @@
     color: #fff;
     border-color: #F5A59E;
   }
+  
+  .avatar-section {
+    background-color: #FFE0CC;
+    padding: 16px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .profile-top {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 24px;
+  }
+  
+  .input-columns { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; /* ← 2列にする */ 
+    gap: 16px; 
+    background-color: #EDF1F9; 
+    padding: 16px; 
+    border-radius: 16px; 
+}
   
 
   .form-group label {

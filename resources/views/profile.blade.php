@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="container">
-    <h2 class="text-center"><img src="{{ asset('images/logo.png') }}" alt="Site Logo" class="logo-img">Profile</h2>
+    <h2 class="text-center logo-title"><img src="{{ asset('images/logo.png') }}" alt="Site Logo" class="logo-img">Profile</h2>
     <div class="profile-wrapper">
     <div class="profile-top">
         <div class="avatar-section">
@@ -38,27 +38,33 @@
         </div>
         <div class="form-group">
             <label>Age</label>
+            <div>
             @if($user->profile->age_hidden)
             <span class="text-muted">Private</span>
             @else
             {{ $user->age }}
             @endif
         </div>
+        </div>
         <div class="form-group">
             <label>Country</label>
+            <div>
             @if($user->profile->country_hidden)
             <span class="text-muted">Private</span>
             @else
             {{ $profile->user->country }}
             @endif
         </div>
+        </div>
         <div class="form-group">
             <label>Region</label>
+            <div>
             @if($user->profile->region_hidden)
             <span class="text-muted">Private</span>
             @else
             {{ $profile->user->region }}
             @endif
+        </div>
         </div>
         <div class="form-group empty-cell"></div>
         <div class="form-group bio-group">
