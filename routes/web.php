@@ -30,6 +30,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('show/{user_id}', [ProfileController::class, 'show'])->name('show');
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
         Route::patch('/update', [ProfileController::class, 'update'])->name('update');
+        Route::post('/report/{id}', [ProfileController::class, 'report'])->name('report');
     });
 
     Route::group(["prefix" => "setting", "as" => "setting."], function () {

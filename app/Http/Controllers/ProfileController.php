@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\User;
 use App\Models\Interest;
+use App\Models\ReportViolationReason;
 
 class ProfileController extends Controller
 {
@@ -26,8 +27,8 @@ class ProfileController extends Controller
         }
         $user = $profile->user;
         $interests = $user->interests;
-
-    return view('profile', compact('profile', 'user', 'interests'));
+        $violationReasons = ReportViolationReason::where('category', 'user')->get();
+    return view('profile', compact('profile', 'user', 'interests','violationReasons'));
     } catch (\Exception $e) {
     abort(404);
     }       
@@ -37,7 +38,7 @@ class ProfileController extends Controller
 
         $user = auth()->user();
         $interests = Interest::all();
-
+        
         return view('editprofile', compact('profile', 'user', 'interests'));
 
     }
@@ -122,9 +123,9 @@ class ProfileController extends Controller
             'file' => 'nullable|file|max:2048',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json(['errors' => $validator->errors()], 422);
+        // }
 
         $filePath = null;
         if ($request->hasFile('file')) {
@@ -136,8 +137,8 @@ class ProfileController extends Controller
             'violation_reason_id' => $request->violation_reason_id,
             'detail' => $request->detail,
             'file' => $filePath,
-            'reported_content_id' => $id,
-            'reported_content_type' => User::class, 
+            'reported_content_id' => $user->id,
+            'reported_content_type' => \App\Models\User::class, 
             'action_status' => 'pending',
         ]);
 
@@ -149,4 +150,5 @@ class ProfileController extends Controller
     {
         //
     }
+
 }

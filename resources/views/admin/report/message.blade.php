@@ -45,7 +45,7 @@
             <td class="px-4 py-2 border">{{ $report->detail }}</td>
             <td class="px-4 py-2 border">
                 @if(!empty($report->file))  
-            <a href="/storage/{{$report->file}}" 
+            <a href="{{ asset('storage/' . $report->file)}}" 
              target="_blank" 
              class="text-gray-600 hover:text-blue-500 transition-colors"
              title="View attached file">
