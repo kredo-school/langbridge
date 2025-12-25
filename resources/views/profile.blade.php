@@ -267,8 +267,6 @@ function openUserReportModal(userId, userName = '', userAvatar = '') {
         alert('Please select a reason for the report.');
         document.getElementById('report_reason').classList.add('is-invalid');
         return;
-    } else {
-        document.getElementById('report_reason').classList.remove('is-invalid');
     }
 
     const fd = new FormData();
@@ -278,35 +276,37 @@ function openUserReportModal(userId, userName = '', userAvatar = '') {
         fd.append('file', file);
     }
 
-    fetch(`/user/report/${targetId}`, {
+    // URLを /profile/report/ に修正
+    fetch(`/profile/report/${targetId}`, {
         method: 'POST',
         headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json'
         },
-        body: fd,
-        credentials: 'same-origin'
+        body: fd
     })
-        .then(async res => {
+    .then(async res => {
         if (!res.ok) {
-                const errorData = await res.json();
-                console.error('Validation error:', errorData);
-                alert('Failed to report.: ' + (errorData.message || 'Unknown error'));
-                throw new Error('Validation failed');
-            }
-            return res.json();
-        })
-        .then(data => {
-            console.log('Save Success!', data);
-            document.getElementById('report-step-2').style.display = 'none';
-            document.getElementById('report-footer-2').style.display = 'none';
-            document.getElementById('report-step-3').style.display = 'block';
-            document.getElementById('report-footer-3').style.display = 'flex';
-        })
-        .catch(error => {
-            console.error('❌ Report error:', error);
-            alert('An error occurred while sending the report.');
-            });
-        });
+            const errorData = await res.json();
+            console.error('Server Error:', errorData);
+            alert('Failed: ' + (errorData.message || 'Unknown error'));
+            throw new Error('Server error');
+        }
+        return res.json();
+    })
+    .then(data => {
+        console.log('Success!', data);
+        // ステップの切り替え
+        document.getElementById('report-step-2').style.display = 'none';
+        document.getElementById('report-footer-2').style.display = 'none';
+        document.getElementById('report-step-3').style.display = 'block';
+        document.getElementById('report-footer-3').style.display = 'flex';
+    })
+    .catch(error => {
+        console.error('❌ Report error:', error);
+        alert('An error occurred while sending the report.');
+    }); // ← fetchの閉じ
+}); // ← addEventListenerの閉じ
 });
 </script>
 @endsection 
