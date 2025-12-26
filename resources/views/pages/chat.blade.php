@@ -42,8 +42,6 @@
             {{-- send messages area--}}
             <form id="chat-form" enctype="multipart/form-data">
                 <input type="hidden" name="to_user_id" id="to_user_id" value="{{ $to_user_id }}">
-                {{-- <input type="hidden" name="to_user_id" id="to_user_id"
-                    value="{{ request('to_user_id') ?? ($users->first()->id ?? '') }}"> --}}
                 <div class="mb-2" style="display:flex;align-items:center;gap:8px;">
                     {{-- upload pictures--}}
                     <label for="image"
