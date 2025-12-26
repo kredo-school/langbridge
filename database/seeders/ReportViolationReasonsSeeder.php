@@ -15,7 +15,7 @@ class ReportViolationReasonsSeeder extends Seeder
      */
     public function run(): void
     {
-    
+
         DB::table('report_violation_reasons')->insert([
             // --- user category ---
             [
