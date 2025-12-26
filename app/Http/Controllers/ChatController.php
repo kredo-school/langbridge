@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use App\Models\Report;
 use App\Models\ReportViolationReason;
+use Illuminate\Support\Facades\Crypt;
 
 class ChatController extends Controller
 {
@@ -36,7 +37,17 @@ class ChatController extends Controller
             ->orderByDesc('last_chat')
             ->get();
 
+        $toUser = null;
+
         $to_user_id = $request->input('to_user_id');
+
+        if ($to_user_id) {
+            try {
+                $to_user_id = Crypt::decrypt($to_user_id);
+            } catch (\Exception $e) {
+                abort(403, 'Invalid user ID');
+            }
+        }
 
         // hiddenユーザーでも、過去にチャット履歴があれば非hiddenユーザーから再開できる
         if ($to_user_id) {
@@ -67,7 +78,7 @@ class ChatController extends Controller
 
         // checks passed, show chat page
         $violationReasons = ReportViolationReason::where('category', 'chat')->get();
-        return view('pages.chat', compact('users', 'to_user_id', 'violationReasons'));
+        return view('pages.chat', compact('users', 'to_user_id', 'toUser', 'violationReasons'));
     }
 
 

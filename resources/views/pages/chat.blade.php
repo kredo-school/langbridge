@@ -2,20 +2,21 @@
 
 {{-- chat screen main template --}}
 @section('content')
-<div class="container w-75 h-100 my-4">
+<div class="container w-75 h-100 my-2">
     <div style="display:flex;gap:24px;">
 
         {{-- left side: chat partner selection form --}}
         <div style="width:220px;min-width:180px;">
-            <h5>Chat Partner</h5>
             <form id="user-select-form" method="GET" action="/chat">
                 <div class="mb-2">
                     <label>Select Chat Partner:</label>
                     <div style="max-height:320px;overflow-y:auto;">
 
                         @foreach($users as $user)
-                        <button type="submit" name="to_user_id" value="{{ $user->id }}" class="btn btn-light w-100 mb-2"
+                        <button type="submit" name="to_user_id" value="{{ Crypt::encrypt($user->id) }}"
+                            class="btn btn-light w-100 mb-2"
                             style="display:flex;align-items:center;gap:10px;padding:6px 10px;text-align:left;">
+
                             @if($user->profile && $user->profile->avatar)
                             <img src="{{ $user->profile->avatar }}" class="rounded-circle"
                                 style="width:32px;height:32px;object-fit:cover;">
@@ -33,15 +34,16 @@
         {{-- right side: chat main body --}}
         <div style="flex:1;">
             {{-- chat room title --}}
-            <h3>Chat Room</h3>
+            <h5>Chat with {{ $toUser->name ?? '...' }}</h5>
             {{-- display message area --}}
             <div id="chat-box"
                 style="height:400px;overflow-y:scroll;border:1px solid #ccc;padding:10px;margin-bottom:10px;">
             </div>
             {{-- send messages area--}}
             <form id="chat-form" enctype="multipart/form-data">
-                <input type="hidden" name="to_user_id" id="to_user_id"
-                    value="{{ request('to_user_id') ?? ($users->first()->id ?? '') }}">
+                <input type="hidden" name="to_user_id" id="to_user_id" value="{{ $to_user_id }}">
+                {{-- <input type="hidden" name="to_user_id" id="to_user_id"
+                    value="{{ request('to_user_id') ?? ($users->first()->id ?? '') }}"> --}}
                 <div class="mb-2" style="display:flex;align-items:center;gap:8px;">
                     {{-- upload pictures--}}
                     <label for="image"
