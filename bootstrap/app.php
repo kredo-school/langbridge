@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         //webグループにSetLocaleを追加
         $middleware->web(append:[
             SetLocale::class,
+            \App\Http\Middleware\CheckSuspended::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

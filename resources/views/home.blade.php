@@ -97,7 +97,7 @@
                 <div class="chat-list">
                     @foreach($recentChats as $user)
                     <div class="chat-card">
-                        <a href="{{ route('chat.pages.chat', ['to_user_id' => $user->id]) }}">
+                        <a href="{{ route('chat.pages.chat', ['to_user_id' => encrypt($user->id)]) }}">
                             @if($user->profile && $user->profile->avatar)
                                 <img src="{{ $user->profile->avatar }}" class="avatar rounded-circle">
                             @else
@@ -132,7 +132,7 @@
                         <p class="handle">{{ $user->profile->handle }}</p>
                         <p class="bio">{{ $user->profile->bio }}</p>
                         <button class="chat-btn"
-                            onclick="window.location.href='{{ route('chat.pages.chat', ['to_user_id' => $user->id]) }}'">
+                            onclick="window.location.href='{{ route('chat.pages.chat', ['to_user_id' => encrypt($user->id)]) }}'">
                             <i class="fa-regular fa-comment"></i> {{__('messages.start_chat')}}
                         </button>
                     </div>
