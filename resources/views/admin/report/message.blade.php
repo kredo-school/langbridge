@@ -33,7 +33,7 @@
             <td class="px-4 py-2 border">{{ class_basename($report->reported_content_type) }}</td>
             <td class="px-4 py-2 border">
                 @if($report->reported_content_id)
-                <a href="{{ route('chat.chat', ['id' => encrypt($report->reported_content_id)]) }}" 
+                <a href="{{ route('chat.pages.chat', ['id' => encrypt($report->reported_content_id)]) }}" 
                 class="text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1">
                 <span>{{ $report->reported_content_id }}</span> 
                 </a>
@@ -43,22 +43,35 @@
             </td>
             <td class="px-4 py-2 border">{{ $report->violation_reason_id }}</td>
             <td class="px-4 py-2 border">{{ $report->detail }}</td>
-            <td class="px-4 py-2 border">{{ $report->file }}</td>
+            <td class="px-4 py-2 border">
+                @if(!empty($report->file))  
+            <a href="{{ asset('storage/' . $report->file)}}" 
+             target="_blank" 
+             class="text-gray-600 hover:text-blue-500 transition-colors"
+             title="View attached file">
+            <i class="fa-solid fa-paperclip"></i>
+            </a>
+            @else
+            <span class="text-gray-300">-</span>
+            @endif
+            </td>
             <td class="px-4 py-2 border">{{ $report->created_at }}</td>
             <td class="px-4 py-2 border">{{ $report->reporter->profile->handle }}</td>
             <td class="px-4 py-2 border">
-                
-                @if(!$report->message)
-                    <span class="text-gray-400 text-sm font-bold uppercase tracking-wider">Deleted</span>
+                @if($report->reportedContent && $report->action_status !== 'deleted')
+    
+                <form action="{{ route('admin.reports.action', $report->id) }}" method="POST" 
+                onsubmit="return confirm('Are you sure you want to delete this permanently?');">
+                @csrf
+                <button type="submit" name="action" value="delete"
+                class="bg-white">
+                <i class="fa-solid fa-trash-can text-danger"></i>
+                </button>
+                </form>
                 @else
-                    <form action="{{ route('admin.reports.action', $report->id) }}" method="POST" onsubmit="return confirm('完全に削除しますか？');">
-                    @csrf
-                    <button type="submit" name="action" value="delete"
-                    class="bg-white border-none p-2 text-red-500 hover:text-red-700 transition-colors cursor-pointer">
-                    <i class="fa-solid fa-trash-can"></i>
-                    </button>
-                    </form>
+                <span class="text-secondry text-sm font-bold uppercase tracking-wider">Deleted</span>
                 @endif
+                
             </td>
         </tr>
         @endforeach
