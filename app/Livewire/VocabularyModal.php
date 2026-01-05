@@ -5,7 +5,6 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\Vocabulary;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 class VocabularyModal extends Component
@@ -28,7 +27,6 @@ class VocabularyModal extends Component
 
         if (is_string($params)) {
             // 文字列パラメータの場合、frontのみ設定
-            Log::debug("Opening VocabularyModal with string content: " . $params);
 
             if (str_contains($params, $separator)) {
                 [$front, $back, $note] = explode($separator, $params, 3);
@@ -42,7 +40,7 @@ class VocabularyModal extends Component
             }
         } elseif (is_array($params)) {
             // 配列パラメータの場合、front, back, noteを設定
-            Log::debug("Opening VocabularyModal with params: " . json_encode($params));
+
             $this->front = $params['front'] ?? '';
             $this->back = $params['back'] ?? '';
             $this->note = $params['note'] ?? '';
