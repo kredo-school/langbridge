@@ -1,4 +1,10 @@
 @extends('layouts.app')
+<style>
+    /* chatページだけnavbarアイコン間隔を広げる */
+    .nav-body {
+        gap: 1.5rem !important;
+    }
+</style>
 <livewire:vocabulary-modal />
 
 {{-- chat screen main template --}}
@@ -10,7 +16,7 @@
         <div style="width:220px;min-width:180px;">
             <form id="user-select-form" method="GET" action="/chat">
                 <div class="mb-2">
-                    <label>Select Chat Partner:</label>
+                    <label style="text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">Select Chat Partner:</label>
                     <div style="max-height:320px;overflow-y:auto;">
 
                         @foreach($users as $user)
@@ -35,7 +41,7 @@
         {{-- right side: chat main body --}}
         <div style="flex:1;">
             {{-- chat room title --}}
-            <h5>Chat with {{ $toUser->name ?? '...' }}</h5>
+            <h5 style="text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">Chat with {{ $toUser->name ?? '...' }}</h5>
             {{-- display message area --}}
             <div id="chat-box"
                 style="height:400px;overflow-y:scroll;border:1px solid #ccc;padding:10px;margin-bottom:10px;">
@@ -78,7 +84,7 @@
                             <option value="🐈">🐈</option>
                         </datalist>
                         {{-- send button --}}
-                        <button type="submit" class="btn btn-primary"
+                        <button type="submit" class="btn btn-yellow"
                             style="position:absolute;right:0;top:0;width:40px;min-width:40px;height:100%;padding:0;display:flex;align-items:center;justify-content:center;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                 viewBox="0 0 24 24">
@@ -225,7 +231,7 @@
 
         // alignment, background color, and name
         let align = msg.user_id == myId ? "right" : "left";
-        let bgColor = msg.user_id == myId ? "#e0f7fa" : "#f1f8e9";
+        let bgColor = msg.user_id == myId ? "#e0f7fa" : "#fff9e1";
 
         let avatarTag;
         if (msg.user_id == myId) {
@@ -253,10 +259,10 @@
         let translateTag =
             `<span style='cursor:pointer;color:#1976d2;font-size:1.0em;margin-left:4px;' title='Translate'
             onclick="translateMessage(${msg.id}, \`${msg.content}\`)">
-            <i class=\"fa-solid fa-language\"></i></span>` +
+            <i class="fa-solid fa-language" style="color:#A19E9B;"></i></span>` +
             `<span style='cursor:pointer;color:#28a745;font-size:1.0em;margin-left:4px;cursor:pointer;' title='Add to Vocabulary'
             onclick=\"addToVocabulary('${msg.id}', \`${msg.content}\`)\">
-            <i class='fa fa-plus'></i></span>`;
+            <i class='fa fa-plus ' style="color:#ECA133;"></i></span>`;
 
         // append formatted message to chat box
         box.innerHTML += [
@@ -279,7 +285,7 @@
             <span id="msg-content-${msg.id}" data-original="${msg.content}" data-translated="false" style="background:${bgColor};padding:4px 8px 2px 8px;border-radius:6px;display:inline-block;">
             ${msg.content} ${emojiTag}
             </span>
-            <div id="msg-translation-${msg.id}" style="color:#1976d2;margin-top:2px;"></div>
+            <div id="msg-translation-${msg.id}" style="color:#A19E9B;margin-top:2px;"></div>
             ` : "",
             
             `<div id="msg-meta-${msg.id}" style='margin-top:4px;font-size:0.9em;color:gray;'>${readTag} ${timeTag}</div>`,
