@@ -1,9 +1,10 @@
 @extends('layouts.app')
 <style>
-    /* chatページだけnavbarアイコン間隔を広げる */
+    /* chatページだけnavbarアイコン・ロゴ間隔を広げる */
     .nav-body {
-        gap: 1.5rem !important;
+        gap: 1.2rem !important;
     }
+  
 </style>
 <livewire:vocabulary-modal />
 
