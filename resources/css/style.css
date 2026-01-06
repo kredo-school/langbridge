@@ -356,3 +356,22 @@
     cursor: pointer;
     transition: background 0.2s;
 }
+
+main {
+    min-width: 0;
+}
+
+.fa-shield-alt {
+    color:#F5A59E;
+}
+
+.report-search-bar {
+    width: 300px; 
+    padding: 8px 40px 8px 20px; 
+    border: 1px solid #E5E7EB; 
+    border-radius: 9999px; 
+    background-color: #ffffff; 
+    outline: none; 
+    font-size: 14px; 
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
