@@ -16,7 +16,7 @@
         <div style="width:220px;min-width:180px;">
             <form id="user-select-form" method="GET" action="/chat">
                 <div class="mb-2">
-                    <label style="text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">Select Chat Partner:</label>
+                    <label>Select Chat Partner:</label>
                     <div style="max-height:320px;overflow-y:auto;">
 
                         @foreach($users as $user)
@@ -41,7 +41,7 @@
         {{-- right side: chat main body --}}
         <div style="flex:1;">
             {{-- chat room title --}}
-            <h5 style="text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">Chat with {{ $toUser->name ?? '...' }}</h5>
+            <h5>Chat with {{ $toUser->name ?? '...' }}</h5>
             {{-- display message area --}}
             <div id="chat-box"
                 style="height:400px;overflow-y:scroll;border:1px solid #ccc;padding:10px;margin-bottom:10px;">
@@ -286,7 +286,7 @@
             <span id="msg-content-${msg.id}" data-original="${msg.content}" data-translated="false" style="background:${bgColor};padding:4px 8px 2px 8px;border-radius:6px;display:inline-block;">
             ${msg.content} ${emojiTag}
             </span>
-            <div id="msg-translation-${msg.id}" style="color:#A19E9B;margin-top:2px;"></div>
+            <div id="msg-translation-${msg.id}" style="color:#6B6B6B;margin-top:2px;"></div>
             ` : "",
             
             `<div id="msg-meta-${msg.id}" style='margin-top:4px;font-size:0.9em;color:gray;'>${readTag} ${timeTag}</div>`,
@@ -309,8 +309,7 @@
         fetchMessages(to_user_id)
             .then(data => {
                 const myId = {{ auth()->id() }};
-                
-                for (const msg of data.messages) {
+                data.messages.forEach(msg => {
                     if (loadedMessages.has(msg.id)) {
                         // Update read status if already loaded
                         const metaTag = document.getElementById(`msg-meta-${msg.id}`);
@@ -327,14 +326,14 @@
                     formatMessage(msg, box, myId, previousMessage); // * format and add message to chat box
                     loadedMessages.add(msg.id);
                     previousMessage = msg; // * Update previousMessage for next iteration
-                }
+                });
 
                 if (reload) box.scrollTop = box.scrollHeight; // auto scroll to bottom
             });
     }
 
     displayMessages();
-    setInterval(displayMessages, 5000);
+    setInterval(displayMessages, 2000);
 
     const form = document.getElementById('chat-form');
     form.addEventListener('submit', function(e) {
