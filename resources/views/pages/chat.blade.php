@@ -194,7 +194,7 @@
             .then(res => res.json())
     }
 
-    function formatMessage(msg, box, myId, previousMessage) {// format a single message for display
+    function formatMessage(msg, box, myId, previousMessage) { // format a single message for display
         // image tag
         let imgTag = (msg.image_path && msg.image_path !== 'null' && msg.image_path.length > 0)
             ? `<img src='${msg.image_path}' style='max-width:100px;'>`
@@ -256,13 +256,14 @@
          : "";
  
         // translate icon (always shown)
-        let translateTag =
+        let translateTag = [
             `<span style='cursor:pointer;color:#1976d2;font-size:1.0em;margin-left:4px;' title='Translate'
-            onclick="translateMessage(${msg.id}, \`${msg.content}\`)">
-            <i class="fa-solid fa-language" style="color:#A19E9B;"></i></span>` +
+            onclick="translateMessage(${msg.id}, '${msg.content}')">
+            <i class="fa-solid fa-language" style="color:#A19E9B;"></i></span>`,
             `<span style='cursor:pointer;color:#28a745;font-size:1.0em;margin-left:4px;cursor:pointer;' title='Add to Vocabulary'
-            onclick=\"addToVocabulary('${msg.id}', \`${msg.content}\`)\">
-            <i class='fa fa-plus ' style="color:#ECA133;"></i></span>`;
+            onclick="addToVocabulary(${msg.id}, '${msg.content}')">
+            <i class='fa fa-plus ' style="color:#ECA133;"></i></span>`
+        ].join("");
 
         // append formatted message to chat box
         box.innerHTML += [
@@ -308,7 +309,8 @@
         fetchMessages(to_user_id)
             .then(data => {
                 const myId = {{ auth()->id() }};
-                data.messages.forEach(msg => {
+                
+                for (const msg of data.messages) {
                     if (loadedMessages.has(msg.id)) {
                         // Update read status if already loaded
                         const metaTag = document.getElementById(`msg-meta-${msg.id}`);
@@ -325,7 +327,7 @@
                     formatMessage(msg, box, myId, previousMessage); // * format and add message to chat box
                     loadedMessages.add(msg.id);
                     previousMessage = msg; // * Update previousMessage for next iteration
-                });
+                }
 
                 if (reload) box.scrollTop = box.scrollHeight; // auto scroll to bottom
             });
@@ -516,7 +518,6 @@ function translateMessage(messageId, content) {
 }
 
 function addToVocabulary(msgId, content) {
-    const separator = '<<|split|>>';
     // 翻訳内容を取得
     let translation = '';
     const translationDiv = document.getElementById(`msg-translation-${msgId}`);
@@ -527,9 +528,7 @@ function addToVocabulary(msgId, content) {
 
     if (translation && translation.trim() !== '') {
         // 翻訳済みなら即modal
-        console.debug('[addToVocabulary] dispatch with (0):', { front: content, back: translation });
-
-        document.dispatchEvent(new CustomEvent('openVocabularyModal', { detail: { front: `${content}${separator}${translation}${separator}` } }));
+        document.dispatchEvent(new CustomEvent('openVocabularyModal', { detail: { front: content, back: translation } }));
     } else {
         // 未翻訳ならAPI呼び出し→modal
         fetch('/translate', {
@@ -549,9 +548,7 @@ function addToVocabulary(msgId, content) {
         })
         .then(data => {
             const translated = data.translated || '';
-            console.debug('[addToVocabulary] dispatch with (1):', { front: content, back: translated });
-
-            document.dispatchEvent(new CustomEvent('openVocabularyModal', { detail: { front: `${content}${separator}${translated}${separator}` } }));
+            document.dispatchEvent(new CustomEvent('openVocabularyModal', { detail: { front: content, back: translated } }));
         })
         .catch(err => {
             console.error('Error adding vocabulary:', err);

@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use Livewire\Attributes\On;
 use App\Models\Vocabulary;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,35 +16,15 @@ class VocabularyModal extends Component
 
     protected $listeners = [
         'openVocabularyModal' => 'open',
-        'openVocabularyModalWithFields' => 'openWithFields'
     ];
 
     // モーダルを開く
-    public function open($params = [])
+    public function open($front = '', $back = '', $vocabularyId = null, $note = '')
     {
-        $separator = '<<|split|>>';
-
-        if (is_string($params)) {
-            // 文字列パラメータの場合、frontのみ設定
-
-            if (str_contains($params, $separator)) {
-                [$front, $back, $note] = explode($separator, $params, 3);
-                $this->front = $front;
-                $this->back = $back;
-                $this->note = $note;
-            } else {
-                $this->front = $params;
-                $this->back = '';
-                $this->note = '';
-            }
-        } elseif (is_array($params)) {
-            // 配列パラメータの場合、front, back, noteを設定
-
-            $this->front = $params['front'] ?? '';
-            $this->back = $params['back'] ?? '';
-            $this->note = $params['note'] ?? '';
-        }
-
+        $this->front = $front;
+        $this->back = $back;
+        $this->note = $note;
+        $this->vocabularyId = $vocabularyId;
         $this->isOpen = true;
     }
 
