@@ -356,3 +356,11 @@
     cursor: pointer;
     transition: background 0.2s;
 }
+
+main {
+    min-width: 0;
+}
+
+.fa-shield-alt {
+    color:#F5A59E;
+}
