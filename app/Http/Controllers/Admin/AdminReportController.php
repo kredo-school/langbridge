@@ -14,7 +14,7 @@ class AdminReportController extends Controller
     //users
     public function users(Request $request)
 {
-    $query = Report::where('reported_content_type', \App\Models\User::class)
+    $query = Report::where('reported_content_type', User::class)
         ->with('reporter.profile');
 
     if ($request->filled('q')) {
@@ -42,7 +42,7 @@ class AdminReportController extends Controller
     // message
     public function messages(Request $request)
 {
-    $query = Report::where('reported_content_type', \App\Models\Message::class)
+    $query = Report::where('reported_content_type', Message::class)
         ->with('reporter.profile');
 
     if ($request->filled('q')) {

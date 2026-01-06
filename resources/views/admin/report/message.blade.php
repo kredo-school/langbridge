@@ -9,7 +9,7 @@
             <i class="fas fa-search" style="font-size: 14px;"></i>
         </span>
         <input type="text" name="q" value="{{ request('q') }}" placeholder="Search Message Report" 
-               style="width: 260px; padding: 8px 40px 8px 20px; border: 1px solid #E5E7EB; border-radius: 9999px; background-color: #ffffff; outline: none; font-size: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+               class="report-search-bar">
     </form>    
 </div>
 <table class="table-auto w-full border">
