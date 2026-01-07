@@ -43,7 +43,7 @@ class AdminReportController extends Controller
     public function messages(Request $request)
 {
     $query = Report::where('reported_content_type', Message::class)
-        ->with('reporter.profile');
+        ->with(['reporter.profile', 'message']);
 
     if ($request->filled('q')) {
         $keyword = $request->q;

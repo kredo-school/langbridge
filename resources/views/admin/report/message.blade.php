@@ -32,10 +32,20 @@
             <td class="px-4 py-2 border">{{ $report->id }}</td>
             <td class="px-4 py-2 border">{{ class_basename($report->reported_content_type) }}</td>
             <td class="px-4 py-2 border">
-                @if($report->reported_content_id)
-                <a href="{{ route('chat.pages.chat', ['id' => encrypt($report->reported_content_id)]) }}" 
+                @if($report->message)
+                @php
+        // メッセージの相手を判定（自分が送信者か受信者か）
+                 $otherUserId = $report->message->user_id === auth()->id()
+                    ? $report->message->to_user_id
+                    : $report->message->user_id;
+                @endphp
+
+                <a href="{{ route('chat.pages.chat', [
+                'id' => encrypt($otherUserId),
+                'message_id' => $report->reported_content_id
+                ]) }}"
                 class="text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1">
-                <span>{{ $report->reported_content_id }}</span> 
+                <span>{{ $report->reported_content_id }}</span>
                 </a>
                 @else
                 <span class="text-gray-400 text-xs">No Data</span>

@@ -3,7 +3,7 @@
 @section('title', 'User Settings')
 
 @section('content')
-<div class="container">
+<div class="container w-50">
     <h2>User Settings</h2>
     <form method="POST" action="{{ route('setting.update') }}">
         @csrf
@@ -22,15 +22,15 @@
             <h6 class="mt-4">Personal Information Visibility</h6>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="age_hidden" id="age_hidden" {{ $user->profile->age_hidden ? 'checked' : '' }}>
-                <label class="form-check-label" for="age_hidden">Hide Age</label>
+                <label class="form-check-label mx-1 mt-1" for="age_hidden">Hide Age</label>
             </div>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="country_hidden" id="country_hidden" {{ $user->profile->country_hidden ? 'checked' : '' }}>
-                <label class="form-check-label" for="country_hidden">Hide Country</label>
+                <label class="form-check-label mx-1 mt-1" for="country_hidden">Hide Country</label>
             </div>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="region_hidden" id="region_hidden" {{ $user->profile->region_hidden ? 'checked' : '' }}>
-                <label class="form-check-label" for="region_hidden">Hide Region</label>
+                <label class="form-check-label mx-1 mt-1" for="region_hidden">Hide Region</label>
             </div>
             <small class="text-muted">*This information will be visible on your public profile if unchecked.</small>
         </div>
@@ -39,7 +39,7 @@
             <h5>Search Settings</h5>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="hidden" id="hidden" {{ $user->profile->hidden ? 'checked' : '' }}>
-                <label class="form-check-label" for="hidden">Hide my profile from search results</label>
+                <label class="form-check-label mx-1 mt-1" for="hidden">Hide my profile from search results</label>
             </div>
             <small class="text-muted">*Prevent your profile from appearing in user searches or suggested connections.</small>
         </div>
