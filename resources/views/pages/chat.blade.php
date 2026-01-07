@@ -4,7 +4,6 @@
     .nav-body {
         gap: 1.2rem !important;
     }
-  
 </style>
 <livewire:vocabulary-modal />
 
@@ -184,7 +183,9 @@
         </div>
     </div>
 </div>
+@endsection
 
+@section('scripts')
 {{-- JavaScript for chat functionality --}}
 <script>
     const loadedMessages = new Set();  // * Global set to track loaded message IDs
@@ -252,17 +253,17 @@
          let isEmojiOnly = (!msg.content || msg.content.trim() === "") && msg.emoji;
          let reportTag = msg.user_id != myId && !isEmojiOnly
          ? `<span style='cursor:pointer;color:#d32f2f;font-size:1.0em;' title='Report'
-         onclick='openReportModal(${msg.id}, \`${msg.content}\`, \`${msg.image_path ?? ""}\`)'>
+         onclick='openReportModal(${msg.id}, \`${esc(msg.content)}\`, \`${esc(msg.image_path ?? "")}\`)'>
          <i class="fa-solid fa-flag"></i></span>`
          : "";
  
         // translate icon (always shown)
         let translateTag = [
             `<span style='cursor:pointer;color:#1976d2;font-size:1.0em;margin-left:4px;' title='Translate'
-            onclick="translateMessage(${msg.id}, '${msg.content}')">
+            onclick="translateMessage(${msg.id}, '${esc(msg.content)}')">
             <i class="fa-solid fa-language" style="color:#A19E9B;"></i></span>`,
             `<span style='cursor:pointer;color:#28a745;font-size:1.0em;margin-left:4px;cursor:pointer;' title='Add to Vocabulary'
-            onclick="addToVocabulary(${msg.id}, '${msg.content}')">
+            onclick="addToVocabulary(${msg.id}, '${esc(msg.content)}')">
             <i class='fa fa-plus ' style="color:#ECA133;"></i></span>`
         ].join("");
 
@@ -284,8 +285,8 @@
             
             // translation display area
             msg.content || emojiTag ? `
-            <span id="msg-content-${msg.id}" data-original="${msg.content}" data-translated="false" style="background:${bgColor};padding:4px 8px 2px 8px;border-radius:6px;display:inline-block;">
-            ${msg.content} ${emojiTag}
+            <span id="msg-content-${msg.id}" data-original="${esc(msg.content)}" data-translated="false" style="background:${bgColor};padding:4px 8px 2px 8px;border-radius:6px;display:inline-block;">
+            ${esc(msg.content)} ${emojiTag}
             </span>
             <div id="msg-translation-${msg.id}" style="color:#6B6B6B;margin-top:2px;"></div>
             ` : "",
@@ -555,6 +556,19 @@ function addToVocabulary(msgId, content) {
             alert('翻訳に失敗しました');
         });
     }
+}
+
+function esc(str) {
+  return str.replace(/[&<>"']/g, function(match) {
+    switch (match) {
+      case '&': return '&amp;';
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '"': return '&quot;';
+      case "'": return '&#39;'; // または &apos;
+      default: return match;
+    }
+  });
 }
 </script>
 @endsection
