@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@php
+    $urlUserId = request()->id ? Crypt::decrypt(request()->id) : null;
+@endphp
 <style>
     /* chatページだけnavbarアイコン・ロゴ間隔を広げる */
     .nav-body {
@@ -48,7 +51,7 @@
             </div>
             {{-- send messages area--}}
             <form id="chat-form" enctype="multipart/form-data">
-                <input type="hidden" name="to_user_id" id="to_user_id" value="{{ $to_user_id }}">
+                <input type="hidden" name="to_user_id" id="to_user_id" value="{{ $urlUserId ?? $to_user_id }}">
                 <div class="mb-2" style="display:flex;align-items:center;gap:8px;">
                     {{-- upload pictures--}}
                     <label for="image"
@@ -188,6 +191,7 @@
 @section('scripts')
 {{-- JavaScript for chat functionality --}}
 <script>
+    const targetMessageId = new URLSearchParams(window.location.search).get('message_id');
     const loadedMessages = new Set();  // * Global set to track loaded message IDs
     let previousMessage = null; // * To track previous message for date comparison
 
@@ -331,6 +335,12 @@
                 });
 
                 if (reload) box.scrollTop = box.scrollHeight; // auto scroll to bottom
+                if (targetMessageId) { const el = document.getElementById(`msg-content-${targetMessageId}`); 
+                    if (el) { 
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' }); 
+                        el.style.backgroundColor = '#fff3cd'; 
+                    } 
+                }
             });
     }
 
