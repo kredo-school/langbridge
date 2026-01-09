@@ -533,3 +533,26 @@ a:hover {
     color: #9f7ccd; 
     text-decoration: underline;
 }
+
+.register-input-area { 
+    display: grid; 
+    
+    gap: 16px; 
+    background-color: #EDF1F9; 
+    padding: 16px; 
+    border-radius: 16px; 
+}
+  
+
+  .form-label {
+    font-weight: bold;
+    color: #ECA133;
+    margin-bottom: 6px;
+  }
+  
+  .form-control::placeholder {
+    color: #bab7b7; 
+    opacity: 1;  
+}
+
+[x-cloak] { display: none !important; }
