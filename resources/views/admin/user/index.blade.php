@@ -67,18 +67,18 @@
                     <td class="px-4 py-2 border border-r-0 text-center relative">
                         <div x-data="{ open: false }" class="relative inline-block text-left">
                             
-                            <button @click="open = !open" type="button" 
+                            <button @click.stop="open = !open" type="button" 
                                     class="btn-ellipsis">
                                 <i class="fa-solid fa-ellipsis"></i>
                             </button>
                     
                             {{-- dropdown menu --}}
-                            <div x-show="open" @click.away="open = false" 
+                            <div x-show="open" @click.away="open = false" x-cloak
                                  x-transition:enter="transition ease-out duration-100"
                                  x-transition:enter-start="opacity-0 scale-95"
                                  x-transition:enter-end="opacity-100 scale-100"
                                  class="dropdown-menu-custom absolute right-0 mt-2 w-44 bg-white z-50 py-2 shadow-xl"
-                                 style="display: none;">
+                                 >
                                 
                                 @if($user->trashed())
                                     <form action="{{ route('admin.users.restore', $user->id) }}" method="POST">

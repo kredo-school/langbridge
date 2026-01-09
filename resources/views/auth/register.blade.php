@@ -2,13 +2,13 @@
 
 @section('content')
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-    <div class="card shadow-sm rounded-4 border-0 p-4" style="width: 100%; max-width: 520px; background-color: #fff;">
+    <div class="card shadow-sm rounded-4 border-0 p-4" style="width: 100%; max-width: 750px; background-color: #fff;">
 
         <!-- Title -->
         <div class="text-center mb-4">
             <h2 class="mt-2 fw-semibold">Let's get to know you!</h2>
         </div>
-
+        <div class="register-input-area">
         <form method="POST" action="{{ route('register') }}">
             @csrf
 
@@ -36,7 +36,7 @@
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
-                    name="password" required>
+                    name="password" placeholder="password" required>
                 @error('password')
                 <div class="invalid-feedback d-block">{{ $message }}</div>
                 @enderror
@@ -45,7 +45,7 @@
             <!-- PW confirm -->
             <div class="mb-3">
                 <label for="password-confirm" class="form-label">Confirm Password</label>
-                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                <input id="password-confirm" type="password" placeholder="password" class="form-control" name="password_confirmation" required>
             </div>
 
             <!-- ROle -->
@@ -54,13 +54,13 @@
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="role" id="role1" value="learner_jp_teacher_en"
                         checked>
-                    <label class="form-check-label" for="role1">
+                    <label class="form-check-label ms-2 mt-1" for="role1">
                         Japanese learner & English teacher
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="role" id="role2" value="learner_en_teacher_jp">
-                    <label class="form-check-label" for="role2">
+                    <label class="form-check-label ms-2 mt-1" for="role2">
                         English learner & Japanese teacher
                     </label>
                 </div>
@@ -94,7 +94,7 @@
             <!-- Kiyaku -->
             <div class="form-check mb-3">
                 <input class="form-check-input" type="checkbox" name="terms" id="terms" required>
-                <label class="form-check-label" for="terms">
+                <label class="form-check-label ms-2 mt-1" for="terms">
                     I agree to the
                     <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms of Service</a>
                     and
@@ -107,8 +107,9 @@
             <!--後で消す-->
 
             <!-- Register button -->
-            <button type="submit" class="btn btn-primary w-100">Register</button>
+            <button type="submit" class="btn login-btn w-100">Register</button>
         </form>
+         </div>
     </div>
 </div>
 
