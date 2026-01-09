@@ -458,3 +458,21 @@ h2, h5 {
 hr {
     border-top: 2px solid rgba(0, 0, 0, 0.05) !important;
 }
+
+/* チャットページの送信ボタン */
+.btn.btn-yellow:hover,
+.btn.btn-yellow:active {
+    background: #d48c1a !important;
+    color: #fff !important;
+}
+
+.btn.btn-yellow:hover svg,
+.btn.btn-yellow:active svg {
+    opacity: 1 !important;
+    fill: inherit !important;
+}
+.btn.btn-yellow:hover svg path,
+.btn.btn-yellow:active svg path {
+    fill: #fff !important;
+    opacity: 1 !important;
+}
