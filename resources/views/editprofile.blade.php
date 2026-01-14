@@ -7,6 +7,8 @@
 
 <div class="container">
     <h2 class="text-center">Edit Profile</h2>
+<div class="profile-wrapper">
+
 <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PATCH')
@@ -70,6 +72,8 @@
             </div>
         </div>
     </div>
+
+</div>
     <div class="interest-section">
         <div class="interest-title">Interest</div>
         <div class="interests-grid">
