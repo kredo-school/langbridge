@@ -14,14 +14,14 @@
 
     <div class="home-body">
         {{-- Learning Journey (Streak Calendar placeholder) --}}
-        <section class="learning-journey">
+        {{-- <section class="learning-journey">
             <h2 class="section-title">{{__('messages.learning_journey')}}</h2>
 
             {{-- TODO: streak calendar --}}
-            <div class="streak-calendar-placeholder">
+            {{-- <div class="streak-calendar-placeholder">
                 <p>Streak calendar will appear here</p>
             </div>
-        </section>
+        </section> --}} 
 
         {{-- Connections --}}
         <section class="connections">
@@ -50,7 +50,7 @@
 
     {{-- Suggested Users --}}
     <section class="suggested-users-section">
-        <h2 class="section-title">Suggested Users</h2>
+        <h2 class="section-title">{{__('messages.suggested_users')}}</h2>
         <div class="suggested-list">
             @foreach($otherUsers as $user)
                 <div class="suggested-card">
