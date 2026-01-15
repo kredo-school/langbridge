@@ -7,7 +7,7 @@
 
 @section('content')
 <div class="container">
-    <h2 class="text-center logo-title"><img src="{{ asset('images/logo.png') }}" alt="Site Logo" class="logo-img">Profile</h2>
+    <h2 class="text-center logo-title"><img src="{{ asset('images/logo.png') }}" alt="Site Logo" class="logo-img">{{ __('messages.profile') }}</h2>
     <div class="profile-wrapper">
     <div class="profile-top">
         <div class="avatar-section">
@@ -29,23 +29,23 @@
         </div>
         <div class="input-columns">
         <div class="form-group">
-            <label>Nickname</label>
+            <label>{{ __('messages.nickname') }}</label>
             <div class="profile-value">{{ $profile->nickname }}</div>
         </div>
         <div class="form-group">
-            <label>Handle</label>
+            <label>{{ __('messages.handle') }}</label>
             <div class="profile-value">{{ $profile->handle }}</div>
         </div>
         <div class="form-group">
-            <label>Japanese level</label>
+            <label>{{ __('messages.japanese level') }}</label>
             <div class="profile-value">{{ $profile->JP_level_text }}</div>
         </div>
         <div class="form-group">
-            <label>English level</label>
+            <label>{{ __('messages.english level') }}</label>
             <div class="profile-value">{{ $profile->EN_level_text }}</div>
         </div>
         <div class="form-group">
-            <label>Age</label>
+            <label>{{ __('messages.age') }}</label>
             <div>
             @if($user->profile->age_hidden)
             <span class="text-muted">Private</span>
@@ -55,7 +55,7 @@
         </div>
         </div>
         <div class="form-group">
-            <label>Country</label>
+            <label>{{ __('messages.country') }}</label>
             <div>
             @if($user->profile->country_hidden)
             <span class="text-muted">Private</span>
@@ -65,7 +65,7 @@
         </div>
         </div>
         <div class="form-group">
-            <label>Region</label>
+            <label>{{ __('messages.region') }}</label>
             <div>
             @if($user->profile->region_hidden)
             <span class="text-muted">Private</span>
@@ -76,7 +76,7 @@
         </div>
         <div class="form-group empty-cell"></div>
         <div class="form-group bio-group">
-            <label>Bio</label>
+            <label>{{ __('messages.bio') }}</label>
             <button id="translate-btn" class="btn btn-sm btn-outline-secondary">
                 <i class="fa fa-language"></i>
             </button>
@@ -88,11 +88,11 @@
 </div>
 
 <div class="interest-section">
-    <div class="interest-title">Interest</div>
+    <div class="interest-title">{{ __('messages.profile_interests') }}</div>
     <div class="interests-grid">
         @foreach($interests as $interest)
             <div class="interest-card {{ $user->interests->pluck('id')->contains($interest->id) ? 'selected' : '' }}">
-                <div class="interest-card-content">{{ $interest->name }}</div>
+                <div class="interest-card-content">{{ __('messages.interests.' . $interest->id) }}</div>
             </div>
         @endforeach
     </div>
@@ -102,7 +102,7 @@
        
             <div>
         @if (auth()->id() === $profile->user_id)
-            <a href="{{ route('profile.edit') }}" class="edit-btn btn-outline-primary btn-sm" >Edit</a>
+            <a href="{{ route('profile.edit') }}" class="edit-btn btn-outline-primary btn-sm" >{{ __('messages.edit') }}</a>
         @endif
     </div>
 </div>

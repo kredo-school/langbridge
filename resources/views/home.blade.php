@@ -13,15 +13,44 @@
     </div>
 
     <div class="home-body">
-        {{-- Learning Journey (Streak Calendar placeholder) --}}
-        {{-- <section class="learning-journey">
-            <h2 class="section-title">{{__('messages.learning_journey')}}</h2>
+        {{-- Learning Journey (Streak Calendar placeholder), 単語クイズ参加するとマークされる --}}
 
-            {{-- TODO: streak calendar --}}
-            {{-- <div class="streak-calendar-placeholder">
-                <p>Streak calendar will appear here</p>
+        <section class="learning-journey">
+            <h2 class="section-title">{{__('messages.learning_journey')}}</h2>
+            <div class="streak-calendar">
+                <div class="row mb-1">
+                    <p class="col">Current streak: {{ $streak ?? 0 }} days</p>
+                    <p class="col">Max streak: {{ $maxStreak ?? 0 }} days</p>
+                </div>
+                <table class="calendar-table">
+                    <thead>
+                        <tr>
+                            <th>Sun</th>
+                            <th>Mon</th>
+                            <th>Tue</th>
+                            <th>Wed</th>
+                            <th>Thu</th>
+                            <th>Fri</th>
+                            <th>Sat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($calendar as $week)
+                        <tr>
+                            @foreach($week as $date)
+                            @if($date)
+                            <td class="{{ isset($datesSet[$date]) ? 'active' : '' }}">{{
+                                \Carbon\Carbon::parse($date)->day }}</td>
+                            @else
+                            <td></td>
+                            @endif
+                            @endforeach
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-        </section> --}} 
+        </section>
 
         {{-- Connections --}}
         <section class="connections">
@@ -35,9 +64,9 @@
                     <div class="chat-card">
                         <a href="{{ route('chat.pages.chat', ['to_user_id' => encrypt($user->id)]) }}">
                             @if($user->profile && $user->profile->avatar)
-                                <img src="{{ $user->profile->avatar }}" class="avatar rounded-circle">
+                            <img src="{{ $user->profile->avatar }}" class="avatar rounded-circle">
                             @else
-                                <i class="fa-solid fa-circle-user text-secondary icon-bd"></i>
+                            <i class="fa-solid fa-circle-user text-secondary icon-bd"></i>
                             @endif
                         </a>
                         <div class="name">{{ $user->profile->nickname }}</div>
@@ -48,31 +77,31 @@
             </section>
 
 
-    {{-- Suggested Users --}}
-    <section class="suggested-users-section">
-        <h2 class="section-title">{{__('messages.suggested_users')}}</h2>
-        <div class="suggested-list">
-            @foreach($otherUsers as $user)
-                <div class="suggested-card">
-                    @if($user->profile->avatar)
-                    <a href="{{ route('profile.show', ['user_id' => encrypt($user->id)]) }}">
-                    <img src="{{ $user->profile->avatar }}" alt="Avatar" class="avatar rounded-circle" >
-                    </a>
-                    @else
-                    <a href="{{ route('profile.show', ['user_id' => encrypt($user->id)]) }}">
-                    <i class="fa-solid fa-circle-user text-secondary icon-bd"></i>
-                    </a>
-                    @endif
-                    <div class="suggested-info">
-                        <p class="name">{{ $user->profile->nickname }}</p>
-                        <p class="handle">{{ $user->profile->handle }}</p>
-                        <p class="bio">{{ $user->profile->bio }}</p>
-                        <button class="chat-btn"
-                            onclick="window.location.href='{{ route('chat.pages.chat', ['to_user_id' => encrypt($user->id)]) }}'">
-                            <i class="fa-regular fa-comment"></i> {{__('messages.start_chat')}}
-                        </button>
+            {{-- Suggested Users --}}
+            <section class="suggested-users-section">
+                <h2 class="section-title">{{__('messages.suggested_users')}}</h2>
+                <div class="suggested-list">
+                    @foreach($otherUsers as $user)
+                    <div class="suggested-card">
+                        @if($user->profile->avatar)
+                        <a href="{{ route('profile.show', ['user_id' => encrypt($user->id)]) }}">
+                            <img src="{{ $user->profile->avatar }}" alt="Avatar" class="avatar rounded-circle">
+                        </a>
+                        @else
+                        <a href="{{ route('profile.show', ['user_id' => encrypt($user->id)]) }}">
+                            <i class="fa-solid fa-circle-user text-secondary icon-bd"></i>
+                        </a>
+                        @endif
+                        <div class="suggested-info">
+                            <p class="name">{{ $user->profile->nickname }}</p>
+                            <p class="handle">{{ $user->profile->handle }}</p>
+                            <p class="bio">{{ $user->profile->bio }}</p>
+                            <button class="chat-btn"
+                                onclick="window.location.href='{{ route('chat.pages.chat', ['to_user_id' => encrypt($user->id)]) }}'">
+                                <i class="fa-regular fa-comment"></i> {{__('messages.start_chat')}}
+                            </button>
+                        </div>
                     </div>
-                </div>
                     @endforeach
                 </div>
             </section>
