@@ -4,7 +4,7 @@
     <div class="my-3">
         <a href="{{ route('home') }}">
             <!--Homeページへのルートを入れる-->
-            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="nav-logo">
+            <img src="{{ asset('images/Logo.png') }}" alt="Logo" class="nav-logo">
         </a>
     </div>
 
@@ -32,15 +32,14 @@
 
     <!-- admin icon -->
     @if(auth()->check() && auth()->user()->is_admin)
-        <a class="nav-link" href="{{ route('admin.users.index') }}">
-            <i class="fa-solid fa-user-shield"></i>
-        </a>
-@endif
+    <a class="nav-link" href="{{ route('admin.users.index') }}">
+        <i class="fa-solid fa-user-shield"></i>
+    </a>
+    @endif
 
 
     <!-- 右にスライドで出るメニュー -->
-    <div class="collapse position-absolute menu-size"
-         id="sidebarMenuContent">
+    <div class="collapse position-absolute menu-size" id="sidebarMenuContent">
         <div class="card shadow-sm">
             <ul class="list-group list-group-flush">
 
@@ -52,7 +51,8 @@
                 </li>
 
                 <li class="list-group-item">
-                    <a href="{{ route('vocabulary.index')}}" class="text-decoration-none text-dark"> <!--vocabularyページへのルートを入れる-->
+                    <a href="{{ route('vocabulary.index')}}" class="text-decoration-none text-dark">
+                        <!--vocabularyページへのルートを入れる-->
                         <i class="fa-solid fa-book me-2"></i>{{ __('messages.vocabulary')}}
                     </a>
                 </li>

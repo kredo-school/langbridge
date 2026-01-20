@@ -7,104 +7,105 @@
 
 @section('content')
 <div class="container">
-    <h2 class="text-center logo-title"><img src="{{ asset('images/logo.png') }}" alt="Site Logo" class="logo-img">{{ __('messages.profile') }}</h2>
+    <h2 class="text-center logo-title"><img src="{{ asset('images/Logo.png') }}" alt="Site Logo" class="logo-img">{{
+        __('messages.profile') }}</h2>
     <div class="profile-wrapper">
-    <div class="profile-top">
-        <div class="avatar-section">
-        <label class="mb-3">Avatar</label>
-        <div>
-            @if($profile->avatar)
-            <img src="{{ $profile->avatar }}" alt="Avatar" class="rounded-circle" width="120">
-            @else
-             <i class="fa-solid fa-circle-user text-secondary icon-bd" ></i>
-            @endif
-        </div>
-        @if(auth()->id() !== $profile->user_id)
-        <button type="button" 
-        onclick="openUserReportModal('{{ $user->id }}', '{{ $user->name }}', '{{ $profile->avatar }}')"
-        class="btn btn-sm btn-link">
-        <i class="fa-solid fa-flag text-danger"></i>
-        </button>
-        @endif
-        </div>
-        <div class="input-columns">
-        <div class="form-group">
-            <label>{{ __('messages.nickname') }}</label>
-            <div class="profile-value">{{ $profile->nickname }}</div>
-        </div>
-        <div class="form-group">
-            <label>{{ __('messages.handle') }}</label>
-            <div class="profile-value">{{ $profile->handle }}</div>
-        </div>
-        <div class="form-group">
-            <label>{{ __('messages.japanese level') }}</label>
-            <div class="profile-value">{{ $profile->JP_level_text }}</div>
-        </div>
-        <div class="form-group">
-            <label>{{ __('messages.english level') }}</label>
-            <div class="profile-value">{{ $profile->EN_level_text }}</div>
-        </div>
-        <div class="form-group">
-            <label>{{ __('messages.age') }}</label>
-            <div>
-            @if($user->profile->age_hidden)
-            <span class="text-muted">Private</span>
-            @else
-            {{ $user->age }}
-            @endif
-        </div>
-        </div>
-        <div class="form-group">
-            <label>{{ __('messages.country') }}</label>
-            <div>
-            @if($user->profile->country_hidden)
-            <span class="text-muted">Private</span>
-            @else
-            {{ $profile->user->country }}
-            @endif
-        </div>
-        </div>
-        <div class="form-group">
-            <label>{{ __('messages.region') }}</label>
-            <div>
-            @if($user->profile->region_hidden)
-            <span class="text-muted">Private</span>
-            @else
-            {{ $profile->user->region }}
-            @endif
-        </div>
-        </div>
-        <div class="form-group empty-cell"></div>
-        <div class="form-group bio-group">
-            <label>{{ __('messages.bio') }}</label>
-            <button id="translate-btn" class="btn btn-sm btn-outline-secondary">
-                <i class="fa fa-language"></i>
-            </button>
-            <p id="bio-text">{{ $profile->bio }}</p>
-            <div id="translation-result" class="mt-2"></div>
-        </div>
+        <div class="profile-top">
+            <div class="avatar-section">
+                <label class="mb-3">Avatar</label>
+                <div>
+                    @if($profile->avatar)
+                    <img src="{{ $profile->avatar }}" alt="Avatar" class="rounded-circle" width="120">
+                    @else
+                    <i class="fa-solid fa-circle-user text-secondary icon-bd"></i>
+                    @endif
+                </div>
+                @if(auth()->id() !== $profile->user_id)
+                <button type="button"
+                    onclick="openUserReportModal('{{ $user->id }}', '{{ $user->name }}', '{{ $profile->avatar }}')"
+                    class="btn btn-sm btn-link">
+                    <i class="fa-solid fa-flag text-danger"></i>
+                </button>
+                @endif
+            </div>
+            <div class="input-columns">
+                <div class="form-group">
+                    <label>{{ __('messages.nickname') }}</label>
+                    <div class="profile-value">{{ $profile->nickname }}</div>
+                </div>
+                <div class="form-group">
+                    <label>{{ __('messages.handle') }}</label>
+                    <div class="profile-value">{{ $profile->handle }}</div>
+                </div>
+                <div class="form-group">
+                    <label>{{ __('messages.japanese level') }}</label>
+                    <div class="profile-value">{{ $profile->JP_level_text }}</div>
+                </div>
+                <div class="form-group">
+                    <label>{{ __('messages.english level') }}</label>
+                    <div class="profile-value">{{ $profile->EN_level_text }}</div>
+                </div>
+                <div class="form-group">
+                    <label>{{ __('messages.age') }}</label>
+                    <div>
+                        @if($user->profile->age_hidden)
+                        <span class="text-muted">Private</span>
+                        @else
+                        {{ $user->age }}
+                        @endif
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>{{ __('messages.country') }}</label>
+                    <div>
+                        @if($user->profile->country_hidden)
+                        <span class="text-muted">Private</span>
+                        @else
+                        {{ $profile->user->country }}
+                        @endif
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>{{ __('messages.region') }}</label>
+                    <div>
+                        @if($user->profile->region_hidden)
+                        <span class="text-muted">Private</span>
+                        @else
+                        {{ $profile->user->region }}
+                        @endif
+                    </div>
+                </div>
+                <div class="form-group empty-cell"></div>
+                <div class="form-group bio-group">
+                    <label>{{ __('messages.bio') }}</label>
+                    <button id="translate-btn" class="btn btn-sm btn-outline-secondary">
+                        <i class="fa fa-language"></i>
+                    </button>
+                    <p id="bio-text">{{ $profile->bio }}</p>
+                    <div id="translation-result" class="mt-2"></div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="interest-section">
-    <div class="interest-title">{{ __('messages.profile_interests') }}</div>
-    <div class="interests-grid">
-        @foreach($interests as $interest)
+    <div class="interest-section">
+        <div class="interest-title">{{ __('messages.profile_interests') }}</div>
+        <div class="interests-grid">
+            @foreach($interests as $interest)
             <div class="interest-card {{ $user->interests->pluck('id')->contains($interest->id) ? 'selected' : '' }}">
                 <div class="interest-card-content">{{ __('messages.interests.' . $interest->id) }}</div>
             </div>
-        @endforeach
+            @endforeach
+        </div>
     </div>
-</div>
 </div>
 
-       
-            <div>
-        @if (auth()->id() === $profile->user_id)
-            <a href="{{ route('profile.edit') }}" class="edit-btn btn-outline-primary btn-sm" >{{ __('messages.edit') }}</a>
-        @endif
-    </div>
+
+<div>
+    @if (auth()->id() === $profile->user_id)
+    <a href="{{ route('profile.edit') }}" class="edit-btn btn-outline-primary btn-sm">{{ __('messages.edit') }}</a>
+    @endif
+</div>
 </div>
 
 
@@ -128,9 +129,8 @@
                     <div class="d-flex align-items-center mb-4 p-3 bg-light rounded">
                         <!-- message image (if any) -->
                         <span id="report_user_avatar_wrapper" class="me-3">
-                            <img id="report_user_avatar" src=""
-                            class="rounded-circle report-avatar">
-                                           
+                            <img id="report_user_avatar" src="" class="rounded-circle report-avatar">
+
                         </span>
                         <!-- message content -->
                         <div>
@@ -195,6 +195,4 @@
     </div>
 </div>
 
-@endsection 
-
-
+@endsection
