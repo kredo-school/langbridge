@@ -11,6 +11,13 @@ export default defineConfig({
                 "resources/css/style.css",
                 "resources/js/translate.js",
                 "resources/css/home.css",
+                'resources/js/vocabulary-modal.js',
+                'resources/js/quiz.js',
+                'resources/js/report.js',
+                'resources/js/timezone.js',
+                'resources/sass/app.scss',
+
+    'resources/css/profile.css'
             ],
             refresh: true,
         }),
